@@ -8,3 +8,15 @@
 {"level":"INFO","time":"2025-02-17T21:37:15.961+0800","caller":"initialize/corn.go:17","msg":"start","keysAndValues":null}
 {"level":"INFO","time":"2025-02-18T11:26:12.962+0800","caller":"core/server.go:24","msg":"server run success on ","address":"0.0.0.0:8080"}
 {"level":"INFO","time":"2025-02-18T11:26:12.962+0800","caller":"initialize/corn.go:17","msg":"start","keysAndValues":null}
+{"level":"INFO","time":"2025-02-18T17:07:55.565+0800","caller":"core/server.go:24","msg":"server run success on ","address":"0.0.0.0:8080"}
+{"level":"INFO","time":"2025-02-18T17:07:55.565+0800","caller":"initialize/corn.go:17","msg":"start","keysAndValues":null}
+{"level":"INFO","time":"2025-02-18T17:34:06.881+0800","caller":"core/server.go:24","msg":"server run success on ","address":"0.0.0.0:8080"}
+{"level":"INFO","time":"2025-02-18T17:34:06.881+0800","caller":"initialize/corn.go:17","msg":"start","keysAndValues":null}
+{"level":"INFO","time":"2025-02-18T17:36:37.362+0800","caller":"flag/enter.go:23","msg":"Successfully initialized the structure of the MySQL database table"}
+{"level":"INFO","time":"2025-02-18T18:57:58.498+0800","caller":"core/server.go:24","msg":"server run success on ","address":"0.0.0.0:8080"}
+{"level":"INFO","time":"2025-02-18T18:57:58.498+0800","caller":"initialize/corn.go:17","msg":"start","keysAndValues":null}
+{"level":"INFO","time":"2025-02-18T19:21:42.091+0800","caller":"flag/enter.go:39","msg":"Successfully exported SQL data"}
+{"level":"INFO","time":"2025-02-18T19:39:56.146+0800","caller":"core/server.go:24","msg":"server run success on ","address":"0.0.0.0:8080"}
+{"level":"INFO","time":"2025-02-18T19:39:56.146+0800","caller":"initialize/corn.go:17","msg":"start","keysAndValues":null}
+{"level":"INFO","time":"2025-02-18T20:09:30.084+0800","caller":"flag/enter.go:65","msg":"Successfully created ES indices"}
+{"level":"INFO","time":"2025-02-18T20:41:34.972+0800","caller":"flag/enter.go:95","msg":"Successfully created an administrator"}

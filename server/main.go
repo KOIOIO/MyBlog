@@ -2,6 +2,7 @@ package main
 
 import (
 	"server/core"
+	"server/flag"
 	"server/global"
 	"server/initialize"
 )
@@ -15,7 +16,7 @@ func main() {
 	global.ESClient = initialize.ConnectEs()
 
 	defer global.Redis.Close()
-
+	flag.InitFlag()
 	initialize.InitCron()
 
 	core.RunServer()
