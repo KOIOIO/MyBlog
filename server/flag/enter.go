@@ -9,37 +9,46 @@ import (
 	"server/global"
 )
 
+// sqlFlag 用于定义初始化MySQL数据库表结构的命令行标志
 var (
 	sqlFalg = &cli.BoolFlag{
 		Name:  "sql",
 		Usage: "Initialize the structure of the MySQL database table",
 	}
+	// sqlExportFlag 用于定义导出SQL数据到指定文件的命令行标志
 	sqlExportFlag = &cli.BoolFlag{
 		Name:  "sql-export",
 		Usage: "Exports SQL data to a specified file.",
 	}
+	// sqlImportFlag 用于定义从指定文件导入SQL数据的命令行标志
 	sqlImportFlag = &cli.StringFlag{
 		Name:  "sql-import",
 		Usage: "Imports SQL data from a specified file.",
 	}
+	// esFlag 用于定义初始化Elasticsearch索引的命令行标志
 	esFlag = &cli.BoolFlag{
 		Name:  "es",
 		Usage: "Initializes the Elasticsearch index.",
 	}
+	// esExportFlag 用于定义从Elasticsearch导出数据到指定文件的命令行标志
 	esExportFlag = &cli.BoolFlag{
 		Name:  "es-export",
 		Usage: "Exports data from Elasticsearch to a specified file.",
 	}
+	// esImportFlag 用于定义从指定文件导入数据到Elasticsearch的命令行标志
 	esImportFlag = &cli.StringFlag{
 		Name:  "es-import",
 		Usage: "Imports data into Elasticsearch from a specified file.",
 	}
+	// adminFlag 用于定义根据config.yaml中的信息创建管理员的命令行标志
 	adminFlag = &cli.BoolFlag{
 		Name:  "admin",
 		Usage: "Creates an administrator using the name, email and address specified in the config.yaml file.",
 	}
 )
 
+// Run 处理命令行标志的逻辑
+// c 是cli.Context类型，包含命令行的上下文信息
 func Run(c *cli.Context) {
 	if c.NumFlags() > 1 {
 		err := cli.NewExitError("Only one flag is allowed", 1)
@@ -99,6 +108,8 @@ func Run(c *cli.Context) {
 		global.Log.Error(err.Error(), zap.Error(err))
 	}
 }
+
+// NewApp 创建并返回一个新的cli.App实例
 func NewApp() *cli.App {
 	app := cli.NewApp()
 	app.Name = "Blog of Xiaoyu_Wang"
@@ -114,6 +125,8 @@ func NewApp() *cli.App {
 	app.Action = Run
 	return app
 }
+
+// InitFlag 初始化命令行标志
 func InitFlag() {
 	if len(os.Args) > 1 {
 		app := NewApp()
