@@ -7,9 +7,9 @@ captcha:
 email:
   host: smtp.qq.com
   port: 465
-  from: xxx@qq.com
+  from: 2652777599@qq.com
   nickname: 发件人昵称
-  secret: xxxxxxxxxxxxxxxx
+  secret: aynjkwnibmwxdiei
   is_ssl: true
 es:
   url: http://127.0.0.1:9200
@@ -58,7 +58,7 @@ system:
   env: release
   router_prefix: api
   use_multipoint: true
-  sessions_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  sessions_secret: YEthzbuwUMpnNvon5_1ugzwh9EDOF6qbKdYkWvl2QWo=
   oss_type: local
 upload:
   size: 20
@@ -66,10 +66,10 @@ upload:
 website:
   logo: ""
   full_logo: ""
-  title: 博客标题-xxx的个人博客
-  slogan: 博客标题
+  title: Xiaoyu_Wangのblog
+  slogan: Xiaoyu_Wangのblog
   slogan_en: Blog Title
-  description: 博客描述
+  description: Go语言博客
   version: 1.0.0
   created_at: "2025-1-15"
   icp_filing: icp备案号

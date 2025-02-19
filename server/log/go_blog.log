@@ -24,3 +24,9 @@
 {"level":"INFO","time":"2025-02-18T21:33:41.097+0800","caller":"initialize/corn.go:17","msg":"start","keysAndValues":null}
 {"level":"INFO","time":"2025-02-19T13:39:37.049+0800","caller":"core/server.go:24","msg":"server run success on ","address":"0.0.0.0:8080"}
 {"level":"INFO","time":"2025-02-19T13:39:37.049+0800","caller":"initialize/corn.go:17","msg":"start","keysAndValues":null}
+{"level":"INFO","time":"2025-02-19T17:23:13.500+0800","caller":"core/server.go:24","msg":"server run success on ","address":"0.0.0.0:8080"}
+{"level":"INFO","time":"2025-02-19T17:23:13.500+0800","caller":"initialize/corn.go:17","msg":"start","keysAndValues":null}
+{"level":"INFO","time":"2025-02-19T19:19:18.017+0800","caller":"core/server.go:24","msg":"server run success on ","address":"0.0.0.0:8080"}
+{"level":"INFO","time":"2025-02-19T19:19:18.017+0800","caller":"initialize/corn.go:17","msg":"start","keysAndValues":null}
+{"level":"INFO","time":"2025-02-19T19:32:40.675+0800","caller":"initialize/corn.go:17","msg":"start","keysAndValues":null}
+{"level":"INFO","time":"2025-02-19T19:32:40.675+0800","caller":"core/server.go:24","msg":"server run success on ","address":"0.0.0.0:8080"}
