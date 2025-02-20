@@ -8,7 +8,7 @@ email:
   host: smtp.qq.com
   port: 465
   from: 2652777599@qq.com
-  nickname: 发件人昵称
+  nickname: Xiaoyu_Wang
   secret: aynjkwnibmwxdiei
   is_ssl: true
 es:
@@ -17,8 +17,8 @@ es:
   password: ""
   is_console_print: true
 gaode:
-  enable: false
-  key: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  enable: true
+  key: 43fc67c95a6390a4e0452be53c9914b2
 jwt:
   access_token_secret: cUIPPwSytDp4xqBepNwx1FamFgVEOs4AG89uUOKuBUk=
   refresh_token_secret: KSE8pQ8gmBBydS2_sb0FIdi-9DlA5Us66zTrC-PM5RQ=
@@ -77,10 +77,10 @@ website:
   bilibili_url: https://space.bilibili.com/xxx
   gitee_url: https://gitee.com/xxx
   github_url: https://github.com/xxx/
-  name: 昵称
+  name: Xiaoyu_Wang
   job: 工作
-  address: 地址
-  email: xxx@qq.com
+  address: 河南省郑州市
+  email: 2652777599@qq.com
   qq_image: ""
   wechat_image: ""
 zap:
