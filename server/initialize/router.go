@@ -23,8 +23,15 @@ func InitRouter() *gin.Engine {
 	routerGroup := router.RouterGroupApp
 
 	publicGroup := Router.Group(global.Config.System.RouterPrefix)
+	privateGroup := Router.Group((global.Config.System.RouterPrefix))
+	privateGroup.Use(middleware.JWTAuth())
+	adminGroup := Router.Group((global.Config.System.RouterPrefix))
+	adminGroup.Use(middleware.JWTAuth()).Use(middleware.AdminAuth())
 	{
 		routerGroup.InitBaseRouter(publicGroup)
+	}
+	{
+		routerGroup.InitUserRouter(privateGroup, publicGroup, adminGroup)
 	}
 	return Router
 }

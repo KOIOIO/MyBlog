@@ -5,6 +5,7 @@ type ServiceGroup struct {
 	BaseService
 	JWTService
 	GaodeService
+	UserService
 }
 
 var ServiceGroupApp = new(ServiceGroup)
