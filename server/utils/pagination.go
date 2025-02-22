@@ -2,10 +2,9 @@ package utils
 
 import (
 	"context"
+	"github.com/elastic/go-elasticsearch/v8/typedapi/types"
 	"server/global"
 	"server/model/other"
-
-	"github.com/elastic/go-elasticsearch/v8/typedapi/types"
 )
 
 // MySQLPagination 实现 MySQL 数据分页查询
