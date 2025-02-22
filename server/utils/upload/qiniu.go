@@ -4,18 +4,18 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/qiniu/go-sdk/v7/auth/qbox"
+	"github.com/qiniu/go-sdk/v7/storage"
 	"mime/multipart"
 	"path/filepath"
 	"server/global"
 	"server/utils"
 	"strings"
 	"time"
-
-	"github.com/qiniu/go-sdk/v7/auth/qbox"
-	"github.com/qiniu/go-sdk/v7/storage"
 )
 
-type Qiniu struct{}
+type Qiniu struct {
+}
 
 func (*Qiniu) UploadImage(file *multipart.FileHeader) (string, string, error) {
 	size := float64(file.Size) / float64(1024*1024)

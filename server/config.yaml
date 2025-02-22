@@ -37,10 +37,10 @@ mysql:
     log_mode: info
 qiniu:
     zone: z0
-    bucket: xxx
-    img_path: https://xxx.xxx/
-    access_key: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-    secret_key: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    bucket: wwyblog112
+    img_path: https://image.xxx.xxx/
+    access_key: BcaKxra1vgy28Y4CHJYPKzEoO_j7zZwc7T58pUci
+    secret_key: vmb-YFdCmFqXf6Jjlzu9EJWcJCshOsMTsAylhp1u
     use_https: true
     use_cdn_domains: true
 qq:
