@@ -1,53 +1,48 @@
-{"level":"INFO","time":"2025-02-17T20:49:24.505+0800","caller":"core/server.go:24","msg":"server run success on ","address":"0.0.0.0:8080"}
-{"level":"INFO","time":"2025-02-17T20:50:57.402+0800","caller":"core/server.go:24","msg":"server run success on ","address":"0.0.0.0:8080"}
-{"level":"ERROR","time":"2025-02-17T21:27:01.021+0800","caller":"initialize/gorm.go:18","msg":"连接数据库失败:","error":"dial tcp: lookup tcp/೪: unknown port"}
-{"level":"INFO","time":"2025-02-17T21:32:36.606+0800","caller":"core/server.go:24","msg":"server run success on ","address":"0.0.0.0:8080"}
-{"level":"INFO","time":"2025-02-17T21:32:36.606+0800","caller":"initialize/corn.go:17","msg":"start","keysAndValues":null}
-{"level":"ERROR","time":"2025-02-17T21:37:04.627+0800","caller":"initialize/gorm.go:18","msg":"连接数据库失败:","error":"dial tcp 127.0.0.1:3306: connectex: No connection could be made because the target machine actively refused it."}
-{"level":"INFO","time":"2025-02-17T21:37:15.961+0800","caller":"core/server.go:24","msg":"server run success on ","address":"0.0.0.0:8080"}
-{"level":"INFO","time":"2025-02-17T21:37:15.961+0800","caller":"initialize/corn.go:17","msg":"start","keysAndValues":null}
-{"level":"INFO","time":"2025-02-18T11:26:12.962+0800","caller":"core/server.go:24","msg":"server run success on ","address":"0.0.0.0:8080"}
-{"level":"INFO","time":"2025-02-18T11:26:12.962+0800","caller":"initialize/corn.go:17","msg":"start","keysAndValues":null}
-{"level":"INFO","time":"2025-02-18T17:07:55.565+0800","caller":"core/server.go:24","msg":"server run success on ","address":"0.0.0.0:8080"}
-{"level":"INFO","time":"2025-02-18T17:07:55.565+0800","caller":"initialize/corn.go:17","msg":"start","keysAndValues":null}
-{"level":"INFO","time":"2025-02-18T17:34:06.881+0800","caller":"core/server.go:24","msg":"server run success on ","address":"0.0.0.0:8080"}
-{"level":"INFO","time":"2025-02-18T17:34:06.881+0800","caller":"initialize/corn.go:17","msg":"start","keysAndValues":null}
-{"level":"INFO","time":"2025-02-18T17:36:37.362+0800","caller":"flag/enter.go:23","msg":"Successfully initialized the structure of the MySQL database table"}
-{"level":"INFO","time":"2025-02-18T18:57:58.498+0800","caller":"core/server.go:24","msg":"server run success on ","address":"0.0.0.0:8080"}
-{"level":"INFO","time":"2025-02-18T18:57:58.498+0800","caller":"initialize/corn.go:17","msg":"start","keysAndValues":null}
-{"level":"INFO","time":"2025-02-18T19:21:42.091+0800","caller":"flag/enter.go:39","msg":"Successfully exported SQL data"}
-{"level":"INFO","time":"2025-02-18T19:39:56.146+0800","caller":"core/server.go:24","msg":"server run success on ","address":"0.0.0.0:8080"}
-{"level":"INFO","time":"2025-02-18T19:39:56.146+0800","caller":"initialize/corn.go:17","msg":"start","keysAndValues":null}
-{"level":"INFO","time":"2025-02-18T20:09:30.084+0800","caller":"flag/enter.go:65","msg":"Successfully created ES indices"}
-{"level":"INFO","time":"2025-02-18T20:41:34.972+0800","caller":"flag/enter.go:95","msg":"Successfully created an administrator"}
-{"level":"INFO","time":"2025-02-18T21:33:41.097+0800","caller":"core/server.go:24","msg":"server run success on ","address":"0.0.0.0:8080"}
-{"level":"INFO","time":"2025-02-18T21:33:41.097+0800","caller":"initialize/corn.go:17","msg":"start","keysAndValues":null}
-{"level":"INFO","time":"2025-02-19T13:39:37.049+0800","caller":"core/server.go:24","msg":"server run success on ","address":"0.0.0.0:8080"}
-{"level":"INFO","time":"2025-02-19T13:39:37.049+0800","caller":"initialize/corn.go:17","msg":"start","keysAndValues":null}
-{"level":"INFO","time":"2025-02-19T17:23:13.500+0800","caller":"core/server.go:24","msg":"server run success on ","address":"0.0.0.0:8080"}
-{"level":"INFO","time":"2025-02-19T17:23:13.500+0800","caller":"initialize/corn.go:17","msg":"start","keysAndValues":null}
-{"level":"INFO","time":"2025-02-19T19:19:18.017+0800","caller":"core/server.go:24","msg":"server run success on ","address":"0.0.0.0:8080"}
-{"level":"INFO","time":"2025-02-19T19:19:18.017+0800","caller":"initialize/corn.go:17","msg":"start","keysAndValues":null}
-{"level":"INFO","time":"2025-02-19T19:32:40.675+0800","caller":"initialize/corn.go:17","msg":"start","keysAndValues":null}
-{"level":"INFO","time":"2025-02-19T19:32:40.675+0800","caller":"core/server.go:24","msg":"server run success on ","address":"0.0.0.0:8080"}
-{"level":"INFO","time":"2025-02-19T19:40:58.048+0800","caller":"core/server.go:24","msg":"server run success on ","address":"0.0.0.0:8080"}
-{"level":"INFO","time":"2025-02-19T19:40:58.047+0800","caller":"initialize/corn.go:17","msg":"start","keysAndValues":null}
-{"level":"INFO","time":"2025-02-19T20:50:32.342+0800","caller":"core/server.go:24","msg":"server run success on ","address":"0.0.0.0:8080"}
-{"level":"INFO","time":"2025-02-19T20:50:32.342+0800","caller":"initialize/corn.go:17","msg":"start","keysAndValues":null}
-{"level":"INFO","time":"2025-02-19T20:50:42.244+0800","caller":"middleware/logger.go:35","msg":"/api/base/captcha","status":200,"method":"POST","path":"/api/base/captcha","query":"","ip":"::1","user-agent":"Apifox/1.0.0 (https://apifox.com)","errors":"","cost":0.0015709}
-{"level":"INFO","time":"2025-02-19T20:53:20.734+0800","caller":"core/server.go:24","msg":"server run success on ","address":"0.0.0.0:8080"}
-{"level":"INFO","time":"2025-02-19T20:53:20.734+0800","caller":"initialize/corn.go:17","msg":"start","keysAndValues":null}
-{"level":"INFO","time":"2025-02-19T20:53:23.546+0800","caller":"middleware/logger.go:35","msg":"/api/base/captcha","status":200,"method":"POST","path":"/api/base/captcha","query":"","ip":"::1","user-agent":"Apifox/1.0.0 (https://apifox.com)","errors":"","cost":0.0010479}
-{"level":"INFO","time":"2025-02-19T20:53:57.297+0800","caller":"middleware/logger.go:35","msg":"/api/base/sendEmailVerificationCode","status":200,"method":"POST","path":"/api/base/sendEmailVerificationCode","query":"","ip":"::1","user-agent":"Apifox/1.0.0 (https://apifox.com)","errors":"","cost":1.2303811}
-{"level":"INFO","time":"2025-02-19T20:54:53.202+0800","caller":"middleware/logger.go:35","msg":"/api/base/captcha","status":200,"method":"POST","path":"/api/base/captcha","query":"","ip":"::1","user-agent":"Apifox/1.0.0 (https://apifox.com)","errors":"","cost":0.0020296}
-{"level":"INFO","time":"2025-02-19T20:55:24.844+0800","caller":"middleware/logger.go:35","msg":"/api/base/sendEmailVerificationCode","status":200,"method":"POST","path":"/api/base/sendEmailVerificationCode","query":"","ip":"::1","user-agent":"Apifox/1.0.0 (https://apifox.com)","errors":"","cost":1.1514845}
-{"level":"INFO","time":"2025-02-19T20:56:22.947+0800","caller":"middleware/logger.go:35","msg":"/api/base/captcha","status":200,"method":"POST","path":"/api/base/captcha","query":"","ip":"::1","user-agent":"Apifox/1.0.0 (https://apifox.com)","errors":"","cost":0.0012668}
-{"level":"INFO","time":"2025-02-19T20:57:05.843+0800","caller":"middleware/logger.go:35","msg":"/api/base/sendEmailVerificationCode","status":200,"method":"POST","path":"/api/base/sendEmailVerificationCode","query":"","ip":"::1","user-agent":"Apifox/1.0.0 (https://apifox.com)","errors":"","cost":1.2377014}
-{"level":"INFO","time":"2025-02-19T21:05:15.981+0800","caller":"core/server.go:24","msg":"server run success on ","address":"0.0.0.0:8080"}
-{"level":"INFO","time":"2025-02-19T21:05:15.981+0800","caller":"initialize/corn.go:17","msg":"start","keysAndValues":null}
-{"level":"INFO","time":"2025-02-19T21:05:17.656+0800","caller":"middleware/logger.go:35","msg":"/api/base/captcha","status":200,"method":"POST","path":"/api/base/captcha","query":"","ip":"::1","user-agent":"Apifox/1.0.0 (https://apifox.com)","errors":"","cost":0.00175}
-{"level":"INFO","time":"2025-02-19T21:05:54.689+0800","caller":"middleware/logger.go:35","msg":"/api/base/sendEmailVerificationCode","status":200,"method":"POST","path":"/api/base/sendEmailVerificationCode","query":"","ip":"::1","user-agent":"Apifox/1.0.0 (https://apifox.com)","errors":"","cost":1.4269081}
-{"level":"INFO","time":"2025-02-19T21:19:19.345+0800","caller":"core/server.go:24","msg":"server run success on ","address":"0.0.0.0:8080"}
-{"level":"INFO","time":"2025-02-19T21:19:19.345+0800","caller":"initialize/corn.go:17","msg":"start","keysAndValues":null}
-{"level":"INFO","time":"2025-02-19T21:19:34.649+0800","caller":"middleware/logger.go:35","msg":"/api/base/captcha","status":200,"method":"POST","path":"/api/base/captcha","query":"","ip":"::1","user-agent":"Apifox/1.0.0 (https://apifox.com)","errors":"","cost":0.0010925}
-{"level":"INFO","time":"2025-02-19T21:20:13.085+0800","caller":"middleware/logger.go:35","msg":"/api/base/sendEmailVerificationCode","status":200,"method":"POST","path":"/api/base/sendEmailVerificationCode","query":"","ip":"::1","user-agent":"Apifox/1.0.0 (https://apifox.com)","errors":"","cost":1.2726142}
+{"level":"INFO","time":"2025-02-22T13:22:36.257+0800","caller":"initialize/corn.go:18","msg":"start","keysAndValues":null}
+{"level":"INFO","time":"2025-02-22T13:22:36.258+0800","caller":"initialize/corn.go:18","msg":"schedule","keysAndValues":["now","2025-02-22T13:22:36.2589686+08:00","entry",1,"next","2025-02-22T14:00:00+08:00"]}
+{"level":"INFO","time":"2025-02-22T13:22:36.258+0800","caller":"initialize/corn.go:18","msg":"schedule","keysAndValues":["now","2025-02-22T13:22:36.2589686+08:00","entry",2,"next","2025-02-22T14:00:00+08:00"]}
+{"level":"INFO","time":"2025-02-22T13:22:36.258+0800","caller":"initialize/corn.go:18","msg":"schedule","keysAndValues":["now","2025-02-22T13:22:36.2589686+08:00","entry",3,"next","2025-02-23T00:00:00+08:00"]}
+{"level":"INFO","time":"2025-02-22T13:22:36.259+0800","caller":"core/server.go:25","msg":"server run success on ","address":"0.0.0.0:8080"}
+{"level":"ERROR","time":"2025-02-22T13:22:36.260+0800","caller":"core/server.go:26","msg":"listen tcp 0.0.0.0:8080: bind: Only one usage of each socket address (protocol/network address/port) is normally permitted."}
+{"level":"INFO","time":"2025-02-22T13:22:49.020+0800","caller":"initialize/corn.go:18","msg":"start","keysAndValues":null}
+{"level":"INFO","time":"2025-02-22T13:22:49.020+0800","caller":"initialize/corn.go:18","msg":"schedule","keysAndValues":["now","2025-02-22T13:22:49.0207339+08:00","entry",1,"next","2025-02-22T14:00:00+08:00"]}
+{"level":"INFO","time":"2025-02-22T13:22:49.020+0800","caller":"initialize/corn.go:18","msg":"schedule","keysAndValues":["now","2025-02-22T13:22:49.0207339+08:00","entry",2,"next","2025-02-22T14:00:00+08:00"]}
+{"level":"INFO","time":"2025-02-22T13:22:49.020+0800","caller":"initialize/corn.go:18","msg":"schedule","keysAndValues":["now","2025-02-22T13:22:49.0207339+08:00","entry",3,"next","2025-02-23T00:00:00+08:00"]}
+{"level":"INFO","time":"2025-02-22T13:22:49.022+0800","caller":"core/server.go:25","msg":"server run success on ","address":"0.0.0.0:8080"}
+{"level":"ERROR","time":"2025-02-22T13:22:49.022+0800","caller":"core/server.go:26","msg":"listen tcp 0.0.0.0:8080: bind: Only one usage of each socket address (protocol/network address/port) is normally permitted."}
+{"level":"INFO","time":"2025-02-22T13:22:57.847+0800","caller":"initialize/corn.go:18","msg":"start","keysAndValues":null}
+{"level":"INFO","time":"2025-02-22T13:22:57.847+0800","caller":"initialize/corn.go:18","msg":"schedule","keysAndValues":["now","2025-02-22T13:22:57.8475927+08:00","entry",1,"next","2025-02-22T14:00:00+08:00"]}
+{"level":"INFO","time":"2025-02-22T13:22:57.847+0800","caller":"initialize/corn.go:18","msg":"schedule","keysAndValues":["now","2025-02-22T13:22:57.8475927+08:00","entry",2,"next","2025-02-22T14:00:00+08:00"]}
+{"level":"INFO","time":"2025-02-22T13:22:57.847+0800","caller":"initialize/corn.go:18","msg":"schedule","keysAndValues":["now","2025-02-22T13:22:57.8475927+08:00","entry",3,"next","2025-02-23T00:00:00+08:00"]}
+{"level":"INFO","time":"2025-02-22T13:22:57.848+0800","caller":"core/server.go:25","msg":"server run success on ","address":"0.0.0.0:8080"}
+{"level":"INFO","time":"2025-02-22T13:23:02.747+0800","caller":"middleware/logger.go:36","msg":"/api/user/register","status":200,"method":"POST","path":"/api/user/register","query":"","ip":"::1","user-agent":"Apifox/1.0.0 (https://apifox.com)","errors":"","cost":0.0005077}
+{"level":"ERROR","time":"2025-02-22T13:23:02.978+0800","caller":"middleware/login_record.go:54","msg":"Failed to record login","error":"Error 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`blog_db`.`logins`, CONSTRAINT `fk_logins_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`))"}
+{"level":"INFO","time":"2025-02-22T13:23:10.367+0800","caller":"middleware/logger.go:36","msg":"/api/base/captcha","status":200,"method":"POST","path":"/api/base/captcha","query":"","ip":"::1","user-agent":"Apifox/1.0.0 (https://apifox.com)","errors":"","cost":0.0017812}
+{"level":"INFO","time":"2025-02-22T13:24:00.264+0800","caller":"middleware/logger.go:36","msg":"/api/base/sendEmailVerificationCode","status":200,"method":"POST","path":"/api/base/sendEmailVerificationCode","query":"","ip":"::1","user-agent":"Apifox/1.0.0 (https://apifox.com)","errors":"","cost":0.8551158}
+{"level":"INFO","time":"2025-02-22T13:24:11.993+0800","caller":"middleware/logger.go:36","msg":"/api/user/register","status":200,"method":"POST","path":"/api/user/register","query":"","ip":"::1","user-agent":"Apifox/1.0.0 (https://apifox.com)","errors":"","cost":0.0608801}
+{"level":"INFO","time":"2025-02-22T13:34:14.332+0800","caller":"initialize/corn.go:18","msg":"start","keysAndValues":null}
+{"level":"INFO","time":"2025-02-22T13:34:14.340+0800","caller":"core/server.go:25","msg":"server run success on ","address":"0.0.0.0:8080"}
+{"level":"INFO","time":"2025-02-22T13:34:20.858+0800","caller":"middleware/logger.go:36","msg":"/api/user/register","status":200,"method":"POST","path":"/api/user/register","query":"","ip":"::1","user-agent":"Apifox/1.0.0 (https://apifox.com)","errors":"","cost":0.0007679}
+{"level":"ERROR","time":"2025-02-22T13:34:21.069+0800","caller":"middleware/login_record.go:54","msg":"Failed to record login","error":"Error 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`blog_db`.`logins`, CONSTRAINT `fk_logins_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`))"}
+{"level":"INFO","time":"2025-02-22T13:34:31.843+0800","caller":"middleware/logger.go:36","msg":"/api/base/captcha","status":200,"method":"POST","path":"/api/base/captcha","query":"","ip":"::1","user-agent":"Apifox/1.0.0 (https://apifox.com)","errors":"","cost":0.0012217}
+{"level":"INFO","time":"2025-02-22T13:35:03.404+0800","caller":"middleware/logger.go:36","msg":"/api/base/sendEmailVerificationCode","status":200,"method":"POST","path":"/api/base/sendEmailVerificationCode","query":"","ip":"::1","user-agent":"Apifox/1.0.0 (https://apifox.com)","errors":"","cost":0.8955101}
+{"level":"ERROR","time":"2025-02-22T13:35:18.535+0800","caller":"api/user.go:56","msg":"Failed to register user:","error":"this email address is already registered, please check the information you filled in, or retrieve your password"}
+{"level":"INFO","time":"2025-02-22T13:35:18.536+0800","caller":"middleware/logger.go:36","msg":"/api/user/register","status":200,"method":"POST","path":"/api/user/register","query":"","ip":"::1","user-agent":"Apifox/1.0.0 (https://apifox.com)","errors":"","cost":0.0042717}
+{"level":"ERROR","time":"2025-02-22T13:35:18.732+0800","caller":"middleware/login_record.go:54","msg":"Failed to record login","error":"Error 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`blog_db`.`logins`, CONSTRAINT `fk_logins_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`))"}
+{"level":"INFO","time":"2025-02-22T13:36:55.575+0800","caller":"flag/enter.go:62","msg":"Successfully created table structure"}
+{"level":"INFO","time":"2025-02-22T13:37:16.149+0800","caller":"flag/enter.go:103","msg":"Successfully created an administrator"}
+{"level":"INFO","time":"2025-02-22T13:37:34.295+0800","caller":"initialize/corn.go:18","msg":"start","keysAndValues":null}
+{"level":"INFO","time":"2025-02-22T13:37:34.304+0800","caller":"core/server.go:25","msg":"server run success on ","address":"0.0.0.0:8080"}
+{"level":"INFO","time":"2025-02-22T13:37:36.166+0800","caller":"middleware/logger.go:36","msg":"/api/base/captcha","status":200,"method":"POST","path":"/api/base/captcha","query":"","ip":"::1","user-agent":"Apifox/1.0.0 (https://apifox.com)","errors":"","cost":0.0010794}
+{"level":"INFO","time":"2025-02-22T13:38:00.898+0800","caller":"middleware/logger.go:36","msg":"/api/base/sendEmailVerificationCode","status":200,"method":"POST","path":"/api/base/sendEmailVerificationCode","query":"","ip":"::1","user-agent":"Apifox/1.0.0 (https://apifox.com)","errors":"","cost":0}
+{"level":"INFO","time":"2025-02-22T13:38:08.809+0800","caller":"middleware/logger.go:36","msg":"/api/base/sendEmailVerificationCode","status":200,"method":"POST","path":"/api/base/sendEmailVerificationCode","query":"","ip":"::1","user-agent":"Apifox/1.0.0 (https://apifox.com)","errors":"","cost":0}
+{"level":"INFO","time":"2025-02-22T13:38:18.047+0800","caller":"middleware/logger.go:36","msg":"/api/base/captcha","status":200,"method":"POST","path":"/api/base/captcha","query":"","ip":"::1","user-agent":"Apifox/1.0.0 (https://apifox.com)","errors":"","cost":0.0015634}
+{"level":"INFO","time":"2025-02-22T13:38:44.735+0800","caller":"middleware/logger.go:36","msg":"/api/base/sendEmailVerificationCode","status":200,"method":"POST","path":"/api/base/sendEmailVerificationCode","query":"","ip":"::1","user-agent":"Apifox/1.0.0 (https://apifox.com)","errors":"","cost":0.87334}
+{"level":"INFO","time":"2025-02-22T13:38:58.422+0800","caller":"middleware/logger.go:36","msg":"/api/user/register","status":200,"method":"POST","path":"/api/user/register","query":"","ip":"::1","user-agent":"Apifox/1.0.0 (https://apifox.com)","errors":"","cost":0.0606895}
+{"level":"INFO","time":"2025-02-22T13:41:23.784+0800","caller":"flag/enter.go:62","msg":"Successfully created table structure"}
+{"level":"INFO","time":"2025-02-22T13:41:48.460+0800","caller":"flag/enter.go:103","msg":"Successfully created an administrator"}
+{"level":"INFO","time":"2025-02-22T13:42:25.228+0800","caller":"initialize/corn.go:18","msg":"start","keysAndValues":null}
+{"level":"INFO","time":"2025-02-22T13:42:25.236+0800","caller":"core/server.go:25","msg":"server run success on ","address":"0.0.0.0:8080"}
+{"level":"INFO","time":"2025-02-22T13:42:48.988+0800","caller":"middleware/logger.go:36","msg":"/api/base/captcha","status":200,"method":"POST","path":"/api/base/captcha","query":"","ip":"::1","user-agent":"Apifox/1.0.0 (https://apifox.com)","errors":"","cost":0.0016121}
+{"level":"INFO","time":"2025-02-22T13:44:00.930+0800","caller":"middleware/logger.go:36","msg":"/api/base/sendEmailVerificationCode","status":200,"method":"POST","path":"/api/base/sendEmailVerificationCode","query":"","ip":"::1","user-agent":"Apifox/1.0.0 (https://apifox.com)","errors":"","cost":0.9014957}
+{"level":"INFO","time":"2025-02-22T13:44:39.378+0800","caller":"middleware/logger.go:36","msg":"/api/user/register","status":200,"method":"POST","path":"/api/user/register","query":"","ip":"::1","user-agent":"Apifox/1.0.0 (https://apifox.com)","errors":"","cost":0.0587584}

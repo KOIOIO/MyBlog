@@ -1,12 +1,13 @@
-package utills
+package utils
 
 import (
 	"crypto/tls"
 	"fmt"
-	"github.com/jordan-wright/email"
 	"net/smtp"
 	"server/global"
 	"strings"
+
+	"github.com/jordan-wright/email"
 )
 
 // Email 发送电子邮件

@@ -1,24 +1,25 @@
 package initialize
 
 import (
-	"github.com/songzhibin97/gkit/cache/local_cache"
-	"go.uber.org/zap"
 	"os"
 	"server/global"
-	"server/utills"
+	"server/utils"
+
+	"github.com/songzhibin97/gkit/cache/local_cache"
+	"go.uber.org/zap"
 )
 
 // OtherInit 执行其他配置初始化
 func OtherInit() {
 	// 解析刷新令牌过期时间
-	refreshTokenExpiry, err := utills.ParseDuration(global.Config.Jwt.RefreshTokenExpiryTime)
+	refreshTokenExpiry, err := utils.ParseDuration(global.Config.Jwt.RefreshTokenExpiryTime)
 	if err != nil {
 		global.Log.Error("Failed to parse refresh token expiry time configuration:", zap.Error(err))
 		os.Exit(1)
 	}
 
 	// 解析访问令牌过期时间
-	_, err = utills.ParseDuration(global.Config.Jwt.AccessTokenExpiryTime)
+	_, err = utils.ParseDuration(global.Config.Jwt.AccessTokenExpiryTime)
 	if err != nil {
 		global.Log.Error("Failed to parse access token expiry time configuration:", zap.Error(err))
 		os.Exit(1)

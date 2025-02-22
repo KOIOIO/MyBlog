@@ -1,11 +1,12 @@
 package initialize
 
 import (
+	"os"
+	"server/global"
+
 	"github.com/elastic/elastic-transport-go/v8/elastictransport"
 	"github.com/elastic/go-elasticsearch/v8"
 	"go.uber.org/zap"
-	"os"
-	"server/global"
 )
 
 // ConnectEs 初始化并返回一个配置好的 Elasticsearch 客户端

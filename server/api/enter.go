@@ -10,4 +10,6 @@ type ApiGroup struct {
 var ApiGroupApp = new(ApiGroup)
 
 var baseService = service.ServiceGroupApp.BaseService
-var UserService = service.ServiceGroupApp.UserService
+var userService = service.ServiceGroupApp.UserService
+var qqService = service.ServiceGroupApp.QQService
+var jwtService = service.ServiceGroupApp.JwtService

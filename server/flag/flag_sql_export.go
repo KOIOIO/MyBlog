@@ -8,11 +8,14 @@ import (
 	"time"
 )
 
+// SQLExport 导出 MySQL 数据
 func SQLExport() error {
-	mysqlCfg := global.Config.Mysql
+	mysql := global.Config.Mysql
+
 	timer := time.Now().Format("20060102")
 	sqlPath := fmt.Sprintf("mysql_%s.sql", timer)
-	cmd := exec.Command("docker", "exec", "mysql", "mysqldump", "-u"+mysqlCfg.Username, "-p"+mysqlCfg.Password, mysqlCfg.DBName)
+	cmd := exec.Command("docker", "exec", "mysql", "mysqldump", "-u"+mysql.Username, "-p"+mysql.Password, mysql.DBName)
+
 	outFile, err := os.Create(sqlPath)
 	if err != nil {
 		return err

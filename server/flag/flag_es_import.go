@@ -3,14 +3,15 @@ package flag
 import (
 	"context"
 	"encoding/json"
-	"github.com/elastic/go-elasticsearch/v8/typedapi/core/bulk"
-	"github.com/elastic/go-elasticsearch/v8/typedapi/types"
-	"github.com/elastic/go-elasticsearch/v8/typedapi/types/enums/refresh"
 	"os"
 	"server/global"
 	"server/model/elasticsearch"
 	"server/model/other"
 	"server/service"
+
+	"github.com/elastic/go-elasticsearch/v8/typedapi/core/bulk"
+	"github.com/elastic/go-elasticsearch/v8/typedapi/types"
+	"github.com/elastic/go-elasticsearch/v8/typedapi/types/enums/refresh"
 )
 
 // ElasticsearchImport 从指定的 JSON 文件导入数据到 ES

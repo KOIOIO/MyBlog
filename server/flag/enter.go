@@ -3,64 +3,63 @@ package flag
 import (
 	"errors"
 	"fmt"
-	"github.com/urfave/cli"
-	"go.uber.org/zap"
 	"os"
 	"server/global"
+
+	"github.com/urfave/cli"
+	"go.uber.org/zap"
 )
 
-// sqlFlag 用于定义初始化MySQL数据库表结构的命令行标志
+// 定义 CLI 标志，用于不同操作的命令行选项
 var (
-	sqlFalg = &cli.BoolFlag{
+	sqlFlag = &cli.BoolFlag{
 		Name:  "sql",
-		Usage: "Initialize the structure of the MySQL database table",
+		Usage: "Initializes the srtucture of the MySQL database table.",
 	}
-	// sqlExportFlag 用于定义导出SQL数据到指定文件的命令行标志
 	sqlExportFlag = &cli.BoolFlag{
 		Name:  "sql-export",
 		Usage: "Exports SQL data to a specified file.",
 	}
-	// sqlImportFlag 用于定义从指定文件导入SQL数据的命令行标志
 	sqlImportFlag = &cli.StringFlag{
 		Name:  "sql-import",
 		Usage: "Imports SQL data from a specified file.",
 	}
-	// esFlag 用于定义初始化Elasticsearch索引的命令行标志
 	esFlag = &cli.BoolFlag{
 		Name:  "es",
 		Usage: "Initializes the Elasticsearch index.",
 	}
-	// esExportFlag 用于定义从Elasticsearch导出数据到指定文件的命令行标志
 	esExportFlag = &cli.BoolFlag{
 		Name:  "es-export",
 		Usage: "Exports data from Elasticsearch to a specified file.",
 	}
-	// esImportFlag 用于定义从指定文件导入数据到Elasticsearch的命令行标志
 	esImportFlag = &cli.StringFlag{
 		Name:  "es-import",
 		Usage: "Imports data into Elasticsearch from a specified file.",
 	}
-	// adminFlag 用于定义根据config.yaml中的信息创建管理员的命令行标志
 	adminFlag = &cli.BoolFlag{
 		Name:  "admin",
 		Usage: "Creates an administrator using the name, email and address specified in the config.yaml file.",
 	}
 )
 
-// Run 处理命令行标志的逻辑
-// c 是cli.Context类型，包含命令行的上下文信息
+// Run 执行基于命令行标志的相应操作
+// 它处理不同的标志，执行相应操作，并记录成功或错误的消息
 func Run(c *cli.Context) {
+	// 检查是否设置了多个标志
 	if c.NumFlags() > 1 {
-		err := cli.NewExitError("Only one flag is allowed", 1)
-		global.Log.Error("Failed to initialize the command line interface", zap.Error(err))
+		err := cli.NewExitError("Only one command can be specified", 1)
+		global.Log.Error("Invalid command usage:", zap.Error(err))
 		os.Exit(1)
 	}
+
+	// 根据不同的标志选择执行的操作
 	switch {
-	case c.Bool(sqlFalg.Name):
+	case c.Bool(sqlFlag.Name):
 		if err := SQL(); err != nil {
-			global.Log.Error("Failed to initialize the structure of the MySQL database table", zap.Error(err))
+			global.Log.Error("Failed to create table structure:", zap.Error(err))
+			return
 		} else {
-			global.Log.Info("Successfully initialized the structure of the MySQL database table")
+			global.Log.Info("Successfully created table structure")
 		}
 	case c.Bool(sqlExportFlag.Name):
 		if err := SQLExport(); err != nil {
@@ -104,17 +103,17 @@ func Run(c *cli.Context) {
 			global.Log.Info("Successfully created an administrator")
 		}
 	default:
-		err := cli.NewExitError("Unknow commend", 1)
+		err := cli.NewExitError("unknown command", 1)
 		global.Log.Error(err.Error(), zap.Error(err))
 	}
 }
 
-// NewApp 创建并返回一个新的cli.App实例
+// NewApp 创建并配置一个新的 CLI 应用程序，设置标志和默认操作
 func NewApp() *cli.App {
 	app := cli.NewApp()
-	app.Name = "Blog of Xiaoyu_Wang"
+	app.Name = "Go Blog"
 	app.Flags = []cli.Flag{
-		sqlFalg,
+		sqlFlag,
 		sqlExportFlag,
 		sqlImportFlag,
 		esFlag,
@@ -126,17 +125,17 @@ func NewApp() *cli.App {
 	return app
 }
 
-// InitFlag 初始化命令行标志
+// InitFlag 初始化并运行 CLI 应用程序
 func InitFlag() {
 	if len(os.Args) > 1 {
 		app := NewApp()
 		err := app.Run(os.Args)
 		if err != nil {
-			global.Log.Error("Failed to initialize the command line interface", zap.Error(err))
+			global.Log.Error("Application execution encountered an error:", zap.Error(err))
 			os.Exit(1)
 		}
 		if os.Args[1] == "-h" || os.Args[1] == "-help" {
-			fmt.Println("Display help information...")
+			fmt.Println("Displaying help message...")
 		}
 		os.Exit(0)
 	}

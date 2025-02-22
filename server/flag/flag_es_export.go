@@ -4,12 +4,13 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/elastic/go-elasticsearch/v8/typedapi/types"
 	"os"
 	"server/global"
 	"server/model/elasticsearch"
 	"server/model/other"
 	"time"
+
+	"github.com/elastic/go-elasticsearch/v8/typedapi/types"
 )
 
 // ElasticsearchExport 导出 ES 中的数据到 JSON 文件

@@ -1,10 +1,11 @@
 package initialize
 
 import (
-	"github.com/go-redis/redis"
-	"go.uber.org/zap"
 	"os"
 	"server/global"
+
+	"github.com/go-redis/redis"
+	"go.uber.org/zap"
 )
 
 // ConnectRedis 初始化并返回一个 Redis 客户端，支持集群或单节点配置

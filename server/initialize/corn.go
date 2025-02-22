@@ -1,11 +1,12 @@
 package initialize
 
 import (
-	"github.com/robfig/cron/v3"
-	"go.uber.org/zap"
 	"os"
 	"server/global"
 	"server/task"
+
+	"github.com/robfig/cron/v3"
+	"go.uber.org/zap"
 )
 
 // ZapLogger 结构体实现了 cron.Logger 接口的 Info 和 Error 方法，这些方法用于接收 cron 包生成的日志并使用 zap 进行记录

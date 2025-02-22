@@ -7,7 +7,7 @@ import (
 	"server/global"
 	"server/model/appTypes"
 	"server/model/database"
-	"server/utills"
+	"server/utils"
 	"syscall"
 
 	"github.com/gofrs/uuid"
@@ -68,7 +68,7 @@ func Admin() error {
 	// 填充用户数据
 	user.UUID = uuid.Must(uuid.NewV4())
 	user.Username = global.Config.Website.Name
-	user.Password = utills.BcryptHash(password)
+	user.Password = utils.BcryptHash(password)
 	user.RoleID = appTypes.Admin
 	user.Avatar = "/image/avatar.jpg"
 	user.Address = global.Config.Website.Address

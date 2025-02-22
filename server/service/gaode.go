@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"server/global"
 	"server/model/other"
-	"server/utills"
+	"server/utils"
 )
 
 // JwtService 提供与高德相关的服务
@@ -24,7 +24,7 @@ func (gaodeService *GaodeService) GetLocationByIP(ip string) (other.IPResponse, 
 		"ip":  ip,
 		"key": key,
 	}
-	res, err := utills.HttpRequest(urlStr, method, nil, params, nil)
+	res, err := utils.HttpRequest(urlStr, method, nil, params, nil)
 	if err != nil {
 		return data, err
 	}
@@ -56,7 +56,7 @@ func (gaodeService *GaodeService) GetWeatherByAdcode(adcode string) (other.Live,
 		"city": adcode,
 		"key":  key,
 	}
-	res, err := utills.HttpRequest(urlStr, method, nil, params, nil)
+	res, err := utils.HttpRequest(urlStr, method, nil, params, nil)
 	if err != nil {
 		return other.Live{}, err
 	}

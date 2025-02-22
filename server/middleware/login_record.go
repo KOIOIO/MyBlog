@@ -1,12 +1,13 @@
 package middleware
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/ua-parser/uap-go/uaparser"
-	"go.uber.org/zap"
 	"server/global"
 	"server/model/database"
 	"server/service"
+
+	"github.com/gin-gonic/gin"
+	"github.com/ua-parser/uap-go/uaparser"
+	"go.uber.org/zap"
 )
 
 // LoginRecord 是一个中间件，用于记录登录日志

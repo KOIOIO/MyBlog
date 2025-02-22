@@ -1,9 +1,10 @@
 package database
 
 import (
-	"github.com/gofrs/uuid"
 	"server/global"
 	"server/model/appTypes"
+
+	"github.com/gofrs/uuid"
 )
 
 // User 用户表

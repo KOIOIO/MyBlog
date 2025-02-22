@@ -1,8 +1,9 @@
 package database
 
 import (
-	"github.com/gofrs/uuid"
 	"server/global"
+
+	"github.com/gofrs/uuid"
 )
 
 // Feedback 反馈表

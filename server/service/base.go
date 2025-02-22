@@ -1,19 +1,22 @@
 package service
 
 import (
+	"server/global"
+	"server/utils"
+	"time"
+
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
-	"server/global"
-	"server/utills"
-	"time"
 )
 
 type BaseService struct {
 }
 
 func (baseService *BaseService) SendEmailVerificationCode(c *gin.Context, to string) error {
-	verificationCode := utills.GenerateVerificationCode(6)
+	verificationCode := utils.GenerateVerificationCode(6)
 	expireTime := time.Now().Add(5 * time.Minute).Unix()
+
+	// 将验证码、验证邮箱、过期时间存入会话中
 	session := sessions.Default(c)
 	session.Set("verification_code", verificationCode)
 	session.Set("email", to)
@@ -37,6 +40,7 @@ func (baseService *BaseService) SendEmailVerificationCode(c *gin.Context, to str
 		global.Config.Website.Title + `<br/>
 <br/>`
 
-	_ = utills.Email(to, subject, body)
+	_ = utils.Email(to, subject, body)
+
 	return nil
 }

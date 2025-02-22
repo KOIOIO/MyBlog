@@ -1,30 +1,30 @@
-package utills
+package utils
 
 import (
 	"errors"
-	"github.com/golang-jwt/jwt/v4"
 	"server/global"
 	"server/model/request"
 	"time"
+
+	"github.com/golang-jwt/jwt/v4"
 )
 
 type JWT struct {
-	AccessTokenSecret  []byte // Access Token 的密钥
-	RefreshTokenSecret []byte // Refresh Token 的密钥
+	AccessTokenSecret  []byte
+	RefreshTokenSecret []byte
 }
 
 var (
-	TokenExpired     = errors.New("token is expired")           // Token 已过期
-	TokenNotValidYet = errors.New("token not active yet")       // Token 还不可用
-	TokenMalformed   = errors.New("that's not even a token")    // Token 格式错误
-	TokenInvalid     = errors.New("couldn't handle this token") // Token 无效
+	TokenExpired     = errors.New("token is expired")
+	TokenNotValidYet = errors.New("token not active yet")
+	TokenMalformed   = errors.New("that's not even a token")
+	TokenInvalid     = errors.New("couldn't handle this token")
 )
 
-// NewJWT 创建一个新的 JWT 实例，初始化 AccessToken 和 RefreshToken 密钥
 func NewJWT() *JWT {
 	return &JWT{
-		AccessTokenSecret:  []byte(global.Config.Jwt.AccessTokenSecret),  // 从全局配置加载 AccessToken 密钥
-		RefreshTokenSecret: []byte(global.Config.Jwt.RefreshTokenSecret), // 从全局配置加载 RefreshToken 密钥
+		AccessTokenSecret:  []byte(global.Config.Jwt.AccessTokenSecret),
+		RefreshTokenSecret: []byte(global.Config.Jwt.RefreshTokenSecret),
 	}
 }
 
