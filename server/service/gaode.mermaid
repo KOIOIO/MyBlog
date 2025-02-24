@@ -1,0 +1,24 @@
+flowchart TD
+    subgraph GetLocationByIP
+    A[开始] --> B{构建请求参数}
+    B --> C[发起HTTP请求]
+    C -->|成功| D{检查状态码}
+    D -->|200| E[读取响应体]
+    E --> F{解析JSON数据}
+    F --> G[返回结果]
+    D -->|非200| H[返回错误]
+    C -->|失败| H
+    end
+
+    subgraph GetWeatherByAdcode
+    I[开始] --> J{构建请求参数}
+    J --> K[发起HTTP请求]
+    K -->|成功| L{检查状态码}
+    L -->|200| M[读取响应体]
+    M --> N{解析JSON数据}
+    N --> O{检查天气数据}
+    O -->|有数据| P[返回当天天气]
+    O -->|无数据| Q[返回错误]
+    L -->|非200| R[返回错误]
+    K -->|失败| R
+    end
