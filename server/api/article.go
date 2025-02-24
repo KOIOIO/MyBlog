@@ -9,10 +9,13 @@ import (
 	"server/utils"
 )
 
+// ArticleApi 结构体定义文章相关的API接口
 type ArticleApi struct {
 }
 
-// ArticleInfoByID 根据文章id获取文章内容
+// ArticleInfoByID 根据文章ID获取文章详细信息
+// @param c *gin.Context
+// @return 通过response包封装返回结果
 func (articleApi *ArticleApi) ArticleInfoByID(c *gin.Context) {
 	var req request.ArticleInfoByID
 	err := c.ShouldBindUri(&req)
@@ -30,7 +33,9 @@ func (articleApi *ArticleApi) ArticleInfoByID(c *gin.Context) {
 	response.OkWithData(article, c)
 }
 
-// ArticleSearch 文章搜索
+// ArticleSearch 文章搜索接口，根据关键词搜索文章
+// @param c *gin.Context
+// @return 通过response包封装返回结果
 func (articleApi *ArticleApi) ArticleSearch(c *gin.Context) {
 	var info request.ArticleSearch
 	err := c.ShouldBindQuery(&info)
@@ -52,6 +57,8 @@ func (articleApi *ArticleApi) ArticleSearch(c *gin.Context) {
 }
 
 // ArticleCategory 获取所有文章类别及数量
+// @param c *gin.Context
+// @return 通过response包封装返回结果
 func (articleApi *ArticleApi) ArticleCategory(c *gin.Context) {
 	category, err := articleService.ArticleCategory()
 	if err != nil {
@@ -63,6 +70,8 @@ func (articleApi *ArticleApi) ArticleCategory(c *gin.Context) {
 }
 
 // ArticleTags 获取所有文章标签及数量
+// @param c *gin.Context
+// @return 通过response包封装返回结果
 func (articleApi *ArticleApi) ArticleTags(c *gin.Context) {
 	tags, err := articleService.ArticleTags()
 	if err != nil {
@@ -73,7 +82,9 @@ func (articleApi *ArticleApi) ArticleTags(c *gin.Context) {
 	response.OkWithData(tags, c)
 }
 
-// ArticleLike 文章收藏操作，收藏文章或者取消收藏
+// ArticleLike 文章收藏操作，用户可以收藏或取消收藏文章
+// @param c *gin.Context
+// @return 通过response包封装返回结果
 func (articleApi *ArticleApi) ArticleLike(c *gin.Context) {
 	var req request.ArticleLike
 	err := c.ShouldBindJSON(&req)
@@ -93,6 +104,8 @@ func (articleApi *ArticleApi) ArticleLike(c *gin.Context) {
 }
 
 // ArticleIsLike 返回文章收藏状态，用户是否收藏该文章
+// @param c *gin.Context
+// @return 通过response包封装返回结果
 func (articleApi *ArticleApi) ArticleIsLike(c *gin.Context) {
 	var req request.ArticleLike
 	err := c.ShouldBindQuery(&req)
@@ -112,6 +125,8 @@ func (articleApi *ArticleApi) ArticleIsLike(c *gin.Context) {
 }
 
 // ArticleLikesList 获取文章收藏列表
+// @param c *gin.Context
+// @return 通过response包封装返回结果
 func (articleApi *ArticleApi) ArticleLikesList(c *gin.Context) {
 	var pageInfo request.ArticleLikesList
 	err := c.ShouldBindQuery(&pageInfo)
@@ -134,6 +149,8 @@ func (articleApi *ArticleApi) ArticleLikesList(c *gin.Context) {
 }
 
 // ArticleCreate 发布文章
+// @param c *gin.Context
+// @return 通过response包封装返回结果
 func (articleApi *ArticleApi) ArticleCreate(c *gin.Context) {
 	var req request.ArticleCreate
 	err := c.ShouldBindJSON(&req)
@@ -152,6 +169,8 @@ func (articleApi *ArticleApi) ArticleCreate(c *gin.Context) {
 }
 
 // ArticleDelete 删除文章
+// @param c *gin.Context
+// @return 通过response包封装返回结果
 func (articleApi *ArticleApi) ArticleDelete(c *gin.Context) {
 	var req request.ArticleDelete
 	err := c.ShouldBindJSON(&req)
@@ -170,6 +189,8 @@ func (articleApi *ArticleApi) ArticleDelete(c *gin.Context) {
 }
 
 // ArticleUpdate 更新文章
+// @param c *gin.Context
+// @return 通过response包封装返回结果
 func (articleApi *ArticleApi) ArticleUpdate(c *gin.Context) {
 	var req request.ArticleUpdate
 	err := c.ShouldBindJSON(&req)
@@ -188,6 +209,8 @@ func (articleApi *ArticleApi) ArticleUpdate(c *gin.Context) {
 }
 
 // ArticleList 获取文章列表
+// @param c *gin.Context
+// @return 通过response包封装返回结果
 func (articleApi *ArticleApi) ArticleList(c *gin.Context) {
 	var pageInfo request.ArticleList
 	err := c.ShouldBindQuery(&pageInfo)
