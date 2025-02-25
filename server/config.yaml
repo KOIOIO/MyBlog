@@ -64,7 +64,7 @@ upload:
     size: 20
     path: uploads
 website:
-    logo: ""
+    logo: "/uploads/image/cdf293b1faca6fd3676edcd93997e8b0-20250222192745.png"
     full_logo: ""
     title: Xiaoyu_Wangのblog
     slogan: Xiaoyu_Wangのblog
