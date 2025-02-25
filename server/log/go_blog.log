@@ -182,3 +182,16 @@
 {"level":"INFO","time":"2025-02-25T16:17:33.289+0800","caller":"middleware/logger.go:36","msg":"/api/config/website","status":200,"method":"GET","path":"/api/config/website","query":"","ip":"::1","user-agent":"Apifox/1.0.0 (https://apifox.com)","errors":"","cost":0.0027137}
 {"level":"INFO","time":"2025-02-25T16:17:53.333+0800","caller":"middleware/logger.go:36","msg":"/api/config/website","status":200,"method":"PUT","path":"/api/config/website","query":"","ip":"::1","user-agent":"Apifox/1.0.0 (https://apifox.com)","errors":"","cost":0.0489405}
 {"level":"INFO","time":"2025-02-25T16:18:19.177+0800","caller":"middleware/logger.go:36","msg":"/api/config/qq","status":200,"method":"GET","path":"/api/config/qq","query":"","ip":"::1","user-agent":"Apifox/1.0.0 (https://apifox.com)","errors":"","cost":0.0024073}
+{"level":"INFO","time":"2025-02-25T16:30:51.897+0800","caller":"initialize/corn.go:18","msg":"start","keysAndValues":null}
+{"level":"INFO","time":"2025-02-25T16:30:51.898+0800","caller":"initialize/corn.go:18","msg":"schedule","keysAndValues":["now","2025-02-25T16:30:51.898458+08:00","entry",1,"next","2025-02-25T17:00:00+08:00"]}
+{"level":"INFO","time":"2025-02-25T16:30:51.898+0800","caller":"initialize/corn.go:18","msg":"schedule","keysAndValues":["now","2025-02-25T16:30:51.898458+08:00","entry",2,"next","2025-02-25T17:00:00+08:00"]}
+{"level":"INFO","time":"2025-02-25T16:30:51.898+0800","caller":"initialize/corn.go:18","msg":"schedule","keysAndValues":["now","2025-02-25T16:30:51.898458+08:00","entry",3,"next","2025-02-26T00:00:00+08:00"]}
+{"level":"INFO","time":"2025-02-25T16:30:51.904+0800","caller":"core/server.go:25","msg":"server run success on ","address":"0.0.0.0:8080"}
+{"level":"INFO","time":"2025-02-25T17:00:00.012+0800","caller":"initialize/corn.go:18","msg":"wake","keysAndValues":["now","2025-02-25T17:00:00.0122562+08:00"]}
+{"level":"INFO","time":"2025-02-25T17:00:00.012+0800","caller":"initialize/corn.go:18","msg":"run","keysAndValues":["now","2025-02-25T17:00:00.0122562+08:00","entry",1,"next","2025-02-25T18:00:00+08:00"]}
+{"level":"INFO","time":"2025-02-25T17:00:00.012+0800","caller":"initialize/corn.go:18","msg":"run","keysAndValues":["now","2025-02-25T17:00:00.0122562+08:00","entry",2,"next","2025-02-25T18:00:00+08:00"]}
+{"level":"INFO","time":"2025-02-25T17:16:13.535+0800","caller":"initialize/corn.go:18","msg":"start","keysAndValues":null}
+{"level":"INFO","time":"2025-02-25T17:16:13.536+0800","caller":"initialize/corn.go:18","msg":"schedule","keysAndValues":["now","2025-02-25T17:16:13.5366676+08:00","entry",1,"next","2025-02-25T18:00:00+08:00"]}
+{"level":"INFO","time":"2025-02-25T17:16:13.536+0800","caller":"initialize/corn.go:18","msg":"schedule","keysAndValues":["now","2025-02-25T17:16:13.5366676+08:00","entry",2,"next","2025-02-25T18:00:00+08:00"]}
+{"level":"INFO","time":"2025-02-25T17:16:13.536+0800","caller":"initialize/corn.go:18","msg":"schedule","keysAndValues":["now","2025-02-25T17:16:13.5366676+08:00","entry",3,"next","2025-02-26T00:00:00+08:00"]}
+{"level":"INFO","time":"2025-02-25T17:16:13.551+0800","caller":"core/server.go:25","msg":"server run success on ","address":"0.0.0.0:8080"}
