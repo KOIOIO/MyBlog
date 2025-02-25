@@ -1,0 +1,2115 @@
+{
+  "info": {
+    "_postman_id": "6f732db8-f702-4156-8616-bfea55113e14",
+    "name": "go_blog",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "29975670"
+  },
+  "item": [
+    {
+      "name": "base",
+      "item": [
+        {
+          "name": "captcha",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{go_blog_url}}/api/base/captcha",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "base",
+                "captcha"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "sendEmailVerificationCode",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"\",\r\n    \"captcha\": \"\",\r\n    \"captcha_id\": \"\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{go_blog_url}}/api/base/sendEmailVerificationCode",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "base",
+                "sendEmailVerificationCode"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "qqLoginURL",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{go_blog_url}}/api/base/qqLoginURL",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "base",
+                "qqLoginURL"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "user",
+      "item": [
+        {
+          "name": "register",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"username\": \"\",\r\n    \"password\": \"\",\r\n    \"email\": \"\",\r\n    \"verification_code\": \"\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{go_blog_url}}/api/user/register",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "user",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "login",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"\",\r\n    \"password\": \"\",\r\n    \"captcha\": \"\",\r\n    \"captcha_id\": \"\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{go_blog_url}}/api/user/login",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "user",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "forgotPassword",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"\",\r\n    \"verification_code\": \"\",\r\n    \"new_password\": \"\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{go_blog_url}}/api/user/forgotPassword",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "user",
+                "forgotPassword"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "card",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{go_blog_url}}/api/user/card?uuid",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "user",
+                "card"
+              ],
+              "query": [
+                {
+                  "key": "uuid",
+                  "value": null
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "logout",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{go_blog_url}}/api/user/logout",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "user",
+                "logout"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "resetPassword",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"password\": \"\",\r\n    \"new_password\": \"\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{go_blog_url}}/api/user/resetPassword",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "user",
+                "resetPassword"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "info",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{go_blog_url}}/api/user/info",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "user",
+                "info"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "changeInfo",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"username\": \"\",\r\n    \"address\": \"\",\r\n    \"signature\": \"\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{go_blog_url}}/api/user/changeInfo",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "user",
+                "changeInfo"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "weather",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{go_blog_url}}/api/user/weather",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "user",
+                "weather"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "chart",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{go_blog_url}}/api/user/chart?date=7",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "user",
+                "chart"
+              ],
+              "query": [
+                {
+                  "key": "date",
+                  "value": "7"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "list",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{go_blog_url}}/api/user/list?page=1&page_size=10",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "user",
+                "list"
+              ],
+              "query": [
+                {
+                  "key": "uuid",
+                  "value": "",
+                  "disabled": true
+                },
+                {
+                  "key": "register",
+                  "value": null,
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "page_size",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "freeze",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"id\": 0\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{go_blog_url}}/api/user/freeze",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "user",
+                "freeze"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "unfreeze",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"id\": 0\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{go_blog_url}}/api/user/unfreeze",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "user",
+                "unfreeze"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "loginList",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{go_blog_url}}/api/user/loginList?page=1&page_size=10",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "user",
+                "loginList"
+              ],
+              "query": [
+                {
+                  "key": "uuid",
+                  "value": null,
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "page_size",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "image",
+      "item": [
+        {
+          "name": "upload",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{go_blog_url}}/api/image/upload",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "image",
+                "upload"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "delete",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"ids\": []\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{go_blog_url}}/api/image/delete",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "image",
+                "delete"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "list",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{go_blog_url}}/api/image/list?page=1&page_size=10",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "image",
+                "list"
+              ],
+              "query": [
+                {
+                  "key": "name",
+                  "value": null,
+                  "disabled": true
+                },
+                {
+                  "key": "category",
+                  "value": null,
+                  "disabled": true
+                },
+                {
+                  "key": "storage",
+                  "value": null,
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "page_size",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "article",
+      "item": [
+        {
+          "name": ":id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{go_blog_url}}/api/article/:id",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "article",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "search",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{go_blog_url}}/api/article/search?query&category&tag&sort&order=desc&page=1&page_size=10",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "article",
+                "search"
+              ],
+              "query": [
+                {
+                  "key": "query",
+                  "value": null
+                },
+                {
+                  "key": "category",
+                  "value": null
+                },
+                {
+                  "key": "tag",
+                  "value": null
+                },
+                {
+                  "key": "sort",
+                  "value": null
+                },
+                {
+                  "key": "order",
+                  "value": "desc"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "page_size",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "category",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{go_blog_url}}/api/article/category",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "article",
+                "category"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "tags",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{go_blog_url}}/api/article/tags",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "article",
+                "tags"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "like",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"article_id\": \"\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{go_blog_url}}/api/article/like",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "article",
+                "like"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "isLike",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{go_blog_url}}/api/article/isLike?article_id",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "article",
+                "isLike"
+              ],
+              "query": [
+                {
+                  "key": "article_id",
+                  "value": null
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "likesList",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{go_blog_url}}/api/article/likesList?page=1&page_size=10",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "article",
+                "likesList"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "page_size",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "create",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"cover\": \"\",\r\n    \"title\": \"\",\r\n    \"category\": \"\",\r\n    \"tags\": [],\r\n    \"abstract\": \"\",\r\n    \"content\": \"\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{go_blog_url}}/api/article/create",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "article",
+                "create"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "delete",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"ids\": []\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{go_blog_url}}/api/article/delete",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "article",
+                "delete"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "update",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"id\": \"\",\r\n    \"cover\": \"\",\r\n    \"title\": \"\",\r\n    \"category\": \"\",\r\n    \"tags\": [],\r\n    \"abstract\": \"\",\r\n    \"content\": \"\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{go_blog_url}}/api/article/update",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "article",
+                "update"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "list",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{go_blog_url}}/api/article/list?page=1&page_size=10",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "article",
+                "list"
+              ],
+              "query": [
+                {
+                  "key": "title",
+                  "value": null,
+                  "disabled": true
+                },
+                {
+                  "key": "category",
+                  "value": null,
+                  "disabled": true
+                },
+                {
+                  "key": "abstract",
+                  "value": null,
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "page_size",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "comment",
+      "item": [
+        {
+          "name": ":article_id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{go_blog_url}}/api/comment/:article_id",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "comment",
+                ":article_id"
+              ],
+              "variable": [
+                {
+                  "key": "article_id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "new",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{go_blog_url}}/api/comment/new",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "comment",
+                "new"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "create",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"article_id\": \"\",\r\n    \"pid\": null,\r\n    \"content\": \"\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{go_blog_url}}/api/comment/create",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "comment",
+                "create"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "delete",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"ids\": []\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{go_blog_url}}/api/comment/delete",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "comment",
+                "delete"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "info",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{go_blog_url}}/api/comment/info",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "comment",
+                "info"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "list",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{go_blog_url}}/api/comment/list?page=1&page_size=10",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "comment",
+                "list"
+              ],
+              "query": [
+                {
+                  "key": "article_id",
+                  "value": null,
+                  "disabled": true
+                },
+                {
+                  "key": "user_uuid",
+                  "value": null,
+                  "disabled": true
+                },
+                {
+                  "key": "content",
+                  "value": null,
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "page_size",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "advertisement",
+      "item": [
+        {
+          "name": "info",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{go_blog_url}}/api/advertisement/info",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "advertisement",
+                "info"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "create",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"ad_image\": \"\",\r\n    \"link\": \"\",\r\n    \"title\": \"\",\r\n    \"content\": \"\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{go_blog_url}}/api/advertisement/create",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "advertisement",
+                "create"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "delete",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"ids\": []\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{go_blog_url}}/api/advertisement/delete",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "advertisement",
+                "delete"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "update",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"id\": 0,\r\n    \"link\": \"\",\r\n    \"title\": \"\",\r\n    \"content\": \"\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{go_blog_url}}/api/advertisement/update",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "advertisement",
+                "update"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "list",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{go_blog_url}}/api/advertisement/list?page=1&page_size=10",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "advertisement",
+                "list"
+              ],
+              "query": [
+                {
+                  "key": "title",
+                  "value": null,
+                  "disabled": true
+                },
+                {
+                  "key": "content",
+                  "value": null,
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "page_size",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "friend_link",
+      "item": [
+        {
+          "name": "info",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{go_blog_url}}/api/friendLink/info",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "friendLink",
+                "info"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "create",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"logo\": \"\",\r\n    \"link\": \"\",\r\n    \"name\": \"\",\r\n    \"description\": \"\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{go_blog_url}}/api/friendLink/create",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "friendLink",
+                "create"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "delete",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"ids\": []\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{go_blog_url}}/api/friendLink/delete",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "friendLink",
+                "delete"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "update",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"id\": 0,\r\n    \"link\": \"\",\r\n    \"name\": \"\",\r\n    \"description\": \"\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{go_blog_url}}/api/friendLink/update",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "friendLink",
+                "update"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "list",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{go_blog_url}}/api/friendLink/list?page=1&page_size=10",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "friendLink",
+                "list"
+              ],
+              "query": [
+                {
+                  "key": "name",
+                  "value": "",
+                  "disabled": true
+                },
+                {
+                  "key": "description",
+                  "value": "",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "page_size",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "feedback",
+      "item": [
+        {
+          "name": "new",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{go_blog_url}}/api/feedback/new",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "feedback",
+                "new"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "create",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"content\": \"\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{go_blog_url}}/api/feedback/create",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "feedback",
+                "create"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "info",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{go_blog_url}}/api/feedback/info",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "feedback",
+                "info"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "delete",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"ids\": []\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{go_blog_url}}/api/feedback/delete",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "feedback",
+                "delete"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "reply",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"id\": 0,\r\n    \"reply\": \"\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{go_blog_url}}/api/feedback/reply",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "feedback",
+                "reply"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "list",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{go_blog_url}}/api/feedback/list?page=1&page_size=10",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "feedback",
+                "list"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "page_size",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "website",
+      "item": [
+        {
+          "name": "logo",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{go_blog_url}}/api/website/logo",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "website",
+                "logo"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "title",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{go_blog_url}}/api/website/title",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "website",
+                "title"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "info",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{go_blog_url}}/api/website/info",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "website",
+                "info"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "carousel",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{go_blog_url}}/api/website/carousel",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "website",
+                "carousel"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "news",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{go_blog_url}}/api/website/news?source=baidu",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "website",
+                "news"
+              ],
+              "query": [
+                {
+                  "key": "source",
+                  "value": "baidu"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "calendar",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{go_blog_url}}/api/website/calendar",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "website",
+                "calendar"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "footerLink",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{go_blog_url}}/api/website/footerLink",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "website",
+                "footerLink"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "addCarousel",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"url\": \"\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{go_blog_url}}/api/website/addCarousel",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "website",
+                "addCarousel"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "cancelCarousel",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"url\": \"\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{go_blog_url}}/api/website/cancelCarousel",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "website",
+                "cancelCarousel"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "createFooterLink",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"title\": \"\",\r\n    \"link\": \"\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{go_blog_url}}/api/website/createFooterLink",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "website",
+                "createFooterLink"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "deleteFooterLink",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"title\": \"\",\r\n    \"link\": \"\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{go_blog_url}}/api/website/deleteFooterLink",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "website",
+                "deleteFooterLink"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "config",
+      "item": [
+        {
+          "name": "website",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{go_blog_url}}/api/config/website",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "config",
+                "website"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "website",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"logo\": \"\",\r\n    \"full_logo\": \"\",\r\n    \"title\": \"\",\r\n    \"slogan\": \"\",\r\n    \"slogan_en\": \"\",\r\n    \"description\": \"\",\r\n    \"version\": \"\",\r\n    \"created_at\": \"\",\r\n    \"icp_filing\": \"\",\r\n    \"public_security_filing\": \"\",\r\n    \"bilibili_url\": \"\",\r\n    \"gitee_url\": \"\",\r\n    \"github_url\": \"\",\r\n    \"name\": \"\",\r\n    \"job\": \"\",\r\n    \"address\": \"\",\r\n    \"email\": \"\",\r\n    \"qq_image\": \"\",\r\n    \"wechat_image\": \"\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{go_blog_url}}/api/config/website",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "config",
+                "website"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "system",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{go_blog_url}}/api/config/system",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "config",
+                "system"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "system",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"use_multipoint\": true,\r\n    \"sessions_secret\": \"\",\r\n    \"oss_type\": \"\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{go_blog_url}}/api/config/system",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "config",
+                "system"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "email",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{go_blog_url}}/api/config/email",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "config",
+                "email"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "email",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"host\": \"\",\r\n    \"port\": 465,\r\n    \"from\": \"\",\r\n    \"nickname\": \"\",\r\n    \"secret\": \"\",\r\n    \"is_ssl\": true\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{go_blog_url}}/api/config/email",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "config",
+                "email"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "qq",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{go_blog_url}}/api/config/qq",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "config",
+                "qq"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "qq",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"enable\": false,\r\n    \"app_id\": \"\",\r\n    \"app_key\": \"\",\r\n    \"redirect_uri\": \"\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{go_blog_url}}/api/config/qq",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "config",
+                "qq"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "qiniu",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{go_blog_url}}/api/config/qiniu",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "config",
+                "qiniu"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "qiniu",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"zone\": \"\",\r\n    \"bucket\": \"\",\r\n    \"img_path\": \"\",\r\n    \"access_key\": \"\",\r\n    \"secret_key\": \"\",\r\n    \"use_https\": true,\r\n    \"use_cdn_domains\": true\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{go_blog_url}}/api/config/qiniu",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "config",
+                "qiniu"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "jwt",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{go_blog_url}}/api/config/jwt",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "config",
+                "jwt"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "jwt",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"access_token_secret\": \"\",\r\n    \"refresh_token_secret\": \"\",\r\n    \"access_token_expiry_time\": \"\",\r\n    \"refresh_token_expiry_time\": \"\",\r\n    \"issuer\": \"\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{go_blog_url}}/api/config/jwt",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "config",
+                "jwt"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "gaode",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{go_blog_url}}/api/config/gaode",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "config",
+                "gaode"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "gaode",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"enable\": true,\r\n    \"key\": \"\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{go_blog_url}}/api/config/gaode",
+              "host": [
+                "{{go_blog_url}}"
+              ],
+              "path": [
+                "api",
+                "config",
+                "gaode"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
