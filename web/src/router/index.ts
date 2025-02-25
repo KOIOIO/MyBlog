@@ -1,4 +1,6 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import {createRouter, createWebHistory} from 'vue-router'
+import {useUserStore} from "@/stores/user";
+import {useLayoutStore} from "@/stores/layout";
 
 const routes = [
     {
@@ -315,3 +317,44 @@ const router = createRouter({
 })
 
 export default router
+
+router.beforeEach((to, from, next) => {
+    const userStore = useUserStore()
+    const layoutStore = useLayoutStore()
+    userStore.initializeUserInfo().then(() => {
+        const isAuthenticated = userStore.isLoggedIn // 检查用户是否登录的逻辑
+        const isAdmin = userStore.isAdmin // 检查用户是否为管理员的逻辑
+        if (to.matched.some(record => record.meta.requiresAuth)) {
+            if (!isAuthenticated) {
+                ElMessageBox.confirm(
+                    '登录已过期，需要重新登录，是否跳转到登录页？', 'Warning', {
+                        cancelButtonText: '取消',
+                        confirmButtonText: '确定',
+                        type: 'warning',
+                    })
+                    .then(() => {
+                        router.push({name: 'index', replace: true}).then(() => {
+                            layoutStore.state.popoverVisible = true;
+                            layoutStore.state.loginVisible = true;
+                        });
+                    })
+                    .catch(() => {
+                        router.push({name: from.name as string}).then();
+                    });
+            } else if (to.matched.some(record => record.meta.requiresAdmin) && !isAdmin) {
+                ElMessageBox.confirm(
+                    '权限不足，请确认您的用户角色是否具备访问该页面的权限。', 'Warning', {
+                        confirmButtonText: '确定',
+                        type: 'warning',
+                    })
+                    .then(() => {
+                        router.push({name: from.name as string}).then();
+                    });
+            } else {
+                next(); // 继续访问
+            }
+        } else {
+            next(); // 不需要登录，继续访问
+        }
+    })
+});

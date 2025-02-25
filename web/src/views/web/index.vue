@@ -1,18 +1,23 @@
 <template>
-{{ url }}
+  <div class="web">
+    <el-container>
+      <router-view/>
+      <el-footer>
+        <web-footer/>
+      </el-footer>
+    </el-container>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import {qqLoginURL} from "@/api/base.ts";
-const usr=ref
-const getUrl = async ()=>{
-  const res =await qqLoginURL()
-  if(res.code===0){
-    url.value=res.data
+import WebFooter from "@/components/layout/WebFooter.vue";
+</script>
+
+<style scoped lang="scss">
+.web {
+  .el-footer {
+    height: auto;
+    border: 1px solid #DCDFE6;
   }
 }
-</script>
-getUrl()
-<style scoped lang="scss">
 </style>

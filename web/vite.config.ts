@@ -11,32 +11,32 @@ let env: Record<keyof ImportMetaEnv, string> = loadEnv("", process.cwd())
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [
-    vue(),
-    AutoImport({
-      resolvers: [ElementPlusResolver()],
-    }),
-    Components({
-      resolvers: [ElementPlusResolver()],
-    }),
-  ],
-  resolve: {
-    alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
+    plugins: [
+        vue(),
+        AutoImport({
+            resolvers: [ElementPlusResolver()],
+        }),
+        Components({
+            resolvers: [ElementPlusResolver()],
+        }),
+    ],
+    resolve: {
+        alias: {
+            '@': fileURLToPath(new URL('./src', import.meta.url))
+        }
+    },
+    server: {
+        host: "0.0.0.0",
+        port: 80,
+        proxy: {
+            "/api": {
+                target: env.VITE_SERVER_URL,
+                changeOrigin: true
+            },
+            "/uploads": {
+                target: env.VITE_SERVER_URL,
+                changeOrigin: true,
+            },
+        }
     }
-  },
-  server: {
-    host: "0.0.0.0",
-    port: 5173,
-    proxy: {
-      "/api": {
-        target: env.VITE_SERVER_URL,
-        changeOrigin: true
-      },
-      "/uploads": {
-        target: env.VITE_SERVER_URL,
-        changeOrigin: true,
-      },
-    }
-  }
 })
