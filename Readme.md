@@ -472,7 +472,7 @@ func (articleService *ArticleService) Exits(title string) (bool, error) {
 ```
 ![img_11.png](img_11.png)
 
-##  JWT双token登录认证
+## JWT双token登录认证
 ***双Token认证是一种增强安全性的认证机制，通常使用两个Token：Access Token 和 Refresh Token。***
 ### Access Token
 1. 作用：用于访问受保护的资源。
