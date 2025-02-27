@@ -14,7 +14,7 @@ import (
 var (
 	sqlFlag = &cli.BoolFlag{
 		Name:  "sql",
-		Usage: "Initializes the srtucture of the MySQL database table.",
+		Usage: "Initializes the structure of the MySQL database table.",
 	}
 	sqlExportFlag = &cli.BoolFlag{
 		Name:  "sql-export",

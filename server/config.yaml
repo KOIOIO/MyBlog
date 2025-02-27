@@ -64,8 +64,8 @@ upload:
     size: 20
     path: uploads
 website:
-    logo: "/uploads/image/cdf293b1faca6fd3676edcd93997e8b0-20250222192745.png"
-    full_logo: ""
+    logo: /uploads/image/532ff2a146d161818845040556fc1307-20250226101107.png
+    full_logo: /uploads/image/532ff2a146d161818845040556fc1307-20250226101117.png
     title: Xiaoyu_Wangのblog
     slogan: Xiaoyu_Wangのblog
     slogan_en: Blog Title
@@ -74,14 +74,14 @@ website:
     created_at: "2025-1-15"
     icp_filing: icp备案号
     public_security_filing: 公安备案号
-    bilibili_url: https://space.bilibili.com/xxx
-    gitee_url: https://gitee.com/xxx
-    github_url: https://github.com/xxx/
+    bilibili_url: https://space.bilibili.com/435344704?spm_id_from=333.1007.0.0
+    gitee_url: https://gitee.com/wang-wenyu-fdhfj
+    github_url: https://github.com/KOIOIO
     name: Xiaoyu_Wang
     job: 工作
     address: 河南省郑州市
     email: 2652777599@qq.com
-    qq_image: ""
+    qq_image: /uploads/image/34672cbe3812cd56564ed12fa3d67b1e-20250226101740.jpg
     wechat_image: ""
 zap:
     level: info
