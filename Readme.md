@@ -1,5 +1,43 @@
 # 个人博客系统说明文档+ES学习笔记
 
+## 目录
+- [技术栈](#技术栈)
+  - [后端](#后端)
+  - [后端框架](#后端框架)
+  - [前端](#前端)
+- [项目框架(后端)](#项目框架后端)
+- [技术栈学习](#技术栈学习)
+  - [flag命令](#flag命令)
+    - [flag命令的用法](#flag命令的用法)
+    - [本项目中定义的flag命令](#本项目中定义的flag命令)
+    - [本项目中flag命令的实现](#本项目中flag命令的实现)
+      - [main函数调用flag初始化函数](#main函数调用flag初始化函数)
+      - [InitFlag函数](#InitFlag函数)
+      - [定义CLI标志](#定义CLI标志)
+      - [基于传入的CLI指令执行响应的操作](#基于传入的CLI指令执行响应的操作)
+      - [底层的admin函数](#底层的admin函数)
+  - [zap日志](#zap日志)
+  - [elasticsearch分布式搜索引擎](#elasticsearch分布式搜索引擎)
+    - [分布式搜索引擎的作用](#分布式搜索引擎的作用)
+    - [elasticsearch工作原理](#elasticsearch工作原理)
+      - [倒排索引](#倒排索引)
+      - [Stored Fields](#Stored Fields)
+      - [Doc Values](#Doc Values)
+      - [Segment](#Segment)
+      - [Lucene](#Lucene)
+      - [优化](#优化)
+      - [Node角色分化](#Node角色分化)
+      - [去中心化](#去中心化)
+    - [本项目中的ES](#本项目中的ES)
+      - [初始化es连接](#初始化es连接)
+      - [数据分页](#数据分页)
+      - [用于文章的CRUD](#用于文章的CRUD)
+  - [JWT双token登录认证](#JWT双token登录认证)
+    - [Access Token](#Access Token)
+    - [Refresh Token](#Refresh Token)
+    - [工作流程](#工作流程)
+    - [图示说明](#图示说明)
+
 ## 技术栈
 ### 后端
 1. Golang
@@ -19,7 +57,7 @@
 
 
 ## 项目框架(后端)
-````
+```
 ├── server
 ├── api               (api层)
 ├── assets            (静态资源包)
@@ -44,7 +82,7 @@
 └── utils             (工具包)
 ├── hotSearch    (热搜接口封装)
 └── upload        (oss接口封装)
-````
+```
 
 ## 技术栈学习
 
