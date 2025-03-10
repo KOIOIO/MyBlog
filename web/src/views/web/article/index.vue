@@ -214,33 +214,40 @@ watch(() => layoutStore.state.shouldRefreshCommentList, (newVal) => {
         width: 70%;
 
         .info {
-          border: 1px solid #DCDFE6;
+          border: 1px solid #3A3F51;
           padding: 20px;
+          background-color: #2C2F3A;
+          color: #E0E0E0;
 
           .title {
             font-size: 24px;
             margin-bottom: 10px;
+            color: #A6E1FA;
           }
 
           .time {
             margin-bottom: 10px;
+            color: #A6E1FA;
           }
 
           .category {
             margin-bottom: 10px;
+            color: #A6E1FA;
           }
 
           .tags {
             margin-bottom: 10px;
+            color: #A6E1FA;
           }
 
           .abstract {
             margin-bottom: 10px;
+            color: #A6E1FA;
           }
         }
 
         .comment {
-          border-top: 1px solid #DCDFE6;
+          border-top: 1px solid #3A3F51;
           padding-top: 20px;
 
           .operation {
@@ -266,6 +273,7 @@ watch(() => layoutStore.state.shouldRefreshCommentList, (newVal) => {
           .title {
             font-size: 24px;
             margin-bottom: 10px;
+            color: #A6E1FA;
           }
         }
       }
@@ -282,11 +290,14 @@ watch(() => layoutStore.state.shouldRefreshCommentList, (newVal) => {
             height: 70vh;
             overflow: auto;
             padding: 20px;
-            border: 1px solid #DCDFE6;
+            border: 1px solid #3A3F51;
+            background-color: #2C2F3A;
+            color: #E0E0E0;
 
             .title {
               font-size: 24px;
               margin-bottom: 10px;
+              color: #A6E1FA;
             }
           }
 
@@ -294,19 +305,24 @@ watch(() => layoutStore.state.shouldRefreshCommentList, (newVal) => {
             justify-content: center;
             display: flex;
             padding: 20px;
-            border-left: 1px solid #DCDFE6;
-            border-right: 1px solid #DCDFE6;
+            border-left: 1px solid #3A3F51;
+            border-right: 1px solid #3A3F51;
+            background-color: #2C2F3A;
+            color: #E0E0E0;
 
             .el-icon {
               margin-left: 20px;
               margin-right: 20px;
+              color: #A6E1FA;
             }
           }
 
           .comment-link {
-            border-left: 1px solid #DCDFE6;
-            border-right: 1px solid #DCDFE6;
-            border-bottom: 1px solid #DCDFE6;
+            border-left: 1px solid #3A3F51;
+            border-right: 1px solid #3A3F51;
+            border-bottom: 1px solid #3A3F51;
+            background-color: #2C2F3A;
+            color: #A6E1FA;
           }
         }
       }

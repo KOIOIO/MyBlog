@@ -322,6 +322,7 @@ const handleCurrentChange = (val: number) => {
 
     .el-row {
       font-size: 24px;
+      color: #4B0082; /* 蓝紫色 */
     }
 
     .el-button-group {
@@ -331,12 +332,15 @@ const handleCurrentChange = (val: number) => {
 
       .el-button {
         margin-left: 32px;
+        background-color: #4B0082; /* 蓝紫色 */
+        border-color: #4B0082; /* 蓝紫色 */
+        color: #fff;
       }
     }
   }
 
   .article-list-request {
-    border: 1px solid #DCDFE6;
+    border: 1px solid #4B0082; /* 蓝紫色 */
     padding-top: 20px;
     margin-top: 20px;
     margin-bottom: 20px;
@@ -344,20 +348,38 @@ const handleCurrentChange = (val: number) => {
 
     .el-form {
       margin-left: auto;
+
+      .el-form-item__label {
+        color: #4B0082; /* 蓝紫色 */
+      }
+
+      .el-input__inner {
+        border-color: #4B0082; /* 蓝紫色 */
+      }
     }
   }
 
   .el-table {
-    border: 1px solid #DCDFE6;
+    border: 1px solid #4B0082; /* 蓝紫色 */
 
     .el-image {
       height: 48px;
+    }
+
+    .el-table__header-wrapper th {
+      background-color: #4B0082; /* 蓝紫色 */
+      color: #fff;
     }
   }
 
   .el-pagination {
     display: flex;
     justify-content: center;
+
+    .el-pager li.active {
+      background-color: #4B0082; /* 蓝紫色 */
+      border-color: #4B0082; /* 蓝紫色 */
+    }
   }
 }
 </style>

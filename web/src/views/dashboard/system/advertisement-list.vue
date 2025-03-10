@@ -308,6 +308,7 @@ const handleCurrentChange = (val: number) => {
 
     .el-row {
       font-size: 24px;
+      color: #3A3D99; // 更改字体颜色为蓝紫色
     }
 
     .el-button-group {
@@ -317,12 +318,15 @@ const handleCurrentChange = (val: number) => {
 
       .el-button {
         margin-left: 32px;
+        background-color: #3A3D99; // 更改按钮背景颜色为蓝紫色
+        border-color: #3A3D99; // 更改按钮边框颜色为蓝紫色
+        color: #fff; // 更改按钮字体颜色为白色
       }
     }
   }
 
   .advertisement-list-request {
-    border: 1px solid #DCDFE6;
+    border: 1px solid #3A3D99; // 更改边框颜色为蓝紫色
     padding-top: 20px;
     margin-top: 20px;
     margin-bottom: 20px;
@@ -330,20 +334,38 @@ const handleCurrentChange = (val: number) => {
 
     .el-form {
       margin-left: auto;
+
+      .el-form-item__label {
+        color: #3A3D99; // 更改表单标签颜色为蓝紫色
+      }
+
+      .el-input__inner {
+        border-color: #3A3D99; // 更改输入框边框颜色为蓝紫色
+      }
     }
   }
 
   .el-table {
-    border: 1px solid #DCDFE6;
+    border: 1px solid #3A3D99; // 更改表格边框颜色为蓝紫色
 
     .el-image {
       height: 48px;
+    }
+
+    .el-table__header-wrapper th {
+      background-color: #3A3D99; // 更改表头背景颜色为蓝紫色
+      color: #fff; // 更改表头字体颜色为白色
     }
   }
 
   .el-pagination {
     display: flex;
     justify-content: center;
+
+    .el-pager li.active {
+      background-color: #3A3D99; // 更改分页器活动页背景颜色为蓝紫色
+      border-color: #3A3D99; // 更改分页器活动页边框颜色为蓝紫色
+    }
   }
 }
 </style>

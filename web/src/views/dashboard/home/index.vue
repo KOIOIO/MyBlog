@@ -203,6 +203,8 @@ getChartInfo()
     margin-bottom: 20px;
 
     .user-card {
+      background-color: #1e1e2f;
+      color: #ffffff;
       .el-row {
         font-size: 32px;
       }
@@ -218,6 +220,8 @@ getChartInfo()
     display: flex;
 
     .entrance-card {
+      background-color: #2a2a3d;
+      color: #ffffff;
       margin-bottom: 20px;
 
       .title {
@@ -240,12 +244,15 @@ getChartInfo()
             --el-font-size-base: 32px;
             height: 62px;
             background-color: transparent;
+            color: #ffffff;
           }
         }
       }
     }
 
     .chart-card {
+      background-color: #2a2a3d;
+      color: #ffffff;
       .title {
         font-size: 24px;
       }
@@ -257,6 +264,8 @@ getChartInfo()
 
         .el-select {
           margin-left: auto;
+          background-color: #3a3a4d;
+          color: #ffffff;
         }
       }
 
@@ -266,6 +275,8 @@ getChartInfo()
     }
 
     .aside {
+      background-color: #2a2a3d;
+      color: #ffffff;
       margin-left: 20px;
       height: 100%;
 

@@ -104,6 +104,9 @@ const handleNewsTableClick = (item: HotItem) => {
 
 <style scoped lang="scss">
 .news {
+  background-color: #1e1e2f;
+  color: #ffffff;
+
   .main-content {
     margin-top: 70px;
     display: flex;
@@ -121,6 +124,10 @@ const handleNewsTableClick = (item: HotItem) => {
               .title {
                 font-size: 24px;
                 margin-bottom: 10px;
+                color: #8ab4f8;
+              }
+              .description {
+                color: #b0b0b0;
               }
             }
           }

@@ -151,28 +151,54 @@ const handleCurrentChange = (val: number) => {
 
     .el-row {
       font-size: 24px;
+      color: #4A90E2; /* 蓝色字体 */
     }
   }
 
   .user-login-list-request {
-    border: 1px solid #DCDFE6;
+    border: 1px solid #4A90E2; /* 蓝色边框 */
     padding-top: 20px;
     margin-top: 20px;
     margin-bottom: 20px;
     display: flex;
+    background-color: #F0F4FF; /* 淡蓝色背景 */
 
     .el-form {
       margin-left: auto;
+
+      .el-form-item__label {
+        color: #4A90E2; /* 蓝色标签 */
+      }
+
+      .el-input__inner {
+        border-color: #4A90E2; /* 蓝色输入框边框 */
+      }
+
+      .el-button--primary {
+        background-color: #4A90E2; /* 蓝色按钮 */
+        border-color: #4A90E2;
+      }
     }
   }
 
   .el-table {
-    border: 1px solid #DCDFE6;
+    border: 1px solid #4A90E2; /* 蓝色边框 */
+    background-color: #F0F4FF; /* 淡蓝色背景 */
+
+    .el-table__header-wrapper {
+      background-color: #4A90E2; /* 蓝色表头背景 */
+      color: #FFFFFF; /* 白色表头字体 */
+    }
   }
 
   .el-pagination {
     display: flex;
     justify-content: center;
+
+    .el-pager li.active {
+      background-color: #4A90E2; /* 蓝色分页器 */
+      border-color: #4A90E2;
+    }
   }
 }
 </style>

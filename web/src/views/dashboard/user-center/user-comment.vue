@@ -43,11 +43,12 @@ watch(() => layoutStore.state.shouldRefreshCommentList, (newVal) => {
   .title {
     margin-bottom: 20px;
     font-size: 24px;
+    color: #4B0082; /* 蓝紫色 */
   }
 
   .table-data {
     display: flex;
-    border: 1px solid #DCDFE6;
+    border: 1px solid #4B0082; /* 蓝紫色 */
     .link{
       width: 200px;
       display: flex;

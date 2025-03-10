@@ -41,7 +41,6 @@ const menuList: MenuItem[] = [
     name: "qq-config",
   },
   {
-
     title: "七牛云配置",
     name: "qiniu-config",
   },
@@ -61,7 +60,36 @@ function generatePathForSingleItem(item: MenuItem): string {
 </script>
 
 <style scoped lang="scss">
-.el-menu{
+.system-config {
+  background-color: #1e1e2f;
+  color: #ffffff;
+}
+
+.el-menu {
   height: 100%;
+  background-color: #2e2e4f;
+  color: #ffffff;
+}
+
+.el-menu-item {
+  &:hover {
+    background-color: #3e3e6f;
+  }
+}
+
+.el-menu-item.is-active {
+  background-color: #4e4e8f;
+}
+
+.el-container {
+  background-color: #1e1e2f;
+}
+
+.el-aside {
+  background-color: #2e2e4f;
+}
+
+.el-main {
+  background-color: #1e1e2f;
 }
 </style>

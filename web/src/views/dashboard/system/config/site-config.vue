@@ -631,8 +631,9 @@ const cancelCarousel = (url: string) => {
   display: flex;
 
   .title {
-    border-left: 5px solid blue;
+    border-left: 5px solid #6a0dad; // 更改为蓝紫色
     padding-left: 10px;
+    color: #6a0dad; // 更改为蓝紫色
   }
 
   .content {
@@ -654,6 +655,7 @@ const cancelCarousel = (url: string) => {
             .upload-filled {
               height: 32px;
               width: 32px;
+              color: #6a0dad; // 更改为蓝紫色
             }
           }
         }
@@ -663,6 +665,8 @@ const cancelCarousel = (url: string) => {
 
           .el-button {
             margin-left: auto;
+            background-color: #6a0dad; // 更改为蓝紫色
+            border-color: #6a0dad; // 更改为蓝紫色
           }
         }
       }
@@ -673,6 +677,8 @@ const cancelCarousel = (url: string) => {
         .el-button {
           margin-left: auto;
           margin-bottom: 20px;
+          background-color: #6a0dad; // 更改为蓝紫色
+          border-color: #6a0dad; // 更改为蓝紫色
         }
       }
     }
@@ -680,6 +686,8 @@ const cancelCarousel = (url: string) => {
     .button-group {
       .el-button {
         margin-bottom: 20px;
+        background-color: #6a0dad; // 更改为蓝紫色
+        border-color: #6a0dad; // 更改为蓝紫色
       }
     }
 
@@ -703,5 +711,6 @@ const cancelCarousel = (url: string) => {
   --el-upload-dragger-padding-horizontal: 0px;
   --el-upload-dragger-padding-vertical: 0px;
   line-height: 0;
+  border: 2px dashed #6a0dad; // 更改为蓝紫色
 }
 </style>

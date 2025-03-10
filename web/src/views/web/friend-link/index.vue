@@ -45,6 +45,9 @@ const handleFriendLinkJumps = (link:string)=>{
 
 <style scoped lang="scss">
 .friend-link {
+  background-color: #1e1e2f;
+  color: #ffffff;
+
   .main-content {
     margin-top: 70px;
     display: flex;
@@ -59,14 +62,26 @@ const handleFriendLinkJumps = (link:string)=>{
         .title {
           font-size: 24px;
           margin-bottom: 20px;
+          color: #8a8aff;
         }
 
         .list {
           display: flex;
+          flex-wrap: wrap;
+          gap: 20px;
+
           .el-card {
             --el-card-padding: 0;
             width: 25%;
             height: 130px;
+            background-color: #2a2a3d;
+            border: 1px solid #3a3a5c;
+            transition: transform 0.3s, box-shadow 0.3s;
+
+            &:hover {
+              transform: translateY(-10px);
+              box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+            }
 
             .logo {
               display: flex;
@@ -75,16 +90,17 @@ const handleFriendLinkJumps = (link:string)=>{
                 font-size: 24px;
                 margin-top: auto;
                 margin-bottom: auto;
+                color: #8a8aff;
               }
             }
 
             .description {
               margin-left: 10px;
               margin-right: 10px;
+              color: #b0b0ff;
             }
           }
         }
-
       }
     }
   }

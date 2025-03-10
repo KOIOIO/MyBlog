@@ -37,6 +37,9 @@ import Feedback from "@/components/pages/Feedback.vue";
 
 <style scoped lang="scss">
 .index {
+  background-color: #1e1e2f; /* 深蓝色背景 */
+  color: #ffffff; /* 白色文字 */
+
   .main-content {
     display: flex;
     justify-content: center;
@@ -48,13 +51,26 @@ import Feedback from "@/components/pages/Feedback.vue";
 
       .el-main {
         width: 70%;
+        background-color: #2a2a3b; /* 深蓝色背景 */
+        padding: 20px;
+        border-radius: 8px;
       }
 
       .el-aside {
         width: 30%;
         padding: 20px;
+        background-color: #2a2a3b; /* 深蓝色背景 */
+        border-radius: 8px;
       }
     }
+  }
+
+  a {
+    color: #8a2be2; /* 蓝紫色链接 */
+  }
+
+  a:hover {
+    color: #7a1bb2; /* 深蓝紫色链接悬停效果 */
   }
 }
 </style>

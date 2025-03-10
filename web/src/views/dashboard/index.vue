@@ -41,7 +41,7 @@ const isCollapse = computed(() => store.state.isCollapse)
   display: flex;
 
   .el-aside {
-    border: 1px solid #DCDFE6;
+    border: 1px solid #4B0082; /* 蓝紫色 */
     width: 240px;
     height: 100vh;
     &::-webkit-scrollbar{

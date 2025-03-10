@@ -108,13 +108,17 @@ const articleCreateVisibleSynchronization = () => {
 <style lang="scss">
 .article-publish {
   height: 100%;
+  background-color: #1e1e2f; /* 深蓝紫色背景 */
 
   .title {
     display: flex;
+    color: #ffffff; /* 白色文字 */
 
     .left {
       .el-input {
         min-width: 400px;
+        background-color: #2e2e4f; /* 深蓝紫色输入框背景 */
+        color: #ffffff; /* 白色文字 */
       }
     }
 
@@ -125,11 +129,24 @@ const articleCreateVisibleSynchronization = () => {
         margin-left: 20px;
         margin-right: 20px;
       }
+
+      .el-button {
+        background-color: #3e3e6f; /* 深蓝紫色按钮背景 */
+        color: #ffffff; /* 白色文字 */
+        border-color: #3e3e6f; /* 深蓝紫色边框 */
+      }
+
+      .el-button:hover {
+        background-color: #5e5e8f; /* 浅蓝紫色按钮背景 */
+        border-color: #5e5e8f; /* 浅蓝紫色边框 */
+      }
     }
   }
 
   .md-editor {
     height: 95%;
+    background-color: #2e2e4f; /* 深蓝紫色编辑器背景 */
+    color: #ffffff; /* 白色文字 */
   }
 }
 </style>
@@ -138,5 +155,6 @@ const articleCreateVisibleSynchronization = () => {
 .article-publish .md-editor .md-editor-toolbar-wrapper .md-editor-toolbar svg.md-editor-icon {
   height: 24px;
   width: 24px;
+  fill: #ffffff; /* 白色图标 */
 }
 </style>

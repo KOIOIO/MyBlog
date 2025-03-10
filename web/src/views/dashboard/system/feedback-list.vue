@@ -256,6 +256,7 @@ const handleCurrentChange = (val: number) => {
 
     .el-row {
       font-size: 24px;
+      color: #4A90E2; // 蓝色
     }
 
     .el-button-group {
@@ -265,17 +266,61 @@ const handleCurrentChange = (val: number) => {
 
       .el-button {
         margin-left: 32px;
+        background-color: #4A90E2; // 蓝色
+        border-color: #4A90E2; // 蓝色
+        color: #fff;
+
+        &:hover {
+          background-color: #3A78C2; // 深蓝色
+          border-color: #3A78C2; // 深蓝色
+        }
       }
     }
   }
 
   .el-table {
-    border: 1px solid #DCDFE6;
+    border: 1px solid #4A90E2; // 蓝色
   }
 
   .el-pagination {
     display: flex;
     justify-content: center;
+
+    .el-pager, .el-pagination__sizes, .el-pagination__total {
+      color: #4A90E2; // 蓝色
+    }
+
+    .el-pagination__jump {
+      .el-input__inner {
+        border-color: #4A90E2; // 蓝色
+      }
+    }
+
+    .el-pagination__prev, .el-pagination__next {
+      .el-icon {
+        color: #4A90E2; // 蓝色
+      }
+    }
+  }
+
+  .el-dialog {
+    .el-dialog__header {
+      background-color: #4A90E2; // 蓝色
+      color: #fff;
+    }
+
+    .el-dialog__footer {
+      .el-button {
+        background-color: #4A90E2; // 蓝色
+        border-color: #4A90E2; // 蓝色
+        color: #fff;
+
+        &:hover {
+          background-color: #3A78C2; // 深蓝色
+          border-color: #3A78C2; // 深蓝色
+        }
+      }
+    }
   }
 }
 </style>

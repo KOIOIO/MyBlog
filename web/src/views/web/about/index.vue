@@ -4,7 +4,9 @@
     <el-container class="main-content">
       <div class="container">
         <el-main>
-          <MdPreview :modelValue="text"/>
+          <div class="markdown-container">
+            <MdPreview :modelValue="text"/>
+          </div>
         </el-main>
       </div>
     </el-container>
@@ -134,6 +136,9 @@ TypeScript 与 Vue 配合的类型检查工具，确保在开发过程中发现�
 
 <style scoped lang="scss">
 .about {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: #fff;
+
   .main-content {
     margin-top: 70px;
     display: flex;
@@ -144,6 +149,41 @@ TypeScript 与 Vue 配合的类型检查工具，确保在开发过程中发现�
       max-width: 1400px;
       width: 100%;
     }
+  }
+
+  .markdown-container {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  .markdown-container h1,
+  .markdown-container h2,
+  .markdown-container h3,
+  .markdown-container h4,
+  .markdown-container h5,
+  .markdown-container h6 {
+    color: #fff;
+  }
+
+  .markdown-container p {
+    color: #e0e0e0;
+  }
+
+  .markdown-container code {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 2px 4px;
+    border-radius: 4px;
+  }
+
+  .markdown-container pre {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 10px;
+    border-radius: 8px;
+    overflow-x: auto;
   }
 }
 </style>

@@ -113,19 +113,30 @@ const handleCurrentChange = (val: number) => {
   .title {
     margin-bottom: 20px;
     font-size: 24px;
+    color: #4B0082; /* 蓝紫色 */
   }
 
   .el-table {
-    border: 1px solid #DCDFE6;
+    border: 1px solid #4B0082; /* 蓝紫色 */
 
     .el-image {
       height: 48px;
+    }
+
+    .el-table__header-wrapper th {
+      background-color: #4B0082; /* 蓝紫色 */
+      color: #fff;
     }
   }
 
   .el-pagination {
     display: flex;
     justify-content: center;
+
+    .el-pager li.active {
+      background-color: #4B0082; /* 蓝紫色 */
+      border-color: #4B0082; /* 蓝紫色 */
+    }
   }
 }
 </style>

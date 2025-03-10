@@ -322,6 +322,7 @@ watch(() => route.query, (newQuery) => {
 
     .el-row {
       font-size: 24px;
+      color: #4A90E2; /* 蓝色 */
     }
 
     .el-button-group {
@@ -331,12 +332,20 @@ watch(() => route.query, (newQuery) => {
 
       .el-button {
         margin-left: 32px;
+        background-color: #4A90E2; /* 蓝色 */
+        border-color: #4A90E2; /* 蓝色 */
+        color: #fff;
+
+        &:hover {
+          background-color: #3A70C2; /* 深蓝色 */
+          border-color: #3A70C2; /* 深蓝色 */
+        }
       }
     }
   }
 
   .friend-link-list-request {
-    border: 1px solid #DCDFE6;
+    border: 1px solid #4A90E2; /* 蓝色 */
     padding-top: 20px;
     margin-top: 20px;
     margin-bottom: 20px;
@@ -344,20 +353,46 @@ watch(() => route.query, (newQuery) => {
 
     .el-form {
       margin-left: auto;
+
+      .el-form-item__label {
+        color: #4A90E2; /* 蓝色 */
+      }
+
+      .el-input__inner {
+        border-color: #4A90E2; /* 蓝色 */
+      }
     }
   }
 
   .el-table {
-    border: 1px solid #DCDFE6;
+    border: 1px solid #4A90E2; /* 蓝色 */
 
     .el-image {
       height: 48px;
+    }
+
+    .el-table__header-wrapper {
+      background-color: #4A90E2; /* 蓝色 */
+      color: #fff;
+    }
+
+    .el-table__body-wrapper {
+      .el-table__row {
+        &:hover {
+          background-color: #E6F7FF; /* 浅蓝色 */
+        }
+      }
     }
   }
 
   .el-pagination {
     display: flex;
     justify-content: center;
+
+    .el-pager li.active {
+      background-color: #4A90E2; /* 蓝色 */
+      border-color: #4A90E2; /* 蓝色 */
+    }
   }
 }
 </style>

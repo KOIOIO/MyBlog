@@ -155,7 +155,7 @@ const passwordResetVisibleSynchronization = () => {
 
   .info {
     .title {
-      border-left: 5px solid blue;
+      border-left: 5px solid #4B0082; /* 蓝紫色 */
       padding-left: 10px;
     }
 
@@ -175,7 +175,7 @@ const passwordResetVisibleSynchronization = () => {
 
   .operation {
     .title {
-      border-left: 5px solid blue;
+      border-left: 5px solid #4B0082; /* 蓝紫色 */
       padding-left: 10px;
     }
 
@@ -186,7 +186,7 @@ const passwordResetVisibleSynchronization = () => {
 
   .card {
     .title {
-      border-left: 5px solid blue;
+      border-left: 5px solid #4B0082; /* 蓝紫色 */
       padding-left: 10px;
     }
 

@@ -242,6 +242,7 @@ const handleCurrentChange = (val: number) => {
     margin-top: 70px;
     display: flex;
     justify-content: center;
+    background-color: #1e1e2f; /* 深蓝色背景 */
 
     .container {
       display: flex;
@@ -254,12 +255,15 @@ const handleCurrentChange = (val: number) => {
         .el-input {
           margin-left: auto;
           width: 320px;
+          background-color: #2e2e4f; /* 深蓝色输入框背景 */
+          color: #ffffff; /* 白色文字 */
         }
       }
 
-      .category {
+      .category, .tag, .sort {
         display: flex;
         margin: 10px;
+        color: #ffffff; /* 白色文字 */
 
         .el-row {
           margin-right: 32px;
@@ -267,35 +271,21 @@ const handleCurrentChange = (val: number) => {
 
         .el-radio-group {
           max-width: 1276px;
-        }
-      }
 
-      .tag {
-        display: flex;
-        margin: 10px;
-
-        .el-row {
-          margin-right: 32px;
-        }
-
-        .el-radio-group {
-          max-width: 1276px;
+          .el-radio-button {
+            background-color: #2e2e4f; /* 深蓝色按钮背景 */
+            color: #ffffff; /* 白色文字 */
+          }
         }
       }
 
       .sort {
-        display: flex;
-        margin: 10px;
-
         .el-button {
           width: 32px;
           padding: unset;
           border: none;
           background-color: transparent;
-        }
-
-        .el-radio-group {
-          max-width: 1276px;
+          color: #ffffff; /* 白色文字 */
         }
       }
 
@@ -304,6 +294,7 @@ const handleCurrentChange = (val: number) => {
           height: 120px;
           display: flex;
           flex-direction: column;
+          color: #ffffff; /* 白色文字 */
 
           .title {
             font-size: 24px;
@@ -318,13 +309,15 @@ const handleCurrentChange = (val: number) => {
             margin-top: auto;
             display: flex;
             width: 100%;
-            .tags{
+            .tags {
               margin-right: auto;
-              .el-tag{
+              .el-tag {
                 margin-right: 10px;
+                background-color: #2e2e4f; /* 深蓝色标签背景 */
+                color: #ffffff; /* 白色文字 */
               }
             }
-            .status{
+            .status {
               margin-left: auto;
             }
           }
@@ -335,6 +328,7 @@ const handleCurrentChange = (val: number) => {
         margin-top: 10px;
         display: flex;
         justify-content: center;
+        color: #ffffff; /* 白色文字 */
       }
     }
   }

@@ -262,6 +262,7 @@ const handleCurrentChange = (val: number) => {
 
     .el-row {
       font-size: 24px;
+      color: #4A90E2; // 修改字体颜色为蓝色
     }
 
     .el-button-group {
@@ -271,12 +272,15 @@ const handleCurrentChange = (val: number) => {
 
       .el-button {
         margin-left: 32px;
+        background-color: #4A90E2; // 修改按钮背景颜色为蓝色
+        border-color: #4A90E2; // 修改按钮边框颜色为蓝色
+        color: #fff; // 修改按钮字体颜色为白色
       }
     }
   }
 
   .comment-list-request {
-    border: 1px solid #DCDFE6;
+    border: 1px solid #4A90E2; // 修改边框颜色为蓝色
     padding-top: 20px;
     margin-top: 20px;
     margin-bottom: 20px;
@@ -284,16 +288,35 @@ const handleCurrentChange = (val: number) => {
 
     .el-form {
       margin-left: auto;
+
+      .el-form-item__label {
+        color: #4A90E2; // 修改表单标签颜色为蓝色
+      }
+
+      .el-input__inner {
+        border-color: #4A90E2; // 修改输入框边框颜色为蓝色
+      }
+
+      .el-button {
+        background-color: #4A90E2; // 修改按钮背景颜色为蓝色
+        border-color: #4A90E2; // 修改按钮边框颜色为蓝色
+        color: #fff; // 修改按钮字体颜色为白色
+      }
     }
   }
 
   .el-table {
-    border: 1px solid #DCDFE6;
+    border: 1px solid #4A90E2; // 修改表格边框颜色为蓝色
   }
 
   .el-pagination {
     display: flex;
     justify-content: center;
+
+    .el-pager li.active {
+      background-color: #4A90E2; // 修改分页器活动页背景颜色为蓝色
+      border-color: #4A90E2; // 修改分页器活动页边框颜色为蓝色
+    }
   }
 }
 </style>

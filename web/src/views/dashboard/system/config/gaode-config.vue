@@ -68,13 +68,35 @@ const updateGaodeInfo = async () => {
 
   .info {
     .title {
-      border-left: 5px solid blue;
+      border-left: 5px solid #8A2BE2; /* 蓝紫色 */
       padding-left: 10px;
+      color: #8A2BE2; /* 蓝紫色 */
     }
 
     .content {
       margin: 20px;
+      background-color: #F0F8FF; /* 浅蓝色背景 */
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(138, 43, 178, 0.5); /* 蓝紫色阴影 */
     }
+  }
+
+  .el-form-item__label {
+    color: #8A2BE2; /* 蓝紫色 */
+  }
+
+  .el-switch__core {
+    background-color: #8A2BE2; /* 蓝紫色 */
+  }
+
+  .el-input__inner {
+    border-color: #8A2BE2; /* 蓝紫色 */
+  }
+
+  .el-input__inner:focus {
+    border-color: #8A2BE2; /* 蓝紫色 */
+    box-shadow: 0 0 5px rgba(138, 43, 178, 0.5); /* 蓝紫色阴影 */
   }
 }
 </style>

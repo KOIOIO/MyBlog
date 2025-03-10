@@ -84,13 +84,35 @@ const updateEmailInfo = async () => {
 
   .info {
     .title {
-      border-left: 5px solid blue;
+      border-left: 5px solid #8A2BE2; /* 更改为蓝紫色 */
       padding-left: 10px;
+      color: #8A2BE2; /* 更改为蓝紫色 */
     }
 
     .content {
       margin: 20px;
+      background-color: #F0F8FF; /* 添加背景色 */
+      border-radius: 10px; /* 添加圆角 */
+      padding: 20px; /* 添加内边距 */
+      box-shadow: 0 0 10px rgba(138, 43, 178, 0.5); /* 添加阴影效果 */
     }
+  }
+
+  .el-form-item__label {
+    color: #8A2BE2; /* 更改标签颜色为蓝紫色 */
+  }
+
+  .el-input__inner, .el-switch__core {
+    border-color: #8A2BE2; /* 更改输入框和开关的边框颜色 */
+  }
+
+  .el-input__inner:focus, .el-switch__core:focus {
+    border-color: #8A2BE2; /* 更改输入框和开关的聚焦边框颜色 */
+  }
+
+  .el-button--primary {
+    background-color: #8A2BE2; /* 更改按钮颜色为蓝紫色 */
+    border-color: #8A2BE2; /* 更改按钮边框颜色为蓝紫色 */
   }
 }
 </style>
