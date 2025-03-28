@@ -21,7 +21,7 @@ func (c *CommentRouter) InitCommentRouter(Router *gin.RouterGroup, PublicRouter 
 		commentRouter.GET("info", commentApi.CommentInfo)
 	}
 	{
-		commentPublicRouter.GET(":article_id", commentApi.CommentInfoByArticleID)
+		commentPublicRouter.GET(":article3_id", commentApi.CommentInfoByArticleID)
 		commentPublicRouter.GET("new", commentApi.CommentNew)
 	}
 	{
