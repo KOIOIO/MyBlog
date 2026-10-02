@@ -1,6 +1,9 @@
 <template>
   <div class="user-comment">
-    <el-row class="title">我的评论</el-row>
+    <div class="page-header">
+      <div class="page-title">{{ t('system.userCenter.comment.title') }}</div>
+      <div class="page-desc">{{ t('system.userCenter.comment.desc') }}</div>
+    </div>
     <div class="table-data" v-for="item in userCommentTableData">
       <div class="link">
         <el-link :href="'/article/'+item.article_id">{{ item.article_id }}</el-link>
@@ -17,7 +20,9 @@ import {ref, watch} from "vue";
 import CommentItem from "@/components/common/CommentItem.vue";
 import {type Comment, commentInfo} from "@/api/comment";
 import {useLayoutStore} from "@/stores/layout";
+import {useI18n} from "vue-i18n";
 
+const {t} = useI18n()
 
 const userCommentTableData = ref<Comment[]>()
 const getUserCommentTableData = async () => {
@@ -40,24 +45,43 @@ watch(() => layoutStore.state.shouldRefreshCommentList, (newVal) => {
 
 <style scoped lang="scss">
 .user-comment {
-  .title {
-    margin-bottom: 20px;
-    font-size: 24px;
-    color: #4B0082; /* 蓝紫色 */
+  .page-header {
+    margin-bottom: var(--sp-5);
+
+    .page-title {
+      font-size: var(--fs-24);
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: var(--lh-title);
+    }
+
+    .page-desc {
+      margin-top: var(--sp-1);
+      font-size: var(--fs-14);
+      color: var(--text-muted);
+    }
   }
 
   .table-data {
     display: flex;
-    border: 1px solid #4B0082; /* 蓝紫色 */
-    .link{
-      width: 200px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--sp-3);
+    transition: background-color 150ms ease-out;
+
+    .link {
+      width: 160px;
       display: flex;
-      .el-link{
-        text-align: center;
-      }
+      align-items: center;
+      justify-content: center;
+      border-right: 1px solid var(--border);
+      padding: var(--sp-3);
     }
-    .item{
-      width: 100%;
+
+    .item {
+      flex: 1;
+      padding: var(--sp-3);
     }
   }
 }

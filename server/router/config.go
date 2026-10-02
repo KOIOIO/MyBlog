@@ -19,8 +19,6 @@ func (c *ConfigRouter) InitConfigRouter(Router *gin.RouterGroup) {
 		configRouter.PUT("system", configApi.UpdateSystem)
 		configRouter.GET("email", configApi.GetEmail)
 		configRouter.PUT("email", configApi.UpdateEmail)
-		configRouter.GET("qq", configApi.GetQQ)
-		configRouter.PUT("qq", configApi.UpdateQQ)
 		configRouter.GET("qiniu", configApi.GetQiniu)
 		configRouter.PUT("qiniu", configApi.UpdateQiniu)
 		configRouter.GET("jwt", configApi.GetJwt)

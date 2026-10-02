@@ -5,28 +5,28 @@
         :validate-on-rule-change="false"
     >
 
-      <el-form-item label="广告图片" prop="ad_image">
+      <el-form-item :label="t('forms.advertisementUpdate.image')" prop="ad_image">
         <el-image :src="props.advertisement.ad_image" alt=""/>
       </el-form-item>
-      <el-form-item label="广告链接" prop="link">
+      <el-form-item :label="t('forms.advertisementUpdate.link')" prop="link">
         <el-input
             v-model="advertisementUpdateFormData.link"
             size="large"
-            placeholder="请输入广告链接"
+            :placeholder="t('forms.advertisementUpdate.linkPlaceholder')"
         />
       </el-form-item>
-      <el-form-item label="广告标题" prop="title">
+      <el-form-item :label="t('forms.advertisementUpdate.title')" prop="title">
         <el-input
             v-model="advertisementUpdateFormData.title"
             size="large"
-            placeholder="请输入广告标题"
+            :placeholder="t('forms.advertisementUpdate.titlePlaceholder')"
         />
       </el-form-item>
-      <el-form-item label="广告内容" prop="content">
+      <el-form-item :label="t('forms.advertisementUpdate.content')" prop="content">
         <el-input
             v-model="advertisementUpdateFormData.content"
             size="large"
-            placeholder="请输入广告内容"
+            :placeholder="t('forms.advertisementUpdate.contentPlaceholder')"
         />
       </el-form-item>
       <el-form-item>
@@ -35,12 +35,12 @@
               type="primary"
               size="large"
               @click="submitForm"
-          >确定
+          >{{ t('common.confirm') }}
           </el-button>
           <el-button
               size="large"
               @click="layoutStore.state.advertisementUpdateVisible = false"
-          >取消
+          >{{ t('common.cancel') }}
           </el-button>
         </div>
       </el-form-item>
@@ -53,6 +53,9 @@ import {defineProps, reactive} from 'vue';
 import {ElMessage} from "element-plus";
 import {type Advertisement, advertisementUpdate, type AdvertisementUpdateRequest} from "@/api/advertisement";
 import {useLayoutStore} from "@/stores/layout";
+import {useI18n} from "vue-i18n";
+
+const {t} = useI18n()
 
 const layoutStore = useLayoutStore()
 
@@ -83,10 +86,21 @@ const submitForm = async () => {
     .el-form-item {
       .el-image {
         height: 120px;
+        width: 100%;
+        object-fit: cover;
+        border-radius: var(--radius-sm);
       }
 
       .button-group {
         margin-left: auto;
+        display: flex;
+        gap: var(--sp-2);
+
+        .el-button {
+          height: 40px;
+          min-width: 88px;
+          font-weight: 500;
+        }
       }
     }
   }

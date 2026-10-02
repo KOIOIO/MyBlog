@@ -21,6 +21,7 @@ func (u *UserRouter) InitUserRouter(Router *gin.RouterGroup, PublicRouter *gin.R
 		userRouter.PUT("resetPassword", userApi.UserResetPassword)
 		userRouter.GET("info", userApi.UserInfo)
 		userRouter.PUT("changeInfo", userApi.UserChangeInfo)
+		userRouter.POST("avatar", userApi.UploadAvatar)
 		userRouter.GET("weather", userApi.UserWeather)
 		userRouter.GET("chart", userApi.UserChart)
 	}

@@ -27,9 +27,3 @@ export const sendEmailVerificationCode = (data: EmailRequest):Promise<ApiRespons
     })
 }
 
-export const qqLoginURL = (): Promise<ApiResponse<string>> => {
-    return service({
-        url: '/base/qqLoginURL',
-        method: 'get',
-    })
-}

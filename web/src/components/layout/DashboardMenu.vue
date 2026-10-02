@@ -38,10 +38,12 @@
 <script setup lang="ts">
 import type {Tag} from "@/stores/tag";
 import {computed} from "vue";
+import {useI18n} from "vue-i18n";
 import {useLayoutStore} from "@/stores/layout";
 import {useTagStore} from "@/stores/tag";
 import {useUserStore} from "@/stores/user";
 
+const {t} = useI18n()
 const userStore = useUserStore()
 
 interface MenuItem {
@@ -52,122 +54,139 @@ interface MenuItem {
   admin_role?:boolean;
 }
 
-const menuList: MenuItem[] = [
+const menuList = computed<MenuItem[]>(() => [
   {
-    title: "主页",
+    title: t("menu.home"),
     name: "",
     icon: "House"
   },
   {
-    title: "个人中心",
+    title: t("menu.userCenter.title"),
     name: "user-center",
     icon: "Monitor",
     subItems: [
       {
-        title: "我的信息",
+        title: t("menu.userCenter.info"),
         name: "user-info",
         icon: "Postcard"
       },
       {
-        title: "我的收藏",
+        title: t("menu.userCenter.star"),
         name: "user-star",
         icon: "Star"
       },
       {
-        title: "我的评论",
+        title: t("menu.userCenter.comment"),
         name: "user-comment",
         icon: "ChatDotRound"
       },
       {
-        title: "我的反馈",
+        title: t("menu.userCenter.feedback"),
         name: "user-feedback",
         icon: "Message"
       }
     ]
   },
   {
-    title: "用户管理",
+    title: t("menu.users.title"),
     name: "users",
     icon: "User",
     admin_role:true,
     subItems: [
       {
-        title: "用户列表",
+        title: t("menu.users.list"),
         name: "user-list",
         icon: "SetUp"
       }
     ]
   },
   {
-    title: "文章管理",
+    title: t("menu.articles.title"),
     name: "articles",
     icon: "Document",
     admin_role:true,
     subItems: [
       {
-        title: "发布文章",
+        title: t("menu.articles.publish"),
         name: "article-publish",
         icon: "Collection"
       },
       {
-        title: "评论列表",
+        title: t("menu.articles.commentList"),
         name: "comment-list",
         icon: "ChatLineRound"
       },
       {
-        title: "文章列表",
+        title: t("menu.articles.list"),
         name: "article-list",
         icon: "DocumentCopy"
       }
     ]
   },
   {
-    title: "图片管理",
+    title: t("menu.forum.title"),
+    name: "forum",
+    icon: "ChatDotRound",
+    subItems: [
+      {
+        title: t("menu.forum.list"),
+        name: "",
+        icon: "Tickets"
+      },
+      {
+        title: t("menu.forum.comments"),
+        name: "comments",
+        icon: "ChatLineRound"
+      }
+    ]
+  },
+  {
+    title: t("menu.images.title"),
     name: "images",
     icon: "Picture",
     admin_role:true,
     subItems: [
       {
-        title: "图片列表",
+        title: t("menu.images.list"),
         name: "image-list",
         icon: "PictureRounded"
       }
     ]
   },
   {
-    title: "系统管理",
+    title: t("menu.system.title"),
     name: "system",
     icon: "Coin",
     admin_role:true,
     subItems: [
       {
-        title: "反馈列表",
+        title: t("menu.system.feedback"),
         name: "feedback-list",
         icon: "Position"
       },
       {
-        title: "广告列表",
+        title: t("menu.system.advertisement"),
         name: "advertisement-list",
         icon: "Connection"
       },
       {
-        title: "友链列表",
+        title: t("menu.system.friendLink"),
         name: "friend-link-list",
         icon: "Link"
       },
       {
-        title: "登录日志",
+        title: t("menu.system.loginLogs"),
         name: "login-logs",
         icon: "memo"
       },
       {
-        title: "应用配置",
+        title: t("menu.system.appConfig"),
         name: "app-config",
         icon: "setting"
       }
     ]
   }
-]
+])
 
 const layoutStore = useLayoutStore()
 const tagStore = useTagStore()
@@ -183,6 +202,9 @@ function generatePathForSingleItem(item: MenuItem): string {
 }
 
 function generatePathForSubItem(parentItem: MenuItem, subItem: MenuItem): string {
+  if (!subItem.name) {
+    return '/dashboard/' + parentItem.name;
+  }
   return '/dashboard/' + parentItem.name + '/' + subItem.name;
 }
 
@@ -201,19 +223,74 @@ function handleClick(subItem: MenuItem) {
 
 <style scoped lang="scss">
 .dashboard-menu {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
   .collapse-button {
     display: flex;
+    padding: var(--sp-2) var(--sp-3);
 
     .el-button {
       margin-left: auto;
-      border-style: none;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+
+      &:hover {
+        background: var(--accent-weak);
+        color: var(--accent);
+      }
     }
   }
 
   .el-menu {
+    flex: 1;
     border-right: none;
-    --el-menu-item-height: 52px;
-    --el-menu-sub-item-height: 44px;
+    background-color: transparent;
+    --el-menu-item-height: 44px;
+    --el-menu-sub-item-height: 40px;
+    --el-menu-text-color: var(--text-body);
+    --el-menu-hover-text-color: var(--accent);
+    --el-menu-active-color: var(--accent);
+
+    :deep(.el-menu-item),
+    :deep(.el-sub-menu__title) {
+      position: relative;
+      height: 44px;
+      line-height: 44px;
+      color: var(--text-body);
+      transition: background-color 150ms ease-out, color 150ms ease-out, transform 80ms ease-out;
+
+      &:hover {
+        background-color: var(--accent-weak);
+        color: var(--accent);
+      }
+
+      &:active {
+        transform: translateY(1px);
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: -2px;
+      }
+    }
+
+    :deep(.el-menu-item.is-active) {
+      background-color: var(--accent-weak);
+      color: var(--accent);
+
+      &::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background-color: var(--accent);
+      }
+    }
   }
 
   .el-popper {
@@ -226,6 +303,7 @@ function handleClick(subItem: MenuItem) {
 
 .collapsed .dashboard-menu .collapse-button .el-button {
   margin-right: auto;
+  margin-left: auto;
 }
 </style>
 

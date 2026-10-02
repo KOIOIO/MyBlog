@@ -46,6 +46,11 @@ type ArticleUpdate struct {
 	Content  string   `json:"content" binding:"required"`
 }
 
+type ArticleSetTop struct {
+	ID    string `json:"id" binding:"required"`
+	IsTop bool   `json:"is_top"`
+}
+
 type ArticleList struct {
 	Title    *string `json:"title" form:"title"`
 	Category *string `json:"category" form:"category"`

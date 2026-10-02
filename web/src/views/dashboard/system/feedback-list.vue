@@ -1,10 +1,13 @@
 <template>
   <div class="feedback-list">
-    <div class="title">
-      <el-row>反馈列表</el-row>
-      <el-button-group>
-        <el-button type="danger" icon="Delete" @click="feedbackBulkDeleteVisible = true;handleIdsToDelete()">
-          批量删除
+    <div class="page-header">
+      <div>
+        <div class="page-title">{{ t('system.feedback.title') }}</div>
+        <div class="page-desc">{{ t('system.feedback.desc') }}</div>
+      </div>
+      <div class="page-actions">
+        <el-button type="danger" plain icon="Delete" @click="feedbackBulkDeleteVisible = true;handleIdsToDelete()">
+          {{ t('common.batchDelete') }}
         </el-button>
 
         <el-dialog
@@ -14,17 +17,17 @@
             destroy-on-close
         >
           <template #header>
-            删除反馈
+            {{ t('system.feedback.delete') }}
           </template>
-          您已选中 [{{ idsToDelete.length }}] 项资源，删除后将无法恢复，是否确认删除？
+          {{ t('system.feedback.confirmDeleteWithCount', {count: idsToDelete.length}) }}
           <template #footer>
             <el-button type="primary" @click="handleBulkDelete(idsToDelete)">
-              确定
+              {{ t('common.confirm') }}
             </el-button>
-            <el-button @click="feedbackBulkDeleteVisible = false">取消</el-button>
+            <el-button @click="feedbackBulkDeleteVisible = false">{{ t('common.cancel') }}</el-button>
           </template>
         </el-dialog>
-      </el-button-group>
+      </div>
     </div>
 
     <el-table
@@ -33,32 +36,34 @@
         :row-style="{height: '120px'}"
     >
       <el-table-column type="selection" width="60"/>
-      <el-table-column label="用户" width="80">
+      <el-table-column :label="t('system.feedback.user')" width="80">
         <template #default="scope:{ row: Feedback, column: any, $index: number }">
           <user-card-popover :uuid="scope.row.user_uuid"/>
         </template>
       </el-table-column>
-      <el-table-column label="时间" width="150">
+      <el-table-column :label="t('common.time')" width="150">
         <template #default="scope:{ row: Feedback, column: any, $index: number }">
           {{ getTime(scope.row.created_at) }}
         </template>
       </el-table-column>
-      <el-table-column prop="content" label="内容"/>
-      <el-table-column prop="reply" label="回复"/>
-      <el-table-column label="操作" width="180">
+      <el-table-column prop="content" :label="t('common.content')"/>
+      <el-table-column prop="reply" :label="t('system.feedback.reply')"/>
+      <el-table-column :label="t('common.actions')" width="180">
         <template #default="scope:{ row: Feedback, column: any, $index: number }">
           <el-button
               v-if="scope.row.reply===''"
+              link
               type="primary"
               @click="layoutStore.state.feedbackReplyVisible=true;feedbackInfo=scope.row"
           >
-            回复
+            {{ t('system.feedback.reply') }}
           </el-button>
           <el-button
+              link
               type="danger"
               @click="feedbackDeleteVisible=true;feedbackInfo=scope.row"
           >
-            删除
+            {{ t('common.delete') }}
           </el-button>
         </template>
       </el-table-column>
@@ -72,7 +77,7 @@
         :before-close="feedbackReplyVisibleSynchronization"
     >
       <template #header>
-        回复反馈
+        {{ t('system.feedback.replyTitle') }}
       </template>
       <feedback-reply-form :id="feedbackInfo.id"/>
       <template #footer>
@@ -86,14 +91,14 @@
         destroy-on-close
     >
       <template #header>
-        删除反馈
+        {{ t('system.feedback.delete') }}
       </template>
-      您已选中 [1] 项资源，删除后将无法恢复，是否确认删除？
+      {{ t('system.feedback.confirmDeleteWithCount', {count: 1}) }}
       <template #footer>
         <el-button type="primary" @click="handleDelete(feedbackInfo.id)">
-          确定
+          {{ t('common.confirm') }}
         </el-button>
-        <el-button @click="feedbackDeleteVisible = false">取消</el-button>
+        <el-button @click="feedbackDeleteVisible = false">{{ t('common.cancel') }}</el-button>
       </template>
     </el-dialog>
 
@@ -118,7 +123,9 @@ import {type Feedback, feedbackDelete, type FeedbackDeleteRequest, feedbackList}
 import type {PageInfo} from "@/api/common";
 import FeedbackReplyForm from "@/components/forms/FeedbackReplyForm.vue";
 import UserCardPopover from "@/components/common/UserCardPopover.vue";
+import {useI18n} from "vue-i18n";
 
+const {t} = useI18n()
 
 const multipleFeedbackTableRef = ref()
 const feedbackTableData = ref<Feedback[]>()
@@ -250,77 +257,43 @@ const handleCurrentChange = (val: number) => {
 
 <style scoped lang="scss">
 .feedback-list {
-  .title {
+  .page-header {
     display: flex;
-    margin-bottom: 20px;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--sp-4);
+    margin-bottom: var(--sp-5);
 
-    .el-row {
-      font-size: 24px;
-      color: #4A90E2; // 蓝色
+    .page-title {
+      font-size: var(--fs-24);
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: var(--lh-title);
     }
 
-    .el-button-group {
-      margin-left: auto;
-      margin-top: auto;
-      margin-bottom: auto;
+    .page-desc {
+      margin-top: var(--sp-1);
+      font-size: var(--fs-14);
+      color: var(--text-muted);
+    }
 
-      .el-button {
-        margin-left: 32px;
-        background-color: #4A90E2; // 蓝色
-        border-color: #4A90E2; // 蓝色
-        color: #fff;
-
-        &:hover {
-          background-color: #3A78C2; // 深蓝色
-          border-color: #3A78C2; // 深蓝色
-        }
-      }
+    .page-actions {
+      display: flex;
+      gap: var(--sp-2);
+      flex-shrink: 0;
     }
   }
 
   .el-table {
-    border: 1px solid #4A90E2; // 蓝色
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
   }
 
   .el-pagination {
     display: flex;
-    justify-content: center;
-
-    .el-pager, .el-pagination__sizes, .el-pagination__total {
-      color: #4A90E2; // 蓝色
-    }
-
-    .el-pagination__jump {
-      .el-input__inner {
-        border-color: #4A90E2; // 蓝色
-      }
-    }
-
-    .el-pagination__prev, .el-pagination__next {
-      .el-icon {
-        color: #4A90E2; // 蓝色
-      }
-    }
-  }
-
-  .el-dialog {
-    .el-dialog__header {
-      background-color: #4A90E2; // 蓝色
-      color: #fff;
-    }
-
-    .el-dialog__footer {
-      .el-button {
-        background-color: #4A90E2; // 蓝色
-        border-color: #4A90E2; // 蓝色
-        color: #fff;
-
-        &:hover {
-          background-color: #3A78C2; // 深蓝色
-          border-color: #3A78C2; // 深蓝色
-        }
-      }
-    }
+    justify-content: flex-end;
+    margin-top: var(--sp-5);
   }
 }
 </style>

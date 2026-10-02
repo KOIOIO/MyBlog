@@ -16,7 +16,15 @@ type Zhihu struct {
 }
 
 func (*Zhihu) GetHotSearchData(maxNum int) (other.HotSearchData, error) {
-	resp, err := http.Get("https://www.zhihu.com/billboard")
+	// 设置超时和浏览器 UA，避免上游反爬导致请求无限挂起
+	client := &http.Client{Timeout: 8 * time.Second}
+	req, err := http.NewRequest("GET", "https://www.zhihu.com/billboard", nil)
+	if err != nil {
+		return other.HotSearchData{}, err
+	}
+	req.Header.Set("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36")
+	req.Header.Set("Referer", "https://www.zhihu.com/")
+	resp, err := client.Do(req)
 	if err != nil {
 		return other.HotSearchData{}, err
 	}

@@ -7,18 +7,18 @@
         :validate-on-rule-change="false"
         hide-required-asterisk
     >
-      <el-form-item label="原密码" prop="password">
+      <el-form-item :label="t('forms.passwordReset.oldPassword')" prop="password">
         <el-input
             v-model="passwordResetFormData.password"
             size="large"
-            placeholder="请输入旧密码"
+            :placeholder="t('forms.passwordReset.oldPasswordPlaceholder')"
         />
       </el-form-item>
-      <el-form-item label="新密码" prop="new_password">
+      <el-form-item :label="t('forms.passwordReset.newPassword')" prop="new_password">
         <el-input
             v-model="passwordResetFormData.new_password"
             size="large"
-            placeholder="请输入新密码"
+            :placeholder="t('forms.passwordReset.newPasswordPlaceholder')"
         />
       </el-form-item>
       <el-form-item>
@@ -26,12 +26,12 @@
           <el-button
               type="primary"
               size="large"
-              @click="submitForm">确定
+              @click="submitForm">{{ t('common.confirm') }}
           </el-button>
           <el-button
               size="large"
               @click="layoutStore.state.passwordResetVisible = false"
-          >取消
+          >{{ t('common.cancel') }}
           </el-button>
         </div>
       </el-form-item>
@@ -46,6 +46,9 @@ import {ElMessage, type FormInstance, type FormRules} from "element-plus";
 import {userResetPassword, type UserResetPasswordRequest} from "@/api/user";
 import router from "@/router";
 import {useUserStore} from "@/stores/user";
+import {useI18n} from "vue-i18n";
+
+const {t} = useI18n()
 
 const layoutStore = useLayoutStore()
 const userStore = useUserStore()
@@ -63,14 +66,14 @@ const rules = reactive<FormRules<UserResetPasswordRequest>>({
     min: 8,
     max: 20,
     trigger: 'change',
-    message: '密码的长度应为8~20位'
+    message: t('forms.passwordReset.passwordLength')
   }],
   new_password: [{
     required: true,
     min: 8,
     max: 20,
     trigger: 'change',
-    message: '密码的长度应为8~20位'
+    message: t('forms.passwordReset.passwordLength')
   }]
 })
 
@@ -100,6 +103,14 @@ const submitForm = async () => {
     .el-form-item {
       .button-group {
         margin-left: auto;
+        display: flex;
+        gap: var(--sp-2);
+
+        .el-button {
+          height: 40px;
+          min-width: 88px;
+          font-weight: 500;
+        }
       }
     }
   }

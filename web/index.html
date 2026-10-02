@@ -2,7 +2,7 @@
 <html lang="zh">
   <head>
     <meta charset="UTF-8">
-    <link rel="icon" href="http://127.0.0.1:8080/api/website/logo">
+    <link rel="icon" href="/api/website/logo">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title></title>
   </head>
@@ -15,6 +15,14 @@
           .then(data => {
               document.title = data.title
           })
+  </script>
+  <script>
+      // 主题初始化：localStorage 优先，其次跟随系统，避免刷新闪烁
+      (function () {
+          var saved = localStorage.getItem('myblog-theme');
+          var theme = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+          document.documentElement.setAttribute('data-theme', theme);
+      })();
   </script>
   </body>
 </html>

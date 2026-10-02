@@ -1,24 +1,20 @@
 <template>
-  <div class="friend-link">
+  <div class="friend-link-page">
     <web-navbar :noScroll="true"/>
-    <el-container class="main-content">
-      <div class="container">
-        <el-main>
-          <el-row class="title">友链列表</el-row>
-          <div class="list">
-            <el-card v-for="item in friendLinkList" @click="handleFriendLinkJumps(item.link)">
-              <div class="logo">
-                <el-image style="width: 64px; height: 64px" :src="item.logo" alt=""></el-image>
-                <el-row class="name">{{ item.name }}</el-row>
-              </div>
-              <div class="description">
-                <el-text>{{ item.description }}</el-text>
-              </div>
-            </el-card>
+    <div class="page">
+      <h1 class="page-title">{{ t('pages.friendLink.title') }}</h1>
+      <div class="list">
+        <div v-for="(item, i) in friendLinkList" :key="item.name" class="link-card"
+             :style="{ animationDelay: Math.min(i, 5) * 60 + 'ms' }"
+             @click="handleFriendLinkJumps(item.link)">
+          <el-image class="card-logo" style="width: 48px; height: 48px" :src="item.logo" alt=""></el-image>
+          <div class="card-body">
+            <h3 class="card-name">{{ item.name }}</h3>
+            <p class="card-desc">{{ item.description }}</p>
           </div>
-        </el-main>
+        </div>
       </div>
-    </el-container>
+    </div>
   </div>
 </template>
 
@@ -26,6 +22,9 @@
 import WebNavbar from "@/components/layout/WebNavbar.vue";
 import {type FriendLink, friendLinkInfo} from "@/api/friend-link";
 import {ref} from "vue";
+import {useI18n} from "vue-i18n";
+
+const {t} = useI18n();
 
 const friendLinkList = ref<FriendLink[]>([])
 
@@ -38,71 +37,89 @@ const getFriendLinkInfo = async () => {
 
 getFriendLinkInfo()
 
-const handleFriendLinkJumps = (link:string)=>{
+const handleFriendLinkJumps = (link: string) => {
   window.open(link)
 }
 </script>
 
 <style scoped lang="scss">
-.friend-link {
-  background-color: #1e1e2f;
-  color: #ffffff;
+.friend-link-page {
+  background-color: var(--bg);
+  min-height: 100vh;
 
-  .main-content {
-    margin-top: 70px;
+  .page {
+    max-width: var(--content-width);
+    margin: 0 auto;
+    padding: calc(70px + var(--sp-6)) var(--sp-4) var(--sp-9);
+  }
+
+  .page-title {
+    font-size: var(--fs-30);
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: var(--sp-6);
+  }
+
+  .list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: var(--sp-4);
+  }
+
+  .link-card {
     display: flex;
-    justify-content: center;
+    align-items: flex-start;
+    gap: var(--sp-3);
+    padding: var(--sp-4);
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: border-color 150ms cubic-bezier(.16,1,.3,1),
+                box-shadow 150ms cubic-bezier(.16,1,.3,1),
+                transform 150ms cubic-bezier(.16,1,.3,1);
+    animation: kf-fade-up var(--dur-mid) var(--ease-out) backwards;
 
-    .container {
-      display: flex;
-      max-width: 1400px;
-      width: 100%;
+    &:hover {
+      border-color: var(--el-border-color-dark);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
 
-      .el-main {
-        .title {
-          font-size: 24px;
-          margin-bottom: 20px;
-          color: #8a8aff;
-        }
+    &:active {
+      transform: translateY(1px);
+      box-shadow: var(--shadow-sm);
+      transition-duration: 80ms;
+    }
 
-        .list {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 20px;
+    .card-logo {
+      border-radius: var(--radius-sm);
+      flex-shrink: 0;
+    }
 
-          .el-card {
-            --el-card-padding: 0;
-            width: 25%;
-            height: 130px;
-            background-color: #2a2a3d;
-            border: 1px solid #3a3a5c;
-            transition: transform 0.3s, box-shadow 0.3s;
+    .card-body {
+      min-width: 0;
 
-            &:hover {
-              transform: translateY(-10px);
-              box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
-            }
+      .card-name {
+        font-size: var(--fs-16);
+        font-weight: 600;
+        color: var(--text-primary);
+        margin: 0 0 var(--sp-1);
+        transition: color 150ms ease-out;
+      }
 
-            .logo {
-              display: flex;
+      &:hover .card-name {
+        color: var(--accent);
+      }
 
-              .name {
-                font-size: 24px;
-                margin-top: auto;
-                margin-bottom: auto;
-                color: #8a8aff;
-              }
-            }
-
-            .description {
-              margin-left: 10px;
-              margin-right: 10px;
-              color: #b0b0ff;
-            }
-          }
-        }
+      .card-desc {
+        font-size: var(--fs-14);
+        color: var(--text-muted);
+        line-height: var(--lh-body);
+        margin: 0;
       }
     }
   }
 }
+
 </style>

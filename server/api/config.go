@@ -80,29 +80,6 @@ func (configApi *ConfigApi) UpdateEmail(c *gin.Context) {
 	response.OkWithMessage("Successfully updated email", c)
 }
 
-// GetQQ 获取QQ登录配置
-func (configApi *ConfigApi) GetQQ(c *gin.Context) {
-	response.OkWithData(global.Config.QQ, c)
-}
-
-// UpdateQQ 更新QQ登录配置
-func (configApi *ConfigApi) UpdateQQ(c *gin.Context) {
-	var req config.QQ
-	err := c.ShouldBindJSON(&req)
-	if err != nil {
-		response.FailWithMessage(err.Error(), c)
-		return
-	}
-
-	err = configService.UpdateQQ(req)
-	if err != nil {
-		global.Log.Error("Failed to update qq:", zap.Error(err))
-		response.FailWithMessage("Failed to update qq", c)
-		return
-	}
-	response.OkWithMessage("Successfully updated qq", c)
-}
-
 // GetQiniu 获取七牛云配置
 func (configApi *ConfigApi) GetQiniu(c *gin.Context) {
 	response.OkWithData(global.Config.Qiniu, c)

@@ -3,16 +3,16 @@
     <div class="title">
       <div class="left">
         <el-form :inline="true">
-          <el-form-item label="文章标题">
-            <el-input v-model="title" placeholder="请输入文章标题" clearable/>
+          <el-form-item :label="t('dashboard.articles.publish.title')">
+            <el-input v-model="title" :placeholder="t('dashboard.articles.publish.titlePh')" clearable/>
           </el-form-item>
         </el-form>
       </div>
       <div class="right">
-        <el-text>自动保存</el-text>
+        <el-text>{{ t('dashboard.articles.publish.autoSave') }}</el-text>
         <el-switch v-model="isAutoSaveEnabled"/>
-        <el-button type="danger" icon="Delete" @click="title='';text=''">清空文章</el-button>
-        <el-button type="success" icon="Plus" @click="layoutStore.state.articleCreateVisible=true">发布文章</el-button>
+        <el-button type="danger" icon="Delete" @click="title='';text=''">{{ t('dashboard.articles.publish.clear') }}</el-button>
+        <el-button type="success" icon="Plus" @click="layoutStore.state.articleCreateVisible=true">{{ t('dashboard.articles.publish.publish') }}</el-button>
 
 
         <!--  这里必须销毁，不然不会重新加载props-->
@@ -24,7 +24,7 @@
             :before-close="articleCreateVisibleSynchronization"
         >
           <template #header>
-            发布文章
+            {{ t('dashboard.articles.publish.publish') }}
           </template>
           <article-create-form :title=title :content="text"/>
           <template #footer>
@@ -38,6 +38,7 @@
 
 <script setup lang="ts">
 import {ref, watch} from 'vue';
+import {useI18n} from 'vue-i18n';
 import {MdEditor} from 'md-editor-v3';
 import 'md-editor-v3/lib/style.css';
 import axios from "axios";
@@ -47,6 +48,7 @@ import type {AxiosResponse} from "axios";
 import type {ApiResponse} from "@/utils/request";
 import type {ImageUploadResponse} from "@/api/image";
 
+const {t} = useI18n()
 const layoutStore = useLayoutStore()
 
 const savedIsAutoSaveEnabled = localStorage.getItem('isAutoSaveEnabled');
@@ -108,53 +110,82 @@ const articleCreateVisibleSynchronization = () => {
 <style lang="scss">
 .article-publish {
   height: 100%;
-  background-color: #1e1e2f; /* 深蓝紫色背景 */
+  display: flex;
+  flex-direction: column;
 
   .title {
     display: flex;
-    color: #ffffff; /* 白色文字 */
+    align-items: center;
+    gap: var(--sp-4);
+    margin-bottom: var(--sp-4);
 
     .left {
-      .el-input {
-        min-width: 400px;
-        background-color: #2e2e4f; /* 深蓝紫色输入框背景 */
-        color: #ffffff; /* 白色文字 */
+      flex: 1;
+      min-width: 0;
+
+      .el-form {
+        display: flex;
+
+        .el-form-item {
+          margin-bottom: 0;
+          flex: 1;
+        }
+      }
+
+      /* 顶部标题输入框：无边框、大号 */
+      .el-input__wrapper {
+        box-shadow: none !important;
+        background: transparent;
+        padding: var(--sp-2) 0;
+        border-radius: 0;
+
+        &.is-focus {
+          box-shadow: none !important;
+        }
+      }
+
+      .el-input__inner {
+        font-size: 28px;
+        font-weight: 600;
+        color: var(--text-primary);
+
+        &::placeholder {
+          color: var(--text-muted);
+        }
       }
     }
 
     .right {
-      margin-left: auto;
+      display: flex;
+      align-items: center;
+
+      .el-text {
+        color: var(--text-muted);
+        font-size: var(--fs-14);
+      }
 
       .el-switch {
-        margin-left: 20px;
-        margin-right: 20px;
-      }
-
-      .el-button {
-        background-color: #3e3e6f; /* 深蓝紫色按钮背景 */
-        color: #ffffff; /* 白色文字 */
-        border-color: #3e3e6f; /* 深蓝紫色边框 */
-      }
-
-      .el-button:hover {
-        background-color: #5e5e8f; /* 浅蓝紫色按钮背景 */
-        border-color: #5e5e8f; /* 浅蓝紫色边框 */
+        margin: 0 var(--sp-3);
       }
     }
   }
 
+  /* 编辑器容器：elevated 卡片、细线、圆角 */
   .md-editor {
-    height: 95%;
-    background-color: #2e2e4f; /* 深蓝紫色编辑器背景 */
-    color: #ffffff; /* 白色文字 */
+    flex: 1;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background-color: var(--bg-elevated);
+    color: var(--text-body);
   }
 }
 </style>
 
 <style lang="scss">
 .article-publish .md-editor .md-editor-toolbar-wrapper .md-editor-toolbar svg.md-editor-icon {
-  height: 24px;
-  width: 24px;
-  fill: #ffffff; /* 白色图标 */
+  height: 20px;
+  width: 20px;
+  fill: currentColor;
 }
 </style>

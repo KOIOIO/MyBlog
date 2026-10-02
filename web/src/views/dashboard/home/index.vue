@@ -3,7 +3,7 @@
     <div class="header">
       <el-card class="user-card">
         <el-row>
-          你好，{{ userStore.state.userInfo.username }}，今天也要加油啊！
+          {{ t('dashboard.home.greeting', { username: userStore.state.userInfo.username }) }}
         </el-row>
         <div class="weather">
           {{ weatherInfo }}
@@ -15,7 +15,7 @@
       <el-col :span="14">
         <el-card class="entrance-card">
           <el-row class="title">
-            快捷入口
+            {{ t('dashboard.home.quickEntry') }}
           </el-row>
           <div class="button-group">
             <div class="button-item" v-for="item in entranceList">
@@ -26,13 +26,13 @@
         </el-card>
         <el-card class="chart-card">
           <el-row class="title">
-            用户数据
+            {{ t('dashboard.home.userData') }}
           </el-row>
           <div class="time-select">
             <el-select
                 @change="getChartInfo"
                 v-model="userChartRequest.date"
-                placeholder="Select"
+                :placeholder="t('dashboard.home.chartPlaceholder')"
                 style="width: 200px"
             >
               <el-option
@@ -49,25 +49,25 @@
       <el-col :span="10">
         <el-card class="aside">
           <el-row class="title">
-            博客声明
+            {{ t('dashboard.home.declaration.title') }}
           </el-row>
           <div class="text">
             <el-text>
-              欢迎访问本博客！本博客致力于分享技术文章、开发经验及个人心得，内容主要涵盖编程技术、前端开发、后端开发、数据库设计、软件架构、开源项目等领域。<br>
-              <h3>版权声明</h3>
-              本博客中的所有原创文章版权归博客作者所有，转载请注明来源。<br>
-              部分文章可能涉及引用其他来源的内容，引用的内容会明确标注出处，版权归原作者所有。<br>
-              如果您认为本博客的某些内容侵犯了您的版权或其他权益，请及时联系我们，我们将立即处理。<br>
-              <h3>使用条款</h3>
-              本博客内容仅供参考和学习交流使用。作者不对内容的准确性、完整性或时效性作出保证，使用时请自行判断。<br>
-              本博客的部分内容可能受到第三方工具、平台的影响，无法完全控制其准确性和可用性，使用时请谨慎。<br>
-              <h3>隐私政策</h3>
-              本博客不会主动收集您的个人信息，除非您主动通过留言、评论或联系方式与我们进行交流。<br>
-              所有个人信息将严格保密，不会外泄或用于其他不当用途。<br>
-              <h3>联系方式</h3>
-              如有任何问题或建议，欢迎通过以下方式与我们联系：<br>
-              邮箱：[{{ useWebsiteStore().state.websiteInfo.email }}]<br>
-              感谢您的支持和关注，希望本博客能为您的技术成长和知识积累带来帮助！<br>
+              {{ t('dashboard.home.declaration.intro') }}<br>
+              <h3>{{ t('dashboard.home.declaration.copyright.title') }}</h3>
+              {{ t('dashboard.home.declaration.copyright.c1') }}<br>
+              {{ t('dashboard.home.declaration.copyright.c2') }}<br>
+              {{ t('dashboard.home.declaration.copyright.c3') }}<br>
+              <h3>{{ t('dashboard.home.declaration.terms.title') }}</h3>
+              {{ t('dashboard.home.declaration.terms.t1') }}<br>
+              {{ t('dashboard.home.declaration.terms.t2') }}<br>
+              <h3>{{ t('dashboard.home.declaration.privacy.title') }}</h3>
+              {{ t('dashboard.home.declaration.privacy.p1') }}<br>
+              {{ t('dashboard.home.declaration.privacy.p2') }}<br>
+              <h3>{{ t('dashboard.home.declaration.contact.title') }}</h3>
+              {{ t('dashboard.home.declaration.contact.c1') }}<br>
+              {{ t('dashboard.home.declaration.contact.emailLabel') }}：[{{ useWebsiteStore().state.websiteInfo.email }}]<br>
+              {{ t('dashboard.home.declaration.contact.c2') }}<br>
             </el-text>
           </div>
         </el-card>
@@ -78,13 +78,15 @@
 
 <script setup lang="ts">
 import {useUserStore} from "@/stores/user";
-import {ref} from "vue";
+import {computed, ref} from "vue";
+import {useI18n} from "vue-i18n";
 import {userChart, type UserChartRequest, type UserChartResponse, userWeather} from "@/api/user";
 import UserActivityChart from "@/components/widgets/UserActivityChart.vue";
 import {useWebsiteStore} from "@/stores/website";
 import router from "@/router";
 import {type Tag, useTagStore} from "@/stores/tag";
 
+const {t} = useI18n()
 const userStore = useUserStore()
 
 const weatherInfo = ref('')
@@ -105,32 +107,32 @@ interface Entrance {
   type: string;
 }
 
-const entranceList: Entrance[] = [
+const entranceList = computed<Entrance[]>(() => [
   {
-    title: '我的信息',
+    title: t('menu.userCenter.info'),
     name: 'user-info',
     icon: 'Postcard',
     type: 'primary',
   },
   {
-    title: '我的收藏',
+    title: t('menu.userCenter.star'),
     name: 'user-star',
     icon: 'Star',
     type: 'warning',
   },
   {
-    title: '我的评论',
+    title: t('menu.userCenter.comment'),
     name: 'user-comment',
     icon: 'ChatDotRound',
     type: 'info',
   },
   {
-    title: '我的反馈',
+    title: t('menu.userCenter.feedback'),
     name: 'user-feedback',
     icon: 'Message',
     type: 'success',
   }
-]
+])
 
 const tagStore = useTagStore()
 
@@ -151,28 +153,28 @@ const userChartRequest = ref<UserChartRequest>({
   date: 7,
 })
 
-const userChartOptions = [
+const userChartOptions = computed(() => [
   {
     value: 7,
-    label: '七天',
+    label: t('dashboard.home.range.7'),
   },
   {
     value: 30,
-    label: '一个月',
+    label: t('dashboard.home.range.30'),
   },
   {
     value: 90,
-    label: '三个月',
+    label: t('dashboard.home.range.90'),
   },
   {
     value: 180,
-    label: '六个月',
+    label: t('dashboard.home.range.180'),
   },
   {
     value: 365,
-    label: '一年',
+    label: t('dashboard.home.range.365'),
   },
-]
+])
 
 const chart = ref<UserChartResponse>(
     {
@@ -200,92 +202,131 @@ getChartInfo()
 <style scoped lang="scss">
 .home {
   .header {
-    margin-bottom: 20px;
+    margin-bottom: var(--sp-5);
 
     .user-card {
-      background-color: #1e1e2f;
-      color: #ffffff;
+      background-color: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      color: var(--text-body);
+
       .el-row {
-        font-size: 32px;
+        font-size: var(--fs-24);
+        font-weight: 600;
+        color: var(--text-primary);
       }
 
       .weather {
-        margin-top: 20px;
-        margin-bottom: 20px;
+        margin-top: var(--sp-3);
+        margin-bottom: var(--sp-2);
+        font-size: var(--fs-14);
+        color: var(--text-muted);
       }
     }
   }
 
   .content {
     display: flex;
+    gap: var(--sp-5);
 
     .entrance-card {
-      background-color: #2a2a3d;
-      color: #ffffff;
-      margin-bottom: 20px;
+      background-color: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      margin-bottom: var(--sp-5);
 
       .title {
-        font-size: 24px;
+        font-size: var(--fs-18);
+        font-weight: 600;
+        color: var(--text-primary);
       }
 
       .button-group {
         display: flex;
-        margin-top: 20px;
-        margin-bottom: 20px;
+        gap: var(--sp-4);
+        margin-top: var(--sp-4);
+        margin-bottom: var(--sp-4);
 
         .button-item {
           display: flex;
           flex-direction: column;
           align-items: center;
+          gap: var(--sp-2);
           width: 80px;
+          font-size: var(--fs-12);
+          color: var(--text-muted);
 
           .el-button {
             border: none;
-            --el-font-size-base: 32px;
-            height: 62px;
-            background-color: transparent;
-            color: #ffffff;
+            --el-font-size-base: 22px;
+            height: 48px;
+            width: 48px;
+            padding: 0;
+            background-color: var(--accent-weak);
+            color: var(--accent);
+            border-radius: var(--radius-md);
+            transition: background-color 180ms ease-out, color 180ms ease-out;
+          }
+
+          .el-button:hover {
+            background-color: var(--accent);
+            color: var(--bg);
           }
         }
       }
     }
 
     .chart-card {
-      background-color: #2a2a3d;
-      color: #ffffff;
+      background-color: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+
       .title {
-        font-size: 24px;
+        font-size: var(--fs-18);
+        font-weight: 600;
+        color: var(--text-primary);
       }
 
       .time-select {
         display: flex;
-        margin-top: 20px;
-        margin-bottom: 40px;
+        margin-top: var(--sp-3);
+        margin-bottom: var(--sp-4);
 
         .el-select {
           margin-left: auto;
-          background-color: #3a3a4d;
-          color: #ffffff;
+          width: 200px;
         }
       }
 
       .user-activity-chart {
         position: relative;
+        width: 100%;
       }
     }
 
     .aside {
-      background-color: #2a2a3d;
-      color: #ffffff;
-      margin-left: 20px;
+      background-color: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      margin-left: var(--sp-5);
       height: 100%;
 
       .title {
-        font-size: 24px;
+        font-size: var(--fs-18);
+        font-weight: 600;
+        color: var(--text-primary);
       }
 
       .text {
-        margin-top: 20px;
+        margin-top: var(--sp-4);
+        font-size: var(--fs-14);
+        line-height: var(--lh-body);
+        color: var(--text-body);
+
+        h3 {
+          font-size: var(--fs-16);
+          color: var(--text-primary);
+        }
       }
     }
   }

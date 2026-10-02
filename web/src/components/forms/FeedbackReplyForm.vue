@@ -4,12 +4,12 @@
       :model="feedbackReplyFormData"
       :validate-on-rule-change="false"
   >
-    <el-form-item label="反馈回复" prop="reply">
+    <el-form-item :label="t('forms.feedbackReply.reply')" prop="reply">
       <el-input
           type="textarea"
           :rows="4"
           v-model="feedbackReplyFormData.reply"
-          placeholder="请输入反馈回复"
+          :placeholder="t('forms.feedbackReply.placeholder')"
       />
     </el-form-item>
     <el-form-item>
@@ -18,12 +18,12 @@
             type="primary"
             size="large"
             @click="submitForm"
-        >确定
+        >{{ t('common.confirm') }}
         </el-button>
         <el-button
             size="large"
             @click="layoutStore.state.feedbackReplyVisible = false"
-        >取消
+        >{{ t('common.cancel') }}
         </el-button>
       </div>
     </el-form-item>
@@ -36,6 +36,9 @@ import {defineProps, reactive} from 'vue';
 import {ElMessage} from "element-plus";
 import {useLayoutStore} from "@/stores/layout";
 import {feedbackReply, type FeedbackReplyRequest} from "@/api/feedback";
+import {useI18n} from "vue-i18n";
+
+const {t} = useI18n()
 
 const layoutStore = useLayoutStore()
 
@@ -62,8 +65,20 @@ const submitForm = async () => {
 .feedback-reply-form {
   .el-form {
     .el-form-item {
+      .el-textarea__inner {
+        background-color: var(--bg-elevated);
+      }
+
       .button-group {
         margin-left: auto;
+        display: flex;
+        gap: var(--sp-2);
+
+        .el-button {
+          height: 40px;
+          min-width: 88px;
+          font-weight: 500;
+        }
       }
     }
   }

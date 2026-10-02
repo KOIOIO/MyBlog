@@ -10,16 +10,27 @@
 </template>
 
 <script setup lang="ts">
+import {useI18n} from "vue-i18n";
 import WebFooter from "@/components/layout/WebFooter.vue";
+
+const {t} = useI18n();
 </script>
 
 <style scoped lang="scss">
 .web {
+  min-height: 100vh;
+  background-color: var(--bg);
+
+  .el-container {
+    flex-direction: column;
+    background-color: transparent;
+  }
+
   .el-footer {
     height: auto;
-    border: 1px solid #DCDFE6;
-    background-color: #1E1E3F; /* 深蓝色背景 */
-    color: #E0E0FF; /* 浅紫色文字 */
+    padding: 0;
+    background-color: transparent;
+    color: var(--text-body);
   }
 }
 </style>

@@ -39,6 +39,7 @@ func InitRouter() *gin.Engine {
 		routerGroup.InitArticleRouter(privateGroup, publicGroup, adminGroup)
 		routerGroup.InitCommentRouter(privateGroup, publicGroup, adminGroup)
 		routerGroup.InitFeedbackRouter(privateGroup, publicGroup, adminGroup)
+		routerGroup.InitForumRouter(privateGroup, publicGroup, adminGroup)
 	}
 	{
 		routerGroup.InitImageRouter(adminGroup)

@@ -83,28 +83,6 @@ export const updateEmail = (data: Email): Promise<ApiResponse<undefined>> => {
     })
 }
 
-export interface QQ {
-    enable: boolean;
-    app_id: string;
-    app_key: string;
-    redirect_uri: string;
-}
-
-export const getQQ = (): Promise<ApiResponse<QQ>> => {
-    return service({
-        url: '/config/qq',
-        method: 'get',
-    })
-}
-
-export const updateQQ = (data: QQ): Promise<ApiResponse<undefined>> => {
-    return service({
-        url: '/config/qq',
-        method: 'put',
-        data: data,
-    })
-}
-
 export interface Qiniu {
     zone: string;
     bucket: string;

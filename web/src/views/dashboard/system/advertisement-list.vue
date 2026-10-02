@@ -1,10 +1,13 @@
 <template>
   <div class="advertisement-list">
-    <div class="title">
-      <el-row>广告列表</el-row>
-      <el-button-group>
-        <el-button type="success" icon="Plus" @click="layoutStore.state.advertisementCreateVisible = true">
-          新建广告
+    <div class="page-header">
+      <div>
+        <div class="page-title">{{ t('system.advertisement.title') }}</div>
+        <div class="page-desc">{{ t('system.advertisement.desc') }}</div>
+      </div>
+      <div class="page-actions">
+        <el-button type="primary" icon="Plus" @click="layoutStore.state.advertisementCreateVisible = true">
+          {{ t('system.advertisement.create') }}
         </el-button>
 
         <el-dialog
@@ -15,15 +18,15 @@
             :before-close="advertisementCreateVisibleSynchronization"
         >
           <template #header>
-            新建广告
+            {{ t('system.advertisement.create') }}
           </template>
           <advertisement-create-form/>
           <template #footer>
           </template>
         </el-dialog>
 
-        <el-button type="danger" icon="Delete" @click="advertisementBulkDeleteVisible = true;handleIdsToDelete()">
-          批量删除
+        <el-button type="danger" plain icon="Delete" @click="advertisementBulkDeleteVisible = true;handleIdsToDelete()">
+          {{ t('common.batchDelete') }}
         </el-button>
 
         <el-dialog
@@ -33,29 +36,29 @@
             destroy-on-close
         >
           <template #header>
-            删除广告
+            {{ t('system.advertisement.delete') }}
           </template>
-          您已选中 [{{ idsToDelete.length }}] 项资源，删除后将无法恢复，是否确认删除？
+          {{ t('system.advertisement.confirmDeleteWithCount', {count: idsToDelete.length}) }}
           <template #footer>
             <el-button type="primary" @click="handleBulkDelete(idsToDelete)">
-              确定
+              {{ t('common.confirm') }}
             </el-button>
-            <el-button @click="advertisementBulkDeleteVisible = false">取消</el-button>
+            <el-button @click="advertisementBulkDeleteVisible = false">{{ t('common.cancel') }}</el-button>
           </template>
         </el-dialog>
-      </el-button-group>
+      </div>
     </div>
 
     <div class="advertisement-list-request">
       <el-form :inline="true" :model="advertisementListRequest">
-        <el-form-item label="广告标题">
-          <el-input v-model="advertisementListRequest.title" placeholder="请输入广告标题" clearable/>
+        <el-form-item :label="t('system.advertisement.adTitle')">
+          <el-input v-model="advertisementListRequest.title" :placeholder="t('system.advertisement.adTitlePlaceholder')" clearable/>
         </el-form-item>
-        <el-form-item label="广告内容">
-          <el-input v-model="advertisementListRequest.content" placeholder="请输入广告内容" clearable/>
+        <el-form-item :label="t('system.advertisement.adContent')">
+          <el-input v-model="advertisementListRequest.content" :placeholder="t('system.advertisement.adContentPlaceholder')" clearable/>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" icon="Search" @click="getAdvertisementTableData">查询</el-button>
+          <el-button type="primary" icon="Search" @click="getAdvertisementTableData">{{ t('common.query') }}</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -65,27 +68,29 @@
         :data="advertisementTableData"
     >
       <el-table-column type="selection" width="60"/>
-      <el-table-column label="图片">
+      <el-table-column :label="t('system.advertisement.image')">
         <template #default="scope:{ row: any, column: any, $index: number }">
           <el-image :src="scope.row.ad_image" alt=""/>
         </template>
       </el-table-column>
-      <el-table-column prop="link" label="链接"/>
-      <el-table-column prop="title" label="标题"/>
-      <el-table-column prop="content" label="内容"/>
-      <el-table-column label="操作">
+      <el-table-column prop="link" :label="t('system.advertisement.link')"/>
+      <el-table-column prop="title" :label="t('common.title')"/>
+      <el-table-column prop="content" :label="t('common.content')"/>
+      <el-table-column :label="t('common.actions')">
         <template #default="scope:{ row: any, column: any, $index: number }">
           <el-button
-              type="warning"
+              link
+              type="primary"
               @click="layoutStore.state.advertisementUpdateVisible=true;advertisementInfo=scope.row"
           >
-            更新
+            {{ t('system.advertisement.updateAction') }}
           </el-button>
           <el-button
+              link
               type="danger"
               @click="advertisementDeleteVisible=true;advertisementInfo=scope.row"
           >
-            删除
+            {{ t('common.delete') }}
           </el-button>
         </template>
       </el-table-column>
@@ -99,7 +104,7 @@
         :before-close="advertisementUpdateVisibleSynchronization"
     >
       <template #header>
-        更新广告
+        {{ t('system.advertisement.update') }}
       </template>
       <advertisement-update-form :advertisement=advertisementInfo />
       <template #footer>
@@ -113,14 +118,14 @@
         destroy-on-close
     >
       <template #header>
-        删除广告
+        {{ t('system.advertisement.delete') }}
       </template>
-      您已选中 [1] 项资源，删除后将无法恢复，是否确认删除？
+      {{ t('system.advertisement.confirmDeleteWithCount', {count: 1}) }}
       <template #footer>
         <el-button type="primary" @click="handleDelete(advertisementInfo.id)">
-          确定
+          {{ t('common.confirm') }}
         </el-button>
-        <el-button @click="advertisementDeleteVisible = false">取消</el-button>
+        <el-button @click="advertisementDeleteVisible = false">{{ t('common.cancel') }}</el-button>
       </template>
     </el-dialog>
 
@@ -149,7 +154,9 @@ import AdvertisementCreateForm from "@/components/forms/AdvertisementCreateForm.
 import {ElMessage} from "element-plus";
 import {useRoute, useRouter} from "vue-router";
 import AdvertisementUpdateForm from "@/components/forms/AdvertisementUpdateForm.vue";
+import {useI18n} from "vue-i18n";
 
+const {t} = useI18n()
 
 const multipleAdvertisementTableRef = ref()
 const advertisementTableData = ref<Advertisement[]>()
@@ -303,69 +310,63 @@ const handleCurrentChange = (val: number) => {
 
 <style scoped lang="scss">
 .advertisement-list {
-  .title {
+  .page-header {
     display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--sp-4);
+    margin-bottom: var(--sp-5);
 
-    .el-row {
-      font-size: 24px;
-      color: #3A3D99; // 更改字体颜色为蓝紫色
+    .page-title {
+      font-size: var(--fs-24);
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: var(--lh-title);
     }
 
-    .el-button-group {
-      margin-left: auto;
-      margin-top: auto;
-      margin-bottom: auto;
+    .page-desc {
+      margin-top: var(--sp-1);
+      font-size: var(--fs-14);
+      color: var(--text-muted);
+    }
 
-      .el-button {
-        margin-left: 32px;
-        background-color: #3A3D99; // 更改按钮背景颜色为蓝紫色
-        border-color: #3A3D99; // 更改按钮边框颜色为蓝紫色
-        color: #fff; // 更改按钮字体颜色为白色
-      }
+    .page-actions {
+      display: flex;
+      gap: var(--sp-2);
+      flex-shrink: 0;
     }
   }
 
   .advertisement-list-request {
-    border: 1px solid #3A3D99; // 更改边框颜色为蓝紫色
-    padding-top: 20px;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    display: flex;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: var(--sp-4) var(--sp-5);
+    margin-bottom: var(--sp-5);
 
     .el-form {
-      margin-left: auto;
-
-      .el-form-item__label {
-        color: #3A3D99; // 更改表单标签颜色为蓝紫色
-      }
-
-      .el-input__inner {
-        border-color: #3A3D99; // 更改输入框边框颜色为蓝紫色
-      }
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--sp-2);
     }
   }
 
   .el-table {
-    border: 1px solid #3A3D99; // 更改表格边框颜色为蓝紫色
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
 
     .el-image {
       height: 48px;
-    }
-
-    .el-table__header-wrapper th {
-      background-color: #3A3D99; // 更改表头背景颜色为蓝紫色
-      color: #fff; // 更改表头字体颜色为白色
+      border-radius: var(--radius-sm);
     }
   }
 
   .el-pagination {
     display: flex;
-    justify-content: center;
-
-    .el-pager li.active {
-      background-color: #3A3D99; // 更改分页器活动页背景颜色为蓝紫色
-      border-color: #3A3D99; // 更改分页器活动页边框颜色为蓝紫色
-    }
+    justify-content: flex-end;
+    margin-top: var(--sp-5);
   }
 }
 </style>

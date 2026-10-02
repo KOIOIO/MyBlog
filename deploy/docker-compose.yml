@@ -1,0 +1,97 @@
+# hengshui-tablet-video-rpc 生产编排文件（1Panel「容器 → 编排」导入使用）
+# 约定：本文件所在目录 = 部署根目录（建议 /opt/myblog/deploy），
+#       相对路径 ./mysql-data ./uploads ./logs ./backup 都会落在该目录下。
+name: myblog
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: myblog-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: blog_db
+      TZ: Asia/Shanghai
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - ./mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    networks:
+      - myblog
+
+  redis:
+    image: redis:7-alpine
+    container_name: myblog-redis
+    restart: always
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    networks:
+      - myblog
+
+  es:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.17.0
+    container_name: myblog-es
+    restart: always
+    environment:
+      discovery.type: single-node
+      xpack.security.enabled: "false"
+      ES_JAVA_OPTS: "-Xms512m -Xmx512m"
+      TZ: Asia/Shanghai
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://127.0.0.1:9200/ >/dev/null || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 30
+    networks:
+      - myblog
+
+  backend:
+    build:
+      context: ../server
+      dockerfile: Dockerfile
+    image: myblog-backend:latest
+    container_name: myblog-backend
+    restart: always
+    ports:
+      # 只绑定本机回环地址：仅 1Panel 的 OpenResty 通过 127.0.0.1:8080 访问，不暴露公网
+      - "127.0.0.1:8080:8080"
+    volumes:
+      - ./config.yaml.prod:/app/config.yaml:ro
+      - ./uploads:/app/uploads
+      - ./logs:/app/log
+      - ./backup:/app/backup:ro
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      es:
+        condition: service_healthy
+    networks:
+      - myblog
+
+networks:
+  myblog:
+    driver: bridge
+
+volumes:
+  redisdata:
+  esdata:

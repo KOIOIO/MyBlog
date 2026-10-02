@@ -208,6 +208,26 @@ func (articleApi *ArticleApi) ArticleUpdate(c *gin.Context) {
 	response.OkWithMessage("Successfully updated article", c)
 }
 
+// ArticleSetTop 设置文章置顶
+// @param c *gin.Context
+// @return 通过response包封装返回结果
+func (articleApi *ArticleApi) ArticleSetTop(c *gin.Context) {
+	var req request.ArticleSetTop
+	err := c.ShouldBindJSON(&req)
+	if err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+
+	err = articleService.ArticleSetTop(req)
+	if err != nil {
+		global.Log.Error("Failed to set article top:", zap.Error(err))
+		response.FailWithMessage("Failed to set article top", c)
+		return
+	}
+	response.OkWithMessage("Successfully set article top", c)
+}
+
 // ArticleList 获取文章列表
 // @param c *gin.Context
 // @return 通过response包封装返回结果

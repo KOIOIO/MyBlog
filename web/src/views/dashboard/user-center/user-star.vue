@@ -1,29 +1,32 @@
 <template>
   <div class="user-star">
-    <el-row class="title">我的收藏</el-row>
+    <div class="page-header">
+      <div class="page-title">{{ t('system.userCenter.star.title') }}</div>
+      <div class="page-desc">{{ t('system.userCenter.star.desc') }}</div>
+    </div>
 
     <el-table
         :data="articleLikesListData"
     >
-      <el-table-column label="封面" width="100">
+      <el-table-column :label="t('common.cover')" width="100">
         <template #default="scope:{ row: Hit<Article>, column: any, $index: number }">
           <el-image :src="scope.row._source.cover" alt=""/>
         </template>
       </el-table-column>
-      <el-table-column prop="_source.title" label="标题" width="120"/>
-      <el-table-column prop="_source.category" label="类别" width="80"/>
-      <el-table-column label="标签" width="120">
+      <el-table-column prop="_source.title" :label="t('common.title')" width="120"/>
+      <el-table-column prop="_source.category" :label="t('system.userCenter.star.category')" width="80"/>
+      <el-table-column :label="t('common.tags')" width="120">
         <template #default="scope:{ row: Hit<Article>, column: any, $index: number }">
           <el-tag v-for="tag in scope.row._source.tags">{{ tag }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="简介">
+      <el-table-column :label="t('system.userCenter.star.abstract')">
         <template #default="scope:{ row: Hit<Article>, column: any, $index: number }">
           <el-text line-clamp="5">{{ scope.row._source.abstract }}</el-text>
         </template>
       </el-table-column>
-      <el-table-column prop="_source.created_at" label="发布时间" width="102"/>
-      <el-table-column label="文章id" width="200">
+      <el-table-column prop="_source.created_at" :label="t('system.userCenter.star.publishTime')" width="102"/>
+      <el-table-column :label="t('system.userCenter.star.articleId')" width="200">
         <template #default="scope:{ row: Hit<Article>, column: any, $index: number }">
           <el-link :href="'/article/'+scope.row._id">{{ scope.row._id }}</el-link>
         </template>
@@ -48,7 +51,9 @@ import {type Article} from "@/api/article";
 import {useRoute, useRouter} from "vue-router";
 import type {Hit, PageInfo} from "@/api/common";
 import {articleLikesList} from "@/api/article";
+import {useI18n} from "vue-i18n";
 
+const {t} = useI18n()
 
 const articleLikesListData = ref<Hit<Article>[]>()
 const page = ref(1)
@@ -110,33 +115,38 @@ const handleCurrentChange = (val: number) => {
 
 <style scoped lang="scss">
 .user-star {
-  .title {
-    margin-bottom: 20px;
-    font-size: 24px;
-    color: #4B0082; /* 蓝紫色 */
+  .page-header {
+    margin-bottom: var(--sp-5);
+
+    .page-title {
+      font-size: var(--fs-24);
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: var(--lh-title);
+    }
+
+    .page-desc {
+      margin-top: var(--sp-1);
+      font-size: var(--fs-14);
+      color: var(--text-muted);
+    }
   }
 
   .el-table {
-    border: 1px solid #4B0082; /* 蓝紫色 */
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
 
     .el-image {
       height: 48px;
-    }
-
-    .el-table__header-wrapper th {
-      background-color: #4B0082; /* 蓝紫色 */
-      color: #fff;
+      border-radius: var(--radius-sm);
     }
   }
 
   .el-pagination {
     display: flex;
-    justify-content: center;
-
-    .el-pager li.active {
-      background-color: #4B0082; /* 蓝紫色 */
-      border-color: #4B0082; /* 蓝紫色 */
-    }
+    justify-content: flex-end;
+    margin-top: var(--sp-5);
   }
 }
 </style>

@@ -123,39 +123,25 @@ func (articleService *ArticleService) UpdateCategoryCount(tx *gorm.DB, oldCatego
 	return nil
 }
 
-// UpdateTagsCount 更新文章标签的计数（增加或减少）
+// UpdateTagsCount 更新固定标签库 blog_tags 的引用计数（增加或减少）
+// 标签为固定库，不再动态创建；调用前已通过 checkArticleTagsExist 校验标签存在
 func (articleService *ArticleService) UpdateTagsCount(tx *gorm.DB, oldTags, newTags []string) error {
 	// 比较旧标签和新标签，获取新增和移除的标签
 	addedTags, removedTags := utils.DiffArrays(oldTags, newTags)
 
-	// 处理新增的标签
+	// 处理新增的标签：计数 +1
 	for _, addedTag := range addedTags {
-		var t database.ArticleTag
-		// 如果标签不存在，则创建该标签并设置计数为1
-		if errors.Is(tx.Where("tag = ?", addedTag).First(&t).Error, gorm.ErrRecordNotFound) {
-			if err := tx.Create(&database.ArticleTag{Tag: addedTag, Number: 1}).Error; err != nil {
-				return err
-			}
-		} else {
-			// 如果标签已存在，更新标签的计数
-			if err := tx.Model(&t).Update("number", gorm.Expr("number + ?", 1)).Error; err != nil {
-				return err
-			}
+		if err := tx.Model(&database.BlogTag{}).Where("tag = ?", addedTag).
+			Update("number", gorm.Expr("number + ?", 1)).Error; err != nil {
+			return err
 		}
 	}
 
-	// 处理移除的标签
+	// 处理移除的标签：计数 -1
 	for _, removedTag := range removedTags {
-		var t database.ArticleTag
-		// 更新标签计数，减少 1
-		if err := tx.Where("tag = ?", removedTag).First(&t).Update("number", gorm.Expr("number - ?", 1)).Error; err != nil {
+		if err := tx.Model(&database.BlogTag{}).Where("tag = ?", removedTag).
+			Update("number", gorm.Expr("number - ?", 1)).Error; err != nil {
 			return err
-		}
-		// 如果标签的计数为 1（减少 1 之前），则删除该标签
-		if t.Number == 1 {
-			if err := tx.Delete(&t).Error; err != nil {
-				return err
-			}
 		}
 	}
 	return nil

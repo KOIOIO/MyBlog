@@ -1,18 +1,21 @@
 <template>
   <div class="user-list">
-    <div class="title">
-      <el-row>用户列表</el-row>
+    <div class="page-header">
+      <div>
+        <div class="page-title">{{ t('system.users.title') }}</div>
+        <div class="page-desc">{{ t('system.users.desc') }}</div>
+      </div>
     </div>
 
     <div class="user-list-request">
       <el-form :inline="true" :model="userListRequest">
         <el-form-item label="uuid">
-          <el-input v-model="userListRequest.uuid" placeholder="请输入用户UUID" clearable/>
+          <el-input v-model="userListRequest.uuid" :placeholder="t('system.users.uuidPlaceholder')" clearable/>
         </el-form-item>
-        <el-form-item label="注册来源">
+        <el-form-item :label="t('system.users.registerSource')">
           <el-select
               v-model="userListRequest.register"
-              placeholder="Select"
+              :placeholder="t('system.users.selectPlaceholder')"
               style="width: 200px"
           >
             <el-option
@@ -24,7 +27,7 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" icon="Search" @click="getUserTableData">查询</el-button>
+          <el-button type="primary" icon="Search" @click="getUserTableData">{{ t('common.query') }}</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -32,33 +35,34 @@
     <el-table
         :data="userTableData"
     >
-      <el-table-column label="头像">
+      <el-table-column :label="t('system.users.avatar')">
         <template #default="scope:{ row: User, column: any, $index: number }">
           <el-avatar :src="scope.row.avatar" alt=""/>
         </template>
       </el-table-column>
-      <el-table-column prop="username" label="用户名"/>
+      <el-table-column prop="username" :label="t('system.users.username')"/>
       <el-table-column prop="uuid" label="UUID" width="320px"/>
-      <el-table-column prop="address" label="地址"/>
-      <el-table-column label="注册时间" width="250px">
+      <el-table-column prop="address" :label="t('system.users.address')"/>
+      <el-table-column :label="t('system.users.registerTime')" width="250px">
         <template #default="scope:{ row: User, column: any, $index: number }">
           {{ getTime(scope.row.created_at) }}
         </template>
       </el-table-column>
-      <el-table-column label="角色">
+      <el-table-column :label="t('system.users.role')">
         <template #default="scope:{ row: User, column: any, $index: number }">
-          {{ scope.row.role_id === 2 ? "管理员" : "普通用户" }}
+          {{ scope.row.role_id === 2 ? t('system.users.admin') : t('system.users.normalUser') }}
         </template>
       </el-table-column>
-      <el-table-column prop="register" label="注册来源"/>
-      <el-table-column label="操作">
+      <el-table-column prop="register" :label="t('system.users.registerSource')"/>
+      <el-table-column :label="t('common.actions')">
         <template #default="scope:{ row: User, column: any, $index: number }">
           <el-button
               v-if="scope.row.role_id===1"
+              link
               type="warning"
               @click="userFreezeVisible=true;userInfo=scope.row"
           >
-            {{ scope.row.freeze === false ? "冻结" : "解冻" }}
+            {{ scope.row.freeze === false ? t('system.users.freeze') : t('system.users.unfreeze') }}
           </el-button>
         </template>
       </el-table-column>
@@ -71,14 +75,14 @@
         destroy-on-close
     >
       <template #header>
-        冻结/解冻用户
+        {{ t('system.users.freezeDialogTitle') }}
       </template>
-      是否{{ userInfo.freeze === false ? "冻结" : "解冻" }}该用户：{{ userInfo.username }}
+      {{ t('system.users.freezeConfirm', {action: userInfo.freeze === false ? t('system.users.freeze') : t('system.users.unfreeze'), username: userInfo.username}) }}
       <template #footer>
         <el-button type="primary" @click="handleFreeze(userInfo.id,userInfo.freeze)">
-          确定
+          {{ t('common.confirm') }}
         </el-button>
-        <el-button @click="userFreezeVisible = false">取消</el-button>
+        <el-button @click="userFreezeVisible = false">{{ t('common.cancel') }}</el-button>
       </template>
     </el-dialog>
     <el-pagination
@@ -94,11 +98,14 @@
 </template>
 
 <script setup lang="ts">
-import {nextTick, onMounted, reactive, ref, watch} from "vue";
+import {computed, nextTick, onMounted, reactive, ref, watch} from "vue";
 import {useLayoutStore} from "@/stores/layout";
 import {ElMessage} from "element-plus";
 import {useRoute, useRouter} from "vue-router";
 import {type User, userFreeze, userList, type UserListRequest, type UserOperation, userUnfreeze} from "@/api/user";
+import {useI18n} from "vue-i18n";
+
+const {t} = useI18n()
 
 const userTableData = ref<User[]>()
 const page = ref(1)
@@ -107,20 +114,16 @@ const total = ref(0)
 
 const layoutStore = useLayoutStore()
 
-const registerOptions=[
+const registerOptions = computed(() => [
   {
     value: '',
-    label: '全部',
-  },
-  {
-    value: 'QQ',
-    label: 'QQ',
+    label: t('common.all'),
   },
   {
     value: '邮箱',
-    label: '邮箱',
+    label: t('system.users.registerEmail'),
   },
-]
+])
 
 const userListRequest = reactive<UserListRequest>({
   uuid: null,
@@ -229,47 +232,48 @@ const handleCurrentChange = (val: number) => {
 
 <style scoped lang="scss">
 .user-list {
-  .title {
-    display: flex;
+  .page-header {
+    margin-bottom: var(--sp-5);
 
-    .el-row {
-      font-size: 24px;
-      color: #4B0082; /* 蓝紫色 */
+    .page-title {
+      font-size: var(--fs-24);
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: var(--lh-title);
+    }
+
+    .page-desc {
+      margin-top: var(--sp-1);
+      font-size: var(--fs-14);
+      color: var(--text-muted);
     }
   }
 
   .user-list-request {
-    border: 1px solid #4B0082; /* 蓝紫色 */
-    padding-top: 20px;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    display: flex;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: var(--sp-4) var(--sp-5);
+    margin-bottom: var(--sp-5);
 
     .el-form {
-      margin-left: auto;
-
-      .el-form-item__label {
-        color: #4B0082; /* 蓝紫色 */
-      }
-
-      .el-input__inner {
-        border-color: #4B0082; /* 蓝紫色 */
-      }
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--sp-2);
     }
   }
 
   .el-table {
-    border: 1px solid #4B0082; /* 蓝紫色 */
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
   }
 
   .el-pagination {
     display: flex;
-    justify-content: center;
-
-    .el-pager li.active {
-      background-color: #4B0082; /* 蓝紫色 */
-      border-color: #4B0082; /* 蓝紫色 */
-    }
+    justify-content: flex-end;
+    margin-top: var(--sp-5);
   }
 }
 </style>

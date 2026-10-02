@@ -5,9 +5,9 @@
       <el-row>{{ userCardInfo.username }}</el-row>
       <el-row>{{ userCardInfo.address }}</el-row>
     </div>
-    <el-row class="uuid">uuid：{{ userCardInfo.uuid }}</el-row>
+    <el-row class="uuid">{{ t('auth.uuid') }}：{{ userCardInfo.uuid }}</el-row>
     <div class="container">
-      <el-row>签名：{{ userCardInfo.signature }}</el-row>
+      <el-row>{{ t('auth.signature') }}：{{ userCardInfo.signature }}</el-row>
     </div>
   </div>
 </template>
@@ -15,6 +15,9 @@
 <script setup lang="ts">
 import {defineProps, ref} from "vue";
 import {userCard, type UserCardRequest, type UserCardResponse} from "@/api/user";
+import {useI18n} from "vue-i18n";
+
+const {t} = useI18n();
 
 const props = defineProps<{
   uuid: string;
@@ -61,27 +64,66 @@ const sendDataToParent = (userCardInfo:UserCardResponse) => {
 <style scoped lang="scss">
 .user-card {
   max-width: 320px;
-  padding-top: 40px;
+  padding: var(--sp-5);
+  background-color: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  transition: border-color 150ms ease-out, box-shadow 150ms ease-out;
+
+  &:hover {
+    border-color: var(--accent);
+    box-shadow: var(--shadow-md);
+  }
 
   .user-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-align: center;
 
-    .el-row {
-      display: flex;
-      justify-content: center;
-      margin: 5px;
+    :deep(.el-avatar) {
+      flex-shrink: 0;
+      transition: opacity 150ms ease-out;
+    }
+
+    &:hover :deep(.el-avatar) {
+      opacity: 0.85;
+    }
+
+    .el-row:first-of-type {
+      margin-top: var(--sp-3);
+      font-size: var(--fs-16);
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: var(--lh-title);
+    }
+
+    .el-row:last-of-type {
+      margin-top: var(--sp-1);
+      font-size: var(--fs-12);
+      color: var(--text-muted);
     }
   }
 
   .uuid {
-    margin: 10px 20px;
+    margin-top: var(--sp-4);
+    padding-top: var(--sp-3);
+    border-top: 1px solid var(--border);
+    font-size: var(--fs-12);
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    word-break: break-all;
   }
 
   .container {
-    background-color: white;
+    margin-top: var(--sp-3);
+    background-color: transparent;
 
     .el-row {
-      padding: 20px;
+      padding: 0;
+      font-size: var(--fs-14);
+      color: var(--text-body);
+      line-height: var(--lh-body);
     }
   }
 }

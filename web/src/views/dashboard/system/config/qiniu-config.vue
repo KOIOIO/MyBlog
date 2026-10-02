@@ -2,9 +2,7 @@
   <div class="qiniu-config">
     <el-col :span="12">
       <div class="info">
-        <div class="title">
-          <el-row>七牛配置</el-row>
-        </div>
+        <div class="page-title">{{ t('system.config.qiniu.title') }}</div>
         <div class="content">
           <el-form
               :model="qiniuInfo"
@@ -12,25 +10,25 @@
               label-width="auto"
               style="max-width: 400px"
           >
-            <el-form-item label="存储区域">
+            <el-form-item :label="t('system.config.qiniu.zone')">
               <el-input @change="updateQiniuInfo" v-model="qiniuInfo.zone"/>
             </el-form-item>
-            <el-form-item label="空间名称">
+            <el-form-item :label="t('system.config.qiniu.bucket')">
               <el-input @change="updateQiniuInfo" v-model.number="qiniuInfo.bucket"/>
             </el-form-item>
-            <el-form-item label="密钥 AK">
+            <el-form-item :label="t('system.config.qiniu.accessKey')">
               <el-input @change="updateQiniuInfo" v-model="qiniuInfo.access_key" type="password" show-password/>
             </el-form-item>
-            <el-form-item label="密钥 SK">
+            <el-form-item :label="t('system.config.qiniu.secretKey')">
               <el-input @change="updateQiniuInfo" v-model="qiniuInfo.secret_key" type="password" show-password/>
             </el-form-item>
-            <el-form-item label="CDN加速域名">
+            <el-form-item :label="t('system.config.qiniu.cdnDomain')">
               <el-input @change="updateQiniuInfo" v-model="qiniuInfo.img_path"/>
             </el-form-item>
-            <el-form-item label="使用CDN上传加速">
+            <el-form-item :label="t('system.config.qiniu.useCdn')">
               <el-switch v-model="qiniuInfo.use_cdn_domains" @change="updateQiniuInfo"/>
             </el-form-item>
-            <el-form-item label="使用Https">
+            <el-form-item :label="t('system.config.qiniu.useHttps')">
               <el-switch v-model="qiniuInfo.use_https" @change="updateQiniuInfo"/>
             </el-form-item>
           </el-form>
@@ -43,6 +41,9 @@
 <script setup lang="ts">
 import {ref, watch} from "vue";
 import {type Qiniu, getQiniu, updateQiniu} from "@/api/config";
+import {useI18n} from "vue-i18n";
+
+const {t} = useI18n()
 
 const qiniuInfo = ref<Qiniu>({
   zone: '',
@@ -84,35 +85,19 @@ const updateQiniuInfo = async () => {
 
 <style scoped lang="scss">
 .qiniu-config {
-  display: flex;
-
-  .info {
-    .title {
-      border-left: 5px solid #8A2BE2; /* 蓝紫色 */
-      padding-left: 10px;
-      color: #8A2BE2; /* 蓝紫色 */
-    }
-
-    .content {
-      margin: 20px;
-      background-color: #F0F8FF; /* 浅蓝色背景 */
-      border-radius: 10px;
-      padding: 20px;
-      box-shadow: 0 0 10px rgba(138, 43, 178, 0.5); /* 蓝紫色阴影 */
-    }
+  .page-title {
+    font-size: var(--fs-20);
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: var(--lh-title);
+    margin-bottom: var(--sp-4);
   }
 
-  .el-form-item__label {
-    color: #8A2BE2; /* 蓝紫色 */
-  }
-
-  .el-input__inner, .el-switch__core {
-    border-color: #8A2BE2; /* 蓝紫色 */
-  }
-
-  .el-input__inner:focus, .el-switch__core:focus {
-    border-color: #8A2BE2; /* 蓝紫色 */
-    box-shadow: 0 0 5px rgba(138, 43, 178, 0.5); /* 蓝紫色阴影 */
+  .content {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: var(--sp-5);
   }
 }
 </style>

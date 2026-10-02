@@ -29,6 +29,7 @@ func (a *ArticleRouter) InitArticleRouter(Router *gin.RouterGroup, PublicRouter 
 		articleAdminRouter.POST("create", articleApi.ArticleCreate)
 		articleAdminRouter.DELETE("delete", articleApi.ArticleDelete)
 		articleAdminRouter.PUT("update", articleApi.ArticleUpdate)
+		articleAdminRouter.PUT("setTop", articleApi.ArticleSetTop)
 		articleAdminRouter.GET("list", articleApi.ArticleList)
 	}
 }

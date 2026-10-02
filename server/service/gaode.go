@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"net"
 	"net/http"
 	"server/global"
 	"server/model/other"
@@ -21,8 +22,12 @@ func (gaodeService *GaodeService) GetLocationByIP(ip string) (other.IPResponse, 
 	urlStr := "https://restapi.amap.com/v3/ip"
 	method := "GET"
 	params := map[string]string{
-		"ip":  ip,
 		"key": key,
+	}
+	// 内网/回环/未指定 IP 高德无法定位（会返回空数组导致解析失败），
+	// 此时不传 ip 参数，让高德按请求来源的公网出口 IP 自动定位
+	if !isPrivateIP(ip) {
+		params["ip"] = ip
 	}
 	res, err := utils.HttpRequest(urlStr, method, nil, params, nil)
 	if err != nil {
@@ -44,6 +49,15 @@ func (gaodeService *GaodeService) GetLocationByIP(ip string) (other.IPResponse, 
 		return data, err
 	}
 	return data, nil
+}
+
+// isPrivateIP 判断 IP 是否为内网/回环/保留地址；解析失败也按内网处理
+func isPrivateIP(ipStr string) bool {
+	ip := net.ParseIP(ipStr)
+	if ip == nil {
+		return true
+	}
+	return ip.IsLoopback() || ip.IsPrivate() || ip.IsLinkLocalUnicast() || ip.IsUnspecified()
 }
 
 // GetWeatherByAdcode 根据城市编码获取实时天气信息

@@ -64,11 +64,11 @@ upload:
     size: 20
     path: uploads
 website:
-    logo: /uploads/image/532ff2a146d161818845040556fc1307-20250226101107.png
-    full_logo: /uploads/image/532ff2a146d161818845040556fc1307-20250226101117.png
-    title: Xiaoyu_Wangのblog
-    slogan: Xiaoyu_Wangのblog
-    slogan_en: Blog Title
+    logo: /uploads/image/logo.png
+    full_logo: /uploads/image/logo.png
+    title: Folio
+    slogan: Folio
+    slogan_en: Folio
     description: Go语言博客
     version: 1.0.0
     created_at: "2025-1-15"

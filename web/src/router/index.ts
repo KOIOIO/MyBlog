@@ -41,19 +41,31 @@ const routes = [
                 }
             },
             {
-                path: "about",
-                name: "about",
-                component: () => import('@/views/web/about/index.vue'),
+                path: "forum",
+                name: "forum",
+                component: () => import('@/views/web/forum/index.vue'),
                 meta: {
-                    title: "关于"
+                    title: "论坛"
+                }
+            },
+            {
+                path: "forum/publish",
+                name: "forum-publish",
+                component: () => import('@/views/web/forum/publish.vue'),
+                meta: {
+                    title: "发帖",
+                    requiresAuth: true
+                }
+            },
+            {
+                path: "forum/:id",
+                name: "forum-detail",
+                component: () => import('@/views/web/forum/detail.vue'),
+                meta: {
+                    title: "帖子详情"
                 }
             }
         ]
-    },
-    {
-        path: "/login",
-        name: "login",
-        component: () => import('@/views/login/index.vue')
     },
     {
         path: "/article/:id",
@@ -172,6 +184,22 @@ const routes = [
                 ]
             },
             {
+                path: "forum",
+                name: "dashboard-forum",
+                component: () => import('@/views/dashboard/forum/forum-list.vue'),
+                meta: {
+                    title: "论坛管理"
+                }
+            },
+            {
+                path: "forum/comments",
+                name: "dashboard-forum-comments",
+                component: () => import('@/views/dashboard/forum/forum-comments.vue'),
+                meta: {
+                    title: "论坛评论"
+                }
+            },
+            {
                 path: "images",
                 name: "images",
                 meta: {
@@ -260,14 +288,6 @@ const routes = [
                                 component: () => import('@/views/dashboard/system/config/email-config.vue'),
                                 meta: {
                                     title: "邮箱配置"
-                                }
-                            },
-                            {
-                                path: "qq-config",
-                                name: "qq-config",
-                                component: () => import('@/views/dashboard/system/config/qq-config.vue'),
-                                meta: {
-                                    title: "QQ登录配置"
                                 }
                             },
                             {

@@ -2,9 +2,7 @@
   <div class="system-config">
     <el-col :span="12">
       <div class="info">
-        <div class="title">
-          <el-row>系统配置</el-row>
-        </div>
+        <div class="page-title">{{ t('system.config.system.title') }}</div>
         <div class="content">
           <el-form
               :model="systemInfo"
@@ -12,17 +10,18 @@
               label-width="auto"
               style="max-width: 400px"
           >
-            <el-form-item label="多地点登录拦截">
+            <el-form-item :label="t('system.config.system.multipoint')">
               <el-switch v-model="systemInfo.use_multipoint" @change="updateSystemInfo"/>
             </el-form-item>
-            <el-form-item label="会话密钥">
+            <el-form-item :label="t('system.config.system.sessionSecret')">
               <el-input @change="updateSystemInfo" v-model="systemInfo.sessions_secret" type="password" show-password/>
             </el-form-item>
-            <el-form-item label="图片存储类型">
+            <el-form-item :label="t('system.config.system.ossType')">
               <el-select
                   @change="updateSystemInfo"
                   v-model="systemInfo.oss_type"
-                  placeholder="Select"
+                  :placeholder="t('system.config.system.selectPlaceholder')"
+                  style="width: 200px"
               >
                 <el-option
                     v-for="item in ossTypeOptions"
@@ -40,8 +39,11 @@
 </template>
 
 <script setup lang="ts">
-import {ref, watch} from "vue";
+import {computed, ref, watch} from "vue";
 import {type System, getSystem, updateSystem} from "@/api/config";
+import {useI18n} from "vue-i18n";
+
+const {t} = useI18n()
 
 const systemInfo = ref<System>({
   use_multipoint: false,
@@ -49,17 +51,16 @@ const systemInfo = ref<System>({
   oss_type: '',
 })
 
-const ossTypeOptions =[
-
+const ossTypeOptions = computed(() => [
   {
     value: 'local',
-    label: '本地',
+    label: t('system.config.system.ossLocal'),
   },
   {
     value: 'qiniu',
-    label: '七牛',
+    label: t('system.config.system.ossQiniu'),
   },
-]
+])
 
 const getSystemInfo = async () => {
   const res = await getSystem()
@@ -91,22 +92,19 @@ const updateSystemInfo = async () => {
 
 <style scoped lang="scss">
 .system-config {
-  display: flex;
+  .page-title {
+    font-size: var(--fs-20);
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: var(--lh-title);
+    margin-bottom: var(--sp-4);
+  }
 
-  .info {
-    .title {
-      border-left: 5px solid #8A2BE2; /* 蓝紫色 */
-      padding-left: 10px;
-      color: #8A2BE2; /* 蓝紫色 */
-    }
-
-    .content {
-      margin: 20px;
-      background-color: #f0f8ff; /* 浅蓝色背景 */
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(138, 43, 226, 0.5); /* 蓝紫色阴影 */
-    }
+  .content {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: var(--sp-5);
   }
 }
 </style>

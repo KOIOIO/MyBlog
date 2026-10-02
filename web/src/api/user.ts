@@ -126,6 +126,24 @@ export const userChangeInfo = (data: UserChangeInfoRequest): Promise<ApiResponse
     })
 }
 
+export interface AvatarUploadResponse {
+    url: string;
+    oss_type: string;
+}
+
+export const uploadAvatar = (file: File): Promise<ApiResponse<AvatarUploadResponse>> => {
+    const formData = new FormData()
+    formData.append('avatar', file)
+    return service({
+        url: '/user/avatar',
+        method: 'post',
+        data: formData,
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    })
+}
+
 export const userWeather = (): Promise<ApiResponse<string>> => {
     return service({
         url: '/user/weather',

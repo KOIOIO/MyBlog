@@ -5,28 +5,28 @@
         :validate-on-rule-change="false"
     >
 
-      <el-form-item label="logo图片" prop="logo">
+      <el-form-item :label="t('forms.friendLinkUpdate.logo')" prop="logo">
         <el-image :src="props.friendLink.logo" alt=""/>
       </el-form-item>
-      <el-form-item label="友链链接" prop="link">
+      <el-form-item :label="t('forms.friendLinkUpdate.link')" prop="link">
         <el-input
             v-model="friendLinkUpdateFormData.link"
             size="large"
-            placeholder="请输入友链链接"
+            :placeholder="t('forms.friendLinkUpdate.linkPlaceholder')"
         />
       </el-form-item>
-      <el-form-item label="友链名称" prop="name">
+      <el-form-item :label="t('forms.friendLinkUpdate.name')" prop="name">
         <el-input
             v-model="friendLinkUpdateFormData.name"
             size="large"
-            placeholder="请输入友链名称"
+            :placeholder="t('forms.friendLinkUpdate.namePlaceholder')"
         />
       </el-form-item>
-      <el-form-item label="友链描述" prop="description">
+      <el-form-item :label="t('forms.friendLinkUpdate.description')" prop="description">
         <el-input
             v-model="friendLinkUpdateFormData.description"
             size="large"
-            placeholder="请输入友链描述"
+            :placeholder="t('forms.friendLinkUpdate.descriptionPlaceholder')"
         />
       </el-form-item>
       <el-form-item>
@@ -35,12 +35,12 @@
               type="primary"
               size="large"
               @click="submitForm"
-          >确定
+          >{{ t('common.confirm') }}
           </el-button>
           <el-button
               size="large"
               @click="layoutStore.state.friendLinkUpdateVisible = false"
-          >取消
+          >{{ t('common.cancel') }}
           </el-button>
         </div>
       </el-form-item>
@@ -53,6 +53,9 @@ import {defineProps, reactive} from 'vue';
 import {ElMessage} from "element-plus";
 import {type FriendLink, friendLinkUpdate, type FriendLinkUpdateRequest} from "@/api/friend-link";
 import {useLayoutStore} from "@/stores/layout";
+import {useI18n} from "vue-i18n";
+
+const {t} = useI18n()
 
 const layoutStore = useLayoutStore()
 
@@ -83,10 +86,21 @@ const submitForm = async () => {
     .el-form-item {
       .el-image {
         height: 120px;
+        width: 100%;
+        object-fit: cover;
+        border-radius: var(--radius-sm);
       }
 
       .button-group {
         margin-left: auto;
+        display: flex;
+        gap: var(--sp-2);
+
+        .el-button {
+          height: 40px;
+          min-width: 88px;
+          font-weight: 500;
+        }
       }
     }
   }

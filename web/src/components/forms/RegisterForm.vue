@@ -1,6 +1,5 @@
 <template>
   <div class="register-form">
-    <el-image class="register-image" src="/image/xiaochun_character_elements_transparent.png" alt=""/>
     <el-form
         ref="registerForm"
         :model="registerFormData"
@@ -10,65 +9,67 @@
         @keyup.enter="submitForm"
     >
 
-      <el-form-item label="用户名" prop="username">
+      <el-form-item :label="t('forms.register.username')" prop="username">
         <el-input
             v-model="registerFormData.username"
             size="large"
-            placeholder="请输入用户名"
+            :placeholder="t('forms.register.usernamePlaceholder')"
         />
       </el-form-item>
-      <el-form-item label="密码" prop="password">
+      <el-form-item :label="t('forms.register.password')" prop="password">
         <el-input
             v-model="registerFormData.password"
             show-password
             size="large"
             type="password"
-            placeholder="请输入密码"
+            :placeholder="t('forms.register.passwordPlaceholder')"
         />
       </el-form-item>
-      <el-form-item label="确认密码">
+      <el-form-item :label="t('forms.register.confirmPassword')">
         <el-input
             v-model="repeatPassword"
             show-password
             size="large"
             type="password"
-            placeholder="请再次输入密码"
+            :placeholder="t('forms.register.confirmPasswordPlaceholder')"
         />
-        <el-text v-if="registerFormData.password!==repeatPassword">两次密码不一致！</el-text>
+        <el-text v-if="registerFormData.password!==repeatPassword">{{ t('forms.register.passwordMismatch') }}</el-text>
       </el-form-item>
-      <el-form-item label="邮箱" prop="email">
+      <el-form-item :label="t('forms.register.email')" prop="email">
         <el-input
             v-model="registerFormData.email"
             size="large"
-            placeholder="请输入邮箱"
+            :placeholder="t('forms.register.emailPlaceholder')"
         />
       </el-form-item>
       <el-form-item prop="captcha">
         <div class="captcha">
           <el-input
               v-model="emailRequest.captcha"
-              placeholder="请输入图片验证码"
+              :placeholder="t('forms.register.imageCaptchaPlaceholder')"
               size="large"
               maxlength="6"
               minlength="6"
           />
           <el-image :src="picPath" alt="" @click="emailVerify"/>
-          <el-button @click="sendCode">发送验证码</el-button>
         </div>
       </el-form-item>
-      <el-form-item label="邮箱验证码" prop="email">
-        <el-input
-            v-model="registerFormData.verification_code"
-            size="large"
-            placeholder="请输入邮箱验证码"
-        />
+      <el-form-item :label="t('forms.register.emailCaptcha')" prop="verification_code">
+        <div class="email-code">
+          <el-input
+              v-model="registerFormData.verification_code"
+              size="large"
+              :placeholder="t('forms.register.emailCaptchaPlaceholder')"
+          />
+          <el-button @click="sendCode">{{ t('forms.register.sendCode') }}</el-button>
+        </div>
       </el-form-item>
       <el-form-item>
         <el-button
             type="primary"
             size="large"
             @click="submitForm"
-        >注册
+        >{{ t('forms.register.submit') }}
         </el-button>
       </el-form-item>
     </el-form>
@@ -82,6 +83,9 @@ import {useUserStore} from "@/stores/user";
 import {captcha, type EmailRequest, sendEmailVerificationCode} from "@/api/base";
 import type {FormInstance, FormRules} from 'element-plus';
 import {useLayoutStore} from "@/stores/layout";
+import {useI18n} from "vue-i18n";
+
+const {t} = useI18n()
 
 const registerForm = ref<FormInstance>()
 
@@ -106,26 +110,26 @@ const rules = reactive<FormRules<RegisterRequest>>({
     required:true,
     max:20,
     trigger:'blur',
-    message:'用户名长度不应大于20位'
+    message:t('forms.register.usernameMax')
   }],
   password:[{
     required:true,
     min:8,
     max:20,
     trigger:'change',
-    message:'密码的长度应为8~20位'
+    message:t('forms.register.passwordLength')
   }],
   email: [{
     required: true,
     type:'email',
     trigger: 'blur',
-    message: '请输入正确的邮箱格式'
+    message: t('forms.register.emailFormat')
   }],
   verification_code: [{
     required: true,
     len: 6,
     trigger: 'blur',
-    message: '请输入6位的验证码'
+    message: t('forms.register.codeLength')
   }],
 })
 
@@ -175,19 +179,58 @@ const submitForm = async () => {
 
 <style scoped lang="scss">
 .register-form {
-  display: flex;
-
-  .register-image {
-    max-width: 240px;
-    width: 100%;
-  }
-
   .el-form {
+
     .captcha {
       display: flex;
+      gap: var(--sp-2);
+      align-items: center;
+      width: 100%;
+
+      .el-input {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .el-image {
+        height: 40px;
+        border-radius: var(--radius-sm);
+        overflow: hidden;
+        cursor: pointer;
+        flex-shrink: 0;
+      }
     }
-    .el-text{
-      color: red;
+
+    .email-code {
+      display: flex;
+      gap: var(--sp-2);
+      align-items: center;
+      width: 100%;
+
+      .el-input {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .el-button {
+        height: 40px;
+        flex-shrink: 0;
+      }
+    }
+
+    .el-text {
+      color: var(--el-color-danger);
+      font-size: var(--fs-12);
+    }
+
+    .el-form-item:last-child {
+      margin-bottom: 0;
+
+      .el-button {
+        width: 100%;
+        height: 40px;
+        font-weight: 500;
+      }
     }
   }
 }
@@ -196,5 +239,15 @@ const submitForm = async () => {
 <style lang="scss">
 .register-form .el-form .captcha .el-input__wrapper {
   height: 40px;
+}
+
+/* 密码可见性切换图标：色渡 150ms + 按压反馈（§8） */
+.register-form .el-input__password {
+  cursor: pointer;
+  transition: color 150ms ease-out, transform 80ms ease-out;
+
+  &:active {
+    transform: scale(0.92);
+  }
 }
 </style>

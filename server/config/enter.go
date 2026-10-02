@@ -8,7 +8,6 @@ type Config struct {
 	Jwt     Jwt     `json:"jwt" yaml:"jwt"`
 	Mysql   Mysql   `json:"mysql" yaml:"mysql"`
 	Qiniu   Qiniu   `json:"qiniu" yaml:"qiniu"`
-	QQ      QQ      `json:"qq" yaml:"qq"`
 	Redis   Redis   `json:"redis" yaml:"redis"`
 	System  System  `json:"system" yaml:"system"`
 	Upload  Upload  `json:"upload" yaml:"upload"`

@@ -2,7 +2,11 @@
 
   <web-navbar :noScroll="true"/>
   <div class="error">
-  <el-image src="/image/404.jpg" alt=""/>
+    <div class="error-inner">
+      <div class="error-code">404</div>
+      <div class="error-text">{{ t('system.error.notFound') }}</div>
+      <router-link class="error-link" :to="{ name: 'index' }">{{ t('system.error.backHome') }}</router-link>
+    </div>
   </div>
 
   <web-footer/>
@@ -12,21 +16,43 @@
 
 import WebNavbar from "@/components/layout/WebNavbar.vue";
 import WebFooter from "@/components/layout/WebFooter.vue";
+import {useI18n} from "vue-i18n";
+
+const {t} = useI18n()
 </script>
 
 <style scoped lang="scss">
-.error{
+.error {
   display: flex;
-  background-color: #1e1e2f; /* 更改背景颜色为深蓝色 */
-  .el-image {
-    margin-top: 80px;
-    margin-left: auto;
-    margin-right: auto;
-    height: 500px;
-    width: auto;
-    border: 2px solid #6a0dad; /* 添加紫色边框 */
-    box-shadow: 0 0 20px #6a0dad; /* 添加紫色阴影 */
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  padding: var(--sp-9) var(--sp-5);
+  background: var(--bg);
+
+  .error-inner {
+    text-align: center;
+  }
+
+  .error-code {
+    font-family: var(--font-serif);
+    font-size: var(--fs-48);
+    font-weight: 700;
+    line-height: 1;
+    color: var(--text-muted);
+    margin-bottom: var(--sp-4);
+  }
+
+  .error-text {
+    font-size: var(--fs-16);
+    color: var(--text-body);
+    margin-bottom: var(--sp-6);
+  }
+
+  .error-link {
+    font-size: var(--fs-14);
+    color: var(--accent);
   }
 }
-
 </style>

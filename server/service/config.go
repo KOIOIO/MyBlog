@@ -55,11 +55,6 @@ func (configService *ConfigService) UpdateEmail(email config.Email) error {
 	return utils.SaveYAML()
 }
 
-func (configService *ConfigService) UpdateQQ(qq config.QQ) error {
-	global.Config.QQ = qq
-	return utils.SaveYAML()
-}
-
 func (configService *ConfigService) UpdateQiniu(qiniu config.Qiniu) error {
 	global.Config.Qiniu = qiniu
 	return utils.SaveYAML()

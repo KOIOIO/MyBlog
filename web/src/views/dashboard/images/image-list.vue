@@ -1,10 +1,10 @@
 <template>
   <div class="image-list">
     <div class="title">
-      <el-row>图片列表</el-row>
+      <el-row>{{ t('dashboard.images.title') }}</el-row>
       <el-button-group>
         <el-button type="danger" icon="Delete" @click="imageBulkDeleteVisible = true;handleIdsToDelete()">
-          批量删除
+          {{ t('common.batchDelete') }}
         </el-button>
 
         <el-dialog
@@ -14,14 +14,14 @@
             destroy-on-close
         >
           <template #header>
-            删除图片
+            {{ t('dashboard.images.deleteTitle') }}
           </template>
-          您已选中 [{{ idsToDelete.length }}] 项资源，删除后将无法恢复，是否确认删除？
+          {{ t('dashboard.common.deleteConfirm', { count: idsToDelete?.length ?? 0 }) }}
           <template #footer>
             <el-button type="primary" @click="handleBulkDelete(idsToDelete)">
-              确定
+              {{ t('common.confirm') }}
             </el-button>
-            <el-button @click="imageBulkDeleteVisible = false">取消</el-button>
+            <el-button @click="imageBulkDeleteVisible = false">{{ t('common.cancel') }}</el-button>
           </template>
         </el-dialog>
       </el-button-group>
@@ -29,13 +29,13 @@
 
     <div class="image-list-request">
       <el-form :inline="true" :model="imageListRequest">
-        <el-form-item label="图片名称">
-          <el-input v-model="imageListRequest.name" placeholder="请输入图片名称" clearable/>
+        <el-form-item :label="t('dashboard.images.filter.name')">
+          <el-input v-model="imageListRequest.name" :placeholder="t('dashboard.images.filter.namePh')" clearable/>
         </el-form-item>
-        <el-form-item label="图片类别">
+        <el-form-item :label="t('dashboard.images.filter.category')">
           <el-select
               v-model="imageListRequest.category"
-              placeholder="Select"
+              :placeholder="t('dashboard.common.select')"
               style="width: 200px"
           >
             <el-option
@@ -46,10 +46,10 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="存储类型">
+        <el-form-item :label="t('dashboard.images.filter.storage')">
           <el-select
               v-model="imageListRequest.storage"
-              placeholder="Select"
+              :placeholder="t('dashboard.common.select')"
               style="width: 200px"
           >
             <el-option
@@ -61,7 +61,7 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" icon="Search" @click="getImageTableData">查询</el-button>
+          <el-button type="primary" icon="Search" @click="getImageTableData">{{ t('common.query') }}</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -71,23 +71,23 @@
         :data="imageTableData"
     >
       <el-table-column type="selection" :selectable="selectable" width="60"/>
-      <el-table-column label="图片" width="100">
+      <el-table-column :label="t('dashboard.images.column.image')" width="100">
         <template #default="scope:{ row: Image, column: any, $index: number }">
           <el-image :src="scope.row.url" alt=""/>
         </template>
       </el-table-column>
-      <el-table-column prop="name" label="名称" width="320"/>
+      <el-table-column prop="name" :label="t('dashboard.images.column.name')" width="320"/>
       <el-table-column prop="url" label="URL" width="340"/>
-      <el-table-column prop="category" label="类别"/>
-      <el-table-column prop="storage" label="存储"/>
-      <el-table-column label="操作">
+      <el-table-column prop="category" :label="t('dashboard.images.column.category')"/>
+      <el-table-column prop="storage" :label="t('dashboard.images.column.storage')"/>
+      <el-table-column :label="t('dashboard.images.column.actions')">
         <template #default="scope:{ row: Image, column: any, $index: number }">
           <el-button
               v-if="scope.row.category==='未使用'"
               type="danger"
               @click="imageDeleteVisible=true;imageInfo=scope.row"
           >
-            删除
+            {{ t('common.delete') }}
           </el-button>
         </template>
       </el-table-column>
@@ -100,14 +100,14 @@
         destroy-on-close
     >
       <template #header>
-        删除图片
+        {{ t('dashboard.images.deleteTitle') }}
       </template>
-      您已选中 [1] 项资源，删除后将无法恢复，是否确认删除？
+      {{ t('dashboard.common.deleteConfirm', { count: 1 }) }}
       <template #footer>
         <el-button type="primary" @click="handleDelete(imageInfo.id)">
-          确定
+          {{ t('common.confirm') }}
         </el-button>
-        <el-button @click="imageDeleteVisible = false">取消</el-button>
+        <el-button @click="imageDeleteVisible = false">{{ t('common.cancel') }}</el-button>
       </template>
     </el-dialog>
 
@@ -124,12 +124,14 @@
 </template>
 
 <script setup lang="ts">
-import {nextTick, onMounted, reactive, ref, watch} from "vue";
+import {computed, nextTick, onMounted, reactive, ref, watch} from "vue";
 import {useLayoutStore} from "@/stores/layout";
 import {ElMessage} from "element-plus";
 import {useRoute, useRouter} from "vue-router";
+import {useI18n} from "vue-i18n";
 import {type Image, imageDelete, type ImageDeleteRequest, imageList, type ImageListRequest} from "@/api/image";
 
+const {t} = useI18n()
 
 const multipleImageTableRef = ref()
 const imageTableData = ref<Image[]>()
@@ -165,55 +167,55 @@ const handleBulkDelete = async (ids: number[]) => {
   layoutStore.state.shouldRefreshImageTable = true
 }
 
-const categoryOptions = [
+const categoryOptions = computed(() => [
   {
     value: '',
-    label: '全部',
+    label: t('dashboard.images.category.all'),
   },
   {
     value: '未使用',
-    label: '未使用',
+    label: t('dashboard.images.category.unused'),
   },
   {
     value: '系统',
-    label: '系统',
+    label: t('dashboard.images.category.system'),
   },
   {
     value: '背景',
-    label: '背景',
+    label: t('dashboard.images.category.background'),
   },
   {
     value: '封面',
-    label: '封面',
+    label: t('dashboard.images.category.cover'),
   },
   {
     value: '插图',
-    label: '插图',
+    label: t('dashboard.images.category.illustration'),
   },
   {
     value: '广告',
-    label: '广告',
+    label: t('dashboard.images.category.ad'),
   },
   {
     value: '友链',
-    label: '友链',
+    label: t('dashboard.images.category.friendLink'),
   },
-]
+])
 
-const storageOptions = [
+const storageOptions = computed(() => [
   {
     value: '',
-    label: '全部',
+    label: t('dashboard.images.storage.all'),
   },
   {
     value: '本地',
-    label: '本地',
+    label: t('dashboard.images.storage.local'),
   },
   {
     value: '七牛云',
-    label: '七牛云',
+    label: t('dashboard.images.storage.qiniu'),
   },
-]
+])
 
 const imageListRequest = reactive<ImageListRequest>({
   name: null,
@@ -320,67 +322,75 @@ const handleCurrentChange = (val: number) => {
 .image-list {
   .title {
     display: flex;
+    align-items: center;
+    margin-bottom: var(--sp-5);
 
     .el-row {
-      font-size: 24px;
-      color: #3a3f51; // 更改字体颜色为蓝紫色
+      font-size: var(--fs-24);
+      font-weight: 600;
+      color: var(--text-primary);
     }
 
     .el-button-group {
       margin-left: auto;
-      margin-top: auto;
-      margin-bottom: auto;
 
       .el-button {
-        margin-left: 32px;
-        background-color: #3a3f51; // 更改按钮背景颜色为蓝紫色
-        border-color: #3a3f51; // 更改按钮边框颜色为蓝紫色
-        color: #fff; // 更改按钮字体颜色为白色
+        margin-left: var(--sp-3);
       }
     }
   }
 
   .image-list-request {
-    border: 1px solid #3a3f51; // 更改边框颜色为蓝紫色
-    padding-top: 20px;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    display: flex;
+    background-color: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: var(--sp-4) var(--sp-5);
+    margin-bottom: var(--sp-5);
 
     .el-form {
-      margin-left: auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
 
-      .el-form-item__label {
-        color: #3a3f51; // 更改表单标签颜色为蓝紫色
+      .el-form-item {
+        margin-right: var(--sp-4);
+        margin-bottom: 0;
       }
 
-      .el-input__inner, .el-select__inner {
-        border-color: #3a3f51; // 更改输入框和选择框边框颜色为蓝紫色
+      .el-input__wrapper {
+        height: 40px;
+        border-radius: var(--radius-sm);
       }
     }
   }
 
   .el-table {
-    border: 1px solid #3a3f51; // 更改表格边框颜色为蓝紫色
+    --el-table-border-color: var(--border);
 
     .el-image {
       height: 48px;
+      width: 48px;
+      border-radius: var(--radius-sm);
     }
+  }
 
-    .el-table__header-wrapper th {
-      background-color: #3a3f51; // 更改表头背景颜色为蓝紫色
-      color: #fff; // 更改表头字体颜色为白色
-    }
+  /* 操作列：文字删除按钮 */
+  .el-table .cell .el-button--danger {
+    --el-button-bg-color: transparent;
+    --el-button-border-color: transparent;
+    --el-button-text-color: var(--el-color-danger);
+    --el-button-hover-bg-color: var(--el-color-danger-light-9);
+    --el-button-hover-text-color: var(--el-color-danger);
+    --el-button-hover-border-color: transparent;
+    --el-button-active-bg-color: var(--el-color-danger-light-9);
+    --el-button-active-text-color: var(--el-color-danger);
+    padding: 4px 0;
   }
 
   .el-pagination {
     display: flex;
-    justify-content: center;
-
-    .el-pager li.active {
-      background-color: #3a3f51; // 更改分页器活动页背景颜色为蓝紫色
-      color: #fff; // 更改分页器活动页字体颜色为白色
-    }
+    justify-content: flex-end;
+    margin-top: var(--sp-5);
   }
 }
 </style>

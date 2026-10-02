@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Folio 交互改造规范 v1.0 · Minimal Editorial Interaction System</title>
+<style>
+  :root {
+    --bg:#FAFAFA; --bg-e:#FFFFFF; --tx:#18181B; --tb:#3F3F46; --tm:#71717A;
+    --bd:#E4E4E7; --ac:#2563EB; --aw:rgba(37,99,235,.08);
+    --fs:16px; --lh:1.75;
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--tb); font:var(--fs)/var(--lh) -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif; }
+  .wrap { max-width:920px; margin:0 auto; padding:48px 24px 96px; }
+  h1,h2,h3,h4 { color:var(--tx); line-height:1.25; }
+  h1 { font-family:Georgia,"Noto Serif SC","Songti SC",serif; font-size:34px; font-weight:700; letter-spacing:-.01em; }
+  h2 { font-size:22px; margin-top:56px; padding-bottom:8px; border-bottom:1px solid var(--bd); }
+  h3 { font-size:17px; margin-top:32px; }
+  h2 > span.no { color:var(--ac); font-family:Georgia,serif; margin-right:6px; }
+  p { margin:12px 0; }
+  table { border-collapse:collapse; width:100%; margin:14px 0; font-size:14px; }
+  th,td { text-align:left; padding:8px 10px; border:1px solid var(--bd); vertical-align:top; }
+  th { background:var(--bg-e); color:var(--tx); font-weight:600; white-space:nowrap; }
+  code { background:var(--aw); color:var(--ac); padding:1px 6px; border-radius:4px; font-size:.9em; font-family:"JetBrains Mono","SF Mono",Consolas,monospace; }
+  pre { background:var(--bg-e); border:1px solid var(--bd); border-radius:8px; padding:14px 16px; overflow-x:auto; }
+  pre code { background:none; color:var(--tb); padding:0; font-size:13px; line-height:1.6; }
+  .tag { display:inline-block; font-size:12px; padding:1px 10px; border-radius:999px; border:1px solid var(--bd); color:var(--tm); margin-right:6px; }
+  .tag.acc { color:var(--ac); border-color:var(--ac); background:var(--aw); }
+  .crit { background:rgba(239,68,68,.05); border-left:3px solid #EF4444; padding:10px 14px; margin:14px 0; font-size:14px; }
+  .ok { background:rgba(37,99,235,.05); border-left:3px solid var(--ac); padding:10px 14px; margin:14px 0; font-size:14px; }
+  .mermaid { position:relative; }
+  .mermaid::before { content:"mermaid · 代码示意（不渲染）"; position:absolute; top:-18px; left:0; font-size:12px; color:var(--tm); }
+  .kv { font-size:13px; color:var(--tm); margin-top:-6px; }
+  ul,ol { padding-left:22px; }
+  li { margin:4px 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>Folio 交互改造规范 v1.0</h1>
+<p class="kv">Minimal Editorial Interaction System · 2026-09-29 · 状态：已冻结（实施分片唯一契约）</p>
+<p><span class="tag acc">交互层</span><span class="tag">不动视觉 token</span><span class="tag">不动后端/路由/i18n</span><span class="tag">禁重动画库</span></p>
+
+<h2><span class="no">1</span>摘要与现状诊断（批判）</h2>
+<p>视觉已完成「极简编辑风」重构，但<strong>交互模型仍是 Element Plus / md-editor-v3 的原生默认</strong>，等于「换了皮、没换瓤」。核心病灶：</p>
+<ul>
+  <li><strong>拖沓</strong>：el-dialog/el-drawer 默认 300ms 线性过渡，无 scale、无缓动层次，进出场一个速度；</li>
+  <li><strong>扁平</strong>：无按压反馈（按钮点下去毫无反应）、无 focus-visible 焦点环（键盘导航不可见）、hover 只有简单换色；</li>
+  <li><strong>换皮不换瓤</strong>：目录栏仍是 md-editor-v3 的静态列表高亮（只是把绿色改成了黑灰色），标签筛选仍是 el-radio-button 这个后台表单控件搬到前台，交互与最初版本完全一致——用户已明确指出这两处必须重构；</li>
+  <li><strong>无动效语言</strong>：无滚动显现、无阅读进度、无回顶、无骨架屏、主题切换硬切、二级评论展开靠 v-if 硬跳。</li>
+</ul>
+<p>本规范依据三路并行调研（leerob / Vercel / Medium / Vitepress / Next.js docs / Linear / Stripe / shadcn / Radix / Tailwind / NN/g 等，源码级取参）冻结为<strong>可执行参数契约</strong>。所有参数均有来源；标「待实测」的项由实施分片在浏览器中校准。</p>
+
+<h2><span class="no">2</span>设计原则（交互宪法）</h2>
+<ol>
+  <li><strong>快速</strong>：120–200ms 为主，上限 300ms；按压/退场 80–120ms。退场总比入场快 40–60ms（「用完即走」）。</li>
+  <li><strong>克制</strong>：只动 transform / opacity / 色值 / 阴影，禁 <code>transition:all</code>；不做 confetti、长 spring（≥400ms）、旋转、背景缩放等「为动效而动效」。</li>
+  <li><strong>即时反馈</strong>：hover 150ms 内响应，按压 80ms 内响应；点击即答，不许延迟表演。</li>
+  <li><strong>双主题一致</strong>：参数全复用，仅换色值；深色下阴影为 none（已定）。</li>
+  <li><strong>可降级</strong>：<code>prefers-reduced-motion: reduce</code> 时所有动画/过渡坍缩为即时；reveal 内容默认可见（JS 失败不吞内容）。</li>
+</ol>
+
+<h2><span class="no">3</span>动效参数总表（新增 token，写入 base.css 双主题）</h2>
+<table>
+  <tr><th>Token</th><th>浅色</th><th>深色</th><th>用途</th></tr>
+  <tr><td><code>--dur-instant</code></td><td colspan="2">80ms</td><td>按压、点击即时应答</td></tr>
+  <tr><td><code>--dur-fast</code></td><td colspan="2">120ms</td><td>hover 底色/页码/退场</td></tr>
+  <tr><td><code>--dur-base</code></td><td colspan="2">150ms</td><td>色值/边框/焦点过渡（主档位）</td></tr>
+  <tr><td><code>--dur-mid</code></td><td colspan="2">200ms</td><td>浮层/遮罩/位移/滚入</td></tr>
+  <tr><td><code>--dur-slow</code></td><td colspan="2">240ms</td><td>抽屉、列表网格展开</td></tr>
+  <tr><td><code>--dur-max</code></td><td colspan="2">300ms</td><td>上限：shake、长位移动画</td></tr>
+  <tr><td><code>--ease-out</code></td><td colspan="2">cubic-bezier(.16,1,.3,1)</td><td>入场：快启缓停</td></tr>
+  <tr><td><code>--ease-in</code></td><td colspan="2">cubic-bezier(.4,0,1,1)</td><td>退场</td></tr>
+  <tr><td><code>--ease-in-out</code></td><td colspan="2">cubic-bezier(.4,0,.2,1)</td><td>标准双向（展开/收起）</td></tr>
+  <tr><td><code>--ease-snap</code></td><td colspan="2">cubic-bezier(.32,.72,0,1)</td><td>抽屉滑入（近 iOS easeOutQuint）</td></tr>
+  <tr><td><code>--ease-snap-out</code></td><td colspan="2">cubic-bezier(.32,0,.68,1)</td><td>抽屉滑出</td></tr>
+  <tr><td><code>--ease-pop</code></td><td colspan="2">cubic-bezier(.34,1.56,.64,1)</td><td>点赞/选中弹跳</td></tr>
+  <tr><td><code>--hover-bg</code></td><td>rgba(0,0,0,.04)</td><td>rgba(255,255,255,.06)</td><td>中性 hover 底色（页码/条目/chip）</td></tr>
+  <tr><td><code>--hover-border</code></td><td>#D4D4D8</td><td>#3F3F46</td><td>hover 边框加深档</td></tr>
+  <tr><td><code>--ring</code></td><td colspan="2">0 0 0 2px var(--accent)</td><td>focus-visible 实环</td></tr>
+  <tr><td><code>--ring-soft</code></td><td>0 0 0 2px rgba(37,99,235,.25)</td><td>0 0 0 2px rgba(96,165,250,.25)</td><td>输入聚焦光环（不加粗边框）</td></tr>
+</table>
+<p>阴影复用现有 <code>--shadow-sm</code>（0 1px 2px .04）与 <code>--shadow-md</code>（0 4px 12px .06，兼作 hover 抬升阴影）；深色均为 none。</p>
+
+<h2><span class="no">4</span>全局动效基座（Slice 1 专属）</h2>
+<h3>4.1 关键帧（base.css）</h3>
+<ul>
+  <li><code>kf-pop</code>：0% scale(1) → 50% scale(1.15) → 100% scale(1)，时长 150ms，缓动 <code>--ease-pop</code>；用于点赞、chip 选中。</li>
+  <li><code>kf-shake</code>：25% translateX(4px)；50% translateX(-4px)；75% translateX(4px)，300ms <code>--ease-out</code>，只播一次；用于表单校验失败。</li>
+  <li><code>kf-fade-up</code>：from opacity 0 translateY(6px) → to 1/0，150–200ms <code>--ease-out</code>；用于错误文案、空态文案、新评论入场。</li>
+  <li><code>kf-pulse</code>：opacity 1→.5，2s ease-in-out infinite；骨架屏（不做强光扫射 shimmer）。</li>
+  <li><code>kf-toc-flash</code>：background var(--accent-weak) → 透明，300ms；目录点击确认。</li>
+</ul>
+<h3>4.2 reveal 指令（新增 <code>web/src/directives/reveal.ts</code>，main.ts 注册 <code>v-reveal</code>）</h3>
+<ul>
+  <li>块级元素进入视口触发：opacity 0→1 + translateY(16px)→0，200–250ms <code>--ease-out</code>；IntersectionObserver rootMargin 底部 -15%，once（触发后 unobserve）。</li>
+  <li>stagger：容器 <code>v-reveal="{stagger:60}"</code> → 子项 delay = 60ms × index，总级联 ≤240ms（子项上限 ~4–5 个，超出不继续加延迟）。</li>
+  <li>reduced-motion 或 JS 不可用：立即显示（指令挂载时若 IO 不可用直接加 is-revealed）。</li>
+  <li>模板类型若被 vue-tsc 拦截，在 <code>reveal.d.ts</code> 声明 GlobalDirectives 即可。</li>
+</ul>
+<h3>4.3 全局 focus-visible</h3>
+<pre><code>:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+/* 默认 :focus 不强制 outline；键盘导航可见即可 */</code></pre>
+<h3>4.4 路由过渡（App.vue）</h3>
+<p><code>router-view</code> 包 <code>&lt;transition name="page" mode="out-in"&gt;</code>：进入 opacity 0→1 150ms <code>--ease-out</code>；离开 80ms 淡出。不做位移、不做 clip-path。</p>
+<h3>4.5 主题切换过渡</h3>
+<p>base.css：<code>html.theme-switching, html.theme-switching *,...{ transition: background-color .25s var(--ease-out), color .25s var(--ease-out), border-color .25s var(--ease-out), box-shadow .25s var(--ease-out) !important; }</code>；ThemeToggle（Slice 2）在 setAttribute 前后挂/摘该 class（300ms 后移除），图标加 200ms 轻微旋转/缩放换场。</p>
+<h3>4.6 全局 Element Plus 覆盖（base.css，实施时以浏览器实测类名为准）</h3>
+<table>
+  <tr><th>组件</th><th>目标行为与参数</th></tr>
+  <tr><td>el-button</td><td>bg/border/color 过渡 150ms <code>--ease-out</code>；<code>:active{transform:translateY(1px)}</code>（transform 80ms）；focus-visible 用 <code>--ring</code>；禁用 opacity .5</td></tr>
+  <tr><td>el-input / el-textarea</td><td>wrapper box-shadow 过渡 150ms；focus = 1px accent 内描边 + <code>--ring-soft</code>（不加粗边框）</td></tr>
+  <tr><td>el-form 校验失败</td><td><code>.el-form-item.is-error .el-input__wrapper{animation:kf-shake .3s var(--ease-out)}</code>；错误文案插入时播 kf-fade-up 150ms（若受 EP v-show 限制则只保 shake）</td></tr>
+  <tr><td>el-message</td><td>进：fade + translateY(-8px→0) 150ms <code>--ease-out</code>；出：100ms <code>--ease-in</code>；停留 3000ms 默认；堆叠重排由 EP 处理；不做 hover 暂停</td></tr>
+  <tr><td>el-dialog / el-message-box</td><td>开：遮罩 opacity 160ms ∥ 内容 scale(.96→1)+fade 180ms <code>--ease-out</code>（并行，非串行）；关：120ms <code>--ease-in</code> scale→.96，遮罩同退；Esc/点遮罩即时关；不做内容级联</td></tr>
+  <tr><td>el-drawer</td><td>滑入 240ms <code>--ease-snap</code> / 滑出 200ms <code>--ease-snap-out</code>；遮罩 200ms 并行；不做背景缩放</td></tr>
+  <tr><td>el-popper（dropdown/popover/tooltip）</td><td>展开 140ms：fade + scale(.98→1) + translateY(4px→0) <code>--ease-out</code>；收起 100ms；click-outside 即时</td></tr>
+  <tr><td>el-pagination</td><td>页码 hover 底色 <code>--hover-bg</code> 120ms；当前页 accent 文字、无动画；上/下箭头 hover translateX(∓2px) 150ms；jumper 输入沿用 input focus；切页内容即时（NN/g：数字分页保留，不做无限滚动/load more）</td></tr>
+  <tr><td>el-radio-button</td><td>bg/color/border 150ms <code>--ease-out</code>（前台筛选组将被 chip 替代，见 §7）</td></tr>
+  <tr><td>el-switch / el-checkbox</td><td>knob 位移 + 轨道色 200ms <code>--ease-in-out</code></td></tr>
+  <tr><td>el-table 行</td><td>hover 底色 transition background-color 150ms</td></tr>
+  <tr><td>el-tag</td><td>bg/color/border 150ms（文章页 tag 行将被 chip 替代，见 §7）</td></tr>
+  <tr><td>el-skeleton</td><td>如用到则覆盖为 kf-pulse；另提供 <code>.skeleton-pulse</code> 工具类</td></tr>
+</table>
+<h3>4.7 reduced-motion 全局兜底</h3>
+<pre><code>@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; }
+  html { scroll-behavior:auto !important; }
+}</code></pre>
+
+<h2><span class="no">5</span>分域规范 A · 导航与滚动联动（Slice 2）</h2>
+<table>
+  <tr><th>子交互</th><th>目标行为</th><th>参数</th></tr>
+  <tr><td>导航链接 hover/active</td><td>文字色过渡 + 现有底部下划线 scaleX（保留，统一为 150ms）；active 常驻下划线 + accent 文字</td><td>color 150ms <code>--ease-out</code>；下划线 180ms→150ms</td></tr>
+  <tr><td>sticky 导航</td><td>滚动 ≥8px 出现毛玻璃底：半透明 bg + backdrop-filter blur(12px) + 1px 底边；过渡 200ms</td><td>bg = color-mix(var(--bg-elevated) 82%, transparent)；blur(12px)；200ms <code>--ease-out</code></td></tr>
+  <tr><td>阅读进度条</td><td>导航顶部 2px accent 细线，scaleX 跟手（无 transition，transform-origin:left）</td><td>height 2px；#2563EB / 深色 #60A5FA</td></tr>
+  <tr><td>scroll-reveal</td><td>首载内容 fade-up + stagger（见 4.2），仅块级</td><td>16px 位移 / 250ms / stagger 60–80ms</td></tr>
+  <tr><td>back-to-top</td><td>滚动 &gt;600px 出现：opacity + translateY(4px) 150ms；点击 window.scrollTo({top:0,behavior:'smooth'})</td><td>fixed bottom-right 24px；40px 圆形；150ms</td></tr>
+  <tr><td>focus-visible</td><td>导航/目录/链接全局 <code>--ring</code></td><td>2px / offset 2px</td></tr>
+  <tr><td>移动端菜单</td><td>若现有横向菜单在 ≤768px 溢出，用最小改动包成面板：淡入 + translateY(-4px) 200ms / 退出 100ms；不得改路由与布局骨架。若发现布局风险则回退并说明</td><td>200ms / 100ms</td></tr>
+</table>
+
+<h2><span class="no">6</span>分域规范 B · 目录栏交互重构（重点域，Slice 2 · 用户点名）</h2>
+<div class="crit"><strong>现状批评</strong>：md-editor-v3 的 MdCatalog 只做了「滚动高亮 + 点击 smooth」，改色只是把绿高亮换成黑灰——<strong>交互模型与最初版本零差异</strong>。用户已明确不满意，本域必须重构感知交互，而非再打磨。</div>
+<table>
+  <tr><th>子交互</th><th>目标行为</th><th>参数</th></tr>
+  <tr><td>连续阅读进度指示条</td><td>目录左侧 2px 竖线不再「定格在当前项」，而是随滚动在标题项之间<strong>连续移动</strong>：IO(rootMargin -20%/-60%) 判定 active 索引，按 (scrollY−headingTop)/(nextTop−headingTop) 插值出指示条 top（落在两标题之间时线性过渡）</td><td>2px；accent；top 过渡 150ms <code>--ease-out</code>（插值区间内连续）</td></tr>
+  <tr><td>active 项双态</td><td>指示条指向项：accent 文字 + weight 700；不用整行背景块</td><td>color/weight 过渡 150ms</td></tr>
+  <tr><td>目录自动居中跟随</td><td>active 项滚出目录可视区时，目录容器 scrollIntoView({block:'nearest'}) 保持可见（节流 ≤60ms/次）——长文目录不再「跟丢」</td><td>节流 60ms</td></tr>
+  <tr><td>点击缓动 + 确认反馈</td><td>点击项：页面平滑滚动（html scroll-behavior smooth；或 rAF 缓动 ≤300ms）；正文标题 scroll-margin-top:80px 防 sticky 遮挡；被点项播 kf-toc-flash 300ms</td><td>scroll-margin-top 80px；flash 300ms</td></tr>
+  <tr><td>首载 stagger 入场</td><td>目录项按序 fade-up 进入（仅首载一次）</td><td>150ms / 间隔 60ms</td></tr>
+  <tr><td>hover 提示</td><td>目录项 hover 右侧滑入「跳转」图标（opacity 0→1 + translateX(2px)）</td><td>150ms <code>--ease-out</code></td></tr>
+</table>
+<p class="ok"><strong>实现说明</strong>：优先保留 MdCatalog 承担锚点/active 判定，在其外层加进度指示条与自动居中（读 md-editor DOM 类名 <code>md-editor-catalog-*</code>）；若 DOM 测量不可行，降级为自研 IO 方案。不得改变文章正文结构与锚点。</p>
+<p><strong>明确不引入</strong>：折叠/树形展开（改文章结构语义）、整行背景块高亮（旧体验）、序号数字、弹跳动画。</p>
+
+<h2><span class="no">7</span>分域规范 C · 标签/分类交互重构（重点域，Slice 3a + 3b + 2 · 用户点名）</h2>
+<div class="crit"><strong>现状批评</strong>：列表页分类/标签筛选用 el-radio-button（后台表单控件搬到前台，切换无状态动效）；文章页 tag 行是静态 el-tag；标签云是静态链接——交互模型与最初版本零差异。本域重构为「芯片式选择器」交互语言。</div>
+<table>
+  <tr><th>子交互</th><th>目标行为</th><th>参数</th></tr>
+  <tr><td>筛选组 → 芯片 chip（分类/标签）</td><td>替代 el-radio-button：单选互斥语义、value 绑定、@change 逻辑全保留，只换呈现与交互。未选中：1px 边框 + text-body；hover：<code>--hover-bg</code> + <code>--hover-border</code> + text-primary；选中：accent 描边 1px + accent-weak 底 + accent 文字 + 左侧 6px accent 圆点 + pop 弹跳；按压 translateY(1px)</td><td>150ms <code>--ease-out</code>；选中弹跳 kf-pop 150ms <code>--ease-pop</code>；按压 80ms</td></tr>
+  <tr><td>筛选切换内容过渡</td><td>列表容器 key 切换时 100ms 淡入（仅 opacity）；行级不动；分页切换保持即时</td><td>100ms</td></tr>
+  <tr><td>文章页 tag 行</td><td>el-tag → 同款 chip（hover/press/ring）；若 /search 已支持 query 参数（先读 search/index.vue 确认），点击标签跳 /search?tag=xxx——<strong>不改路由表，仅复用现有参数</strong>；不支持则只做交互不跳转</td><td>150ms；press 80ms</td></tr>
+  <tr><td>标签云 TagCloud</td><td>保持字号分级；hover = accent 色 + scale(1.05) 150ms + press；首载 stagger 60ms fade-up</td><td>150ms <code>--ease-out</code></td></tr>
+  <tr><td>论坛侧栏 TagCloudSidebar</td><td>同 chip hover/press；跳转逻辑不动</td><td>150ms；press 80ms</td></tr>
+</table>
+<p><strong>明确不引入</strong>：多选筛选、字号弹性动画、拖拽排序、选中项删除。</p>
+
+<h2><span class="no">8</span>分域规范 D · 按钮 / 表单 / 消息 / 开关 / 点赞 / tooltip（Slice 4 + 全局）</h2>
+<table>
+  <tr><th>子交互</th><th>目标行为</th><th>参数</th></tr>
+  <tr><td>按钮</td><td>hover 色渡；按压 translateY(1px)；focus ring；disabled opacity .5；loading 用 EP 内建</td><td>150ms / 80ms / 2px ring</td></tr>
+  <tr><td>表单输入</td><td>focus = accent 内描边 + --ring-soft（150ms 过渡）；校验失败 shake 一次 + 错误文案 fade-up</td><td>shake 300ms；文案 150ms</td></tr>
+  <tr><td>消息 toast</td><td>进 150ms / 出 100ms / 停留 3000ms</td><td>见 §4.6</td></tr>
+  <tr><td>骨架屏</td><td>kf-pulse（如用 el-skeleton 则覆盖）</td><td>2s infinite</td></tr>
+  <tr><td>开关/复选</td><td>knob/色 200ms ease-in-out</td><td>200ms</td></tr>
+  <tr><td>点赞（文章/论坛）</td><td>状态切换：kf-pop 150ms <code>--ease-pop</code> 轻弹一次；无彩纸、无旋转、无数值动画</td><td>150ms</td></tr>
+  <tr><td>tooltip</td><td>show-after 700ms（相邻 300ms）；fade+scale 150ms ease-out（EP popper 覆盖）</td><td>700ms / 150ms</td></tr>
+</table>
+
+<h2><span class="no">9</span>分域规范 E · 弹窗 / 抽屉 / 浮层（Slice 4 + 全局）</h2>
+<p>开：遮罩 160ms ∥ 内容 scale(.96→1)+fade 180ms <code>--ease-out</code> 并行；关：120ms <code>--ease-in</code>。抽屉：240ms <code>--ease-snap</code>/200ms <code>--ease-snap-out</code>。浮层：140ms fade+scale(.98)+4px / 收起 100ms。详见 §4.6。登录/注册/找回密码三个弹窗在 AuthPopover，统一吃全局覆盖，不另写动画。</p>
+
+<h2><span class="no">10</span>分域规范 F · 卡片 / 列表 / 分页 / 二级评论 / 空态 / 搜索（Slice 3a + 3b）</h2>
+<table>
+  <tr><th>子交互</th><th>目标行为</th><th>参数</th></tr>
+  <tr><td>卡片（独立卡片）</td><td>hover 抬升 translateY(-2px) + shadow-md + 边框 --hover-border；只动 transform/shadow/border；封面图 scale(1.02) 200ms（容器 overflow:hidden）</td><td>150ms <code>--ease-out</code></td></tr>
+  <tr><td>列表行（全宽行）</td><td><strong>不抬升</strong>（全宽行抬升=抖动）：hover 底色 <code>--bg-elevated</code>/标题 accent 过渡 + 指针</td><td>150ms</td></tr>
+  <tr><td>分页</td><td>保留数字分页；hover 底色 120ms；切页即时</td><td>见 §4.6</td></tr>
+  <tr><td>二级评论展开</td><td>grid-template-rows 0fr→1fr 双向等时；内层 overflow:hidden;min-height:0（弃 max-height hack）</td><td>220ms <code>--ease-in-out</code></td></tr>
+  <tr><td>新评论入场</td><td>评论项根节点插入即播 kf-fade-up（200ms），不做滚动监听</td><td>200ms</td></tr>
+  <tr><td>空态</td><td>图标静止；文案组 kf-fade-up 200ms，组内 stagger ≤40ms</td><td>200ms</td></tr>
+  <tr><td>搜索</td><td>focus 只动边框/光环（不做宽度展开）；结果行 stagger 30ms/行 150ms，最多 8 行</td><td>150ms / 30ms</td></tr>
+</table>
+
+<h2><span class="no">11</span>Mermaid 动效 / 流程示意（代码，不渲染）</h2>
+
+<div class="mermaid"><pre><code>flowchart LR
+  A[调研: 3 路并行<br/>导航滚动/微反馈/浮层列表] --> B[冻结交互规范 v1.0<br/>参数契约 + token]
+  B --> C1[Slice1 全局动效基座<br/>base.css/main/App/reveal 指令]
+  B --> C2[Slice2 导航滚动+目录重构]
+  B --> C3[Slice3a 列表首页+标签重构]
+  B --> C3b[Slice3b 论坛评论]
+  B --> C4[Slice4 表单弹窗]
+  C1 & C2 & C3 & C3b & C4 --> D[合并: type-check + build-only]
+  D --> E[浏览器实测: 目录跟随/标签筛选/弹窗/表单/滚动/主题]</code></pre></div>
+
+<div class="mermaid"><pre><code>sequenceDiagram
+  participant U as 用户
+  participant D as el-dialog
+  participant M as 遮罩
+  U->>D: 打开
+  par 并行
+    D->>D: content scale .96→1 + fade 180ms ease-out
+    M->>M: opacity 160ms
+  end
+  Note over D: 不做内容级联
+  U->>D: Esc / 点遮罩
+  par 并行
+    D->>D: scale→.96 + fade 120ms ease-in
+    M->>M: fade 120ms
+  end</code></pre></div>
+
+<div class="mermaid"><pre><code>flowchart TD
+  A[提交/失焦] --> B{校验}
+  B -- 通过 --> C[accent 边框 + 成功提交]
+  B -- 失败 --> D[input: kf-shake 300ms]
+  D --> E[错误文案 kf-fade-up 150ms]
+  E --> F[用户修正 → 边框回常态 150ms]</code></pre></div>
+
+<div class="mermaid"><pre><code>flowchart LR
+  A[滚动进入视口] --> B{IO rootMargin -15%}
+  B -- 触发 --> C[reveal: opacity 0→1 + translateY 16→0]
+  C --> D[250ms ease-out]
+  D --> E{stagger?}
+  E -- 是 --> F[子项 delay 60ms×i ≤240ms]
+  E -- 否 --> G[unobserve 完成]</code></pre></div>
+
+<div class="mermaid"><pre><code>flowchart TD
+  A[切换按钮] --> B[html 挂 .theme-switching]
+  B --> C[全局 bg/color/border 过渡 250ms ease-out]
+  C --> D[图标旋转/缩放 200ms 换场]
+  D --> E[300ms 后摘 .theme-switching]</code></pre></div>
+
+<div class="mermaid"><pre><code>flowchart TD
+  A[滚动阅读] --> B{IO rootMargin -20%/-60%}
+  B --> C[active 索引判定]
+  C --> D[指示条 top 按区间进度插值 150ms]
+  C --> E[active 项 accent+700]
+  E --> F{active 滚出可视区?}
+  F -- 是 --> G[目录容器 nearest 跟随 节流60ms]
+  F -- 否 --> H[保持]
+  D --> I[点击 → smooth + scroll-margin 80px + flash 300ms]</code></pre></div>
+
+<div class="mermaid"><pre><code>stateDiagram-v2
+  [*] --> idle: 边框1px text-body
+  idle --> hovered: hover 150ms --hover-bg/--hover-border
+  hovered --> pressed: 按压 80ms translateY(1px)
+  pressed --> idle
+  idle --> selected: 点击
+  selected --> selected: pop 150ms ease-pop + accent 描边/圆点
+  selected --> idle: 点击其它 chip（单选互斥）</code></pre></div>
+
+<div class="mermaid"><pre><code>flowchart LR
+  A[回复按钮] --> B{已登录?}
+  B -- 否 --> C[ElMessage warning + 唤起登录浮层]
+  B -- 是 --> D[grid-template-rows 0fr→1fr 220ms ease-in-out]
+  D --> E[输入框 focus ring 150ms]
+  E --> F[发布成功 → 新评论 kf-fade-up 200ms]</code></pre></div>
+
+<h2><span class="no">12</span>实施分片与文件归属（互斥，合并全覆盖）</h2>
+<table>
+  <tr><th>分片</th><th>归属文件（唯一所有方，其它分片禁碰）</th><th>核心交付</th></tr>
+  <tr><td><strong>S1 全局动效基座</strong></td><td>web/src/assets/base.css、web/src/main.ts、web/src/App.vue、新增 web/src/directives/reveal.ts（+reveal.d.ts 如需要）</td><td>token/关键帧/EP 覆盖/route 过渡/reveal 指令/reduced-motion</td></tr>
+  <tr><td><strong>S2 导航滚动+目录重构</strong></td><td>layout/WebNavbar.vue、common/ThemeToggle.vue、views/web/article/index.vue、layout/DashboardMenu.vue（轻）、layout/Breadcrumb.vue（可选）；新增 common/ScrollProgress.vue、common/BackToTop.vue</td><td>§5 + §6 全部；目录连续进度指示条 + 自动居中 + 点击反馈</td></tr>
+  <tr><td><strong>S3a 列表首页+标签重构</strong></td><td>pages/ArticleList.vue、pages/TagCloud.vue、pages/DailyNews.vue、pages/RecentComments.vue、pages/ProfileCard.vue、pages/Calendar.vue、pages/Advertisement.vue、pages/Feedback.vue、views/web/index.vue、views/web/index/index.vue、views/web/news/index.vue、views/web/friend-link/index.vue、views/web/search/index.vue</td><td>§7（列表筛选 chip + 标签云）+ §10（列表/分页/空态/搜索）</td></tr>
+  <tr><td><strong>S3b 论坛评论</strong></td><td>forum/PostCard.vue、forum/ForumCommentItem.vue、forum/TagCloudSidebar.vue、forum/ForumImageUploader.vue、common/CommentItem.vue、common/UserCardPopover.vue、views/web/forum/index.vue、views/web/forum/detail.vue、views/web/forum/publish.vue</td><td>§7（侧栏 chip）+ §10（二级评论展开/新评论入场/点赞）+ 论坛列表</td></tr>
+  <tr><td><strong>S4 表单弹窗</strong></td><td>common/AuthPopover.vue、widgets/UserCard.vue、forms/LoginForm.vue、RegisterForm.vue、ForgotPasswordForm.vue、PasswordResetForm.vue、FeedbackReplyForm.vue、AdvertisementCreateForm.vue、AdvertisementUpdateForm.vue、FriendLinkCreateForm.vue、FriendLinkUpdateForm.vue、ArticleCreateForm.vue、ArticleUpdateForm.vue</td><td>§8 + §9（弹窗吃全局覆盖；表单 focus/校验/提交反馈；登录注册弹窗）</td></tr>
+</table>
+<p class="ok"><strong>范围声明</strong>：dashboard 后台逐文件改造本轮不做（收益低风险高），但后台页面自动继承全局动效基座（弹窗/消息/分页/按钮/表格 hover 全部生效）。如需可下轮续。</p>
+
+<h2><span class="no">13</span>验收清单（实施分片自查 + 合并验证）</h2>
+<ol>
+  <li>每分片：只改归属文件；新组件显式 <code>import</code>（不依赖 unplugin 自动导入）；不改 package.json / 后端 / 路由表 / i18n 文案。</li>
+  <li>每分片：可运行 <code>cd web && npm run type-check</code> 自查（tsbuildinfo 竞态若报错重跑一次）；<strong>禁止并行跑 build-only</strong>（dist 冲突），由验证阶段统一跑。</li>
+  <li>合并验证：<code>npm run build-only</code>（先，重生成 auto d.ts）→ <code>npm run type-check</code> 全绿。</li>
+  <li>浏览器实测（localhost）：目录连续指示条与自动跟随、标签 chip 筛选与内容淡入、导航 sticky 毛玻璃、登录弹窗出入场、表单校验 shake、列表 hover、滚动显现、主题切换过渡、二级评论展开、分页 hover、回顶。</li>
+  <li>双主题各过一遍；≤768px 下目录/菜单不破版。</li>
+</ol>
+
+<hr>
+<p class="kv">调研来源：leerob.com / vercel.com / medium.com / vitepress.dev / nextjs.org / linear.app / stripe.com / ui.shadcn.com（registry 源码）/ radix-ui.com（animation guide）/ tailwindui.com / tailwindcss-animate / element-plus theme-chalk（dialog.scss、drawer.scss 实测）/ nngroup.com（分页研究）/ CSS-Tricks / W3C WCAG。调研报告原件：agents 工作区 artifacts/ 下 3 份 Markdown。</p>
+</div>
+</body>
+</html>

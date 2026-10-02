@@ -1,0 +1,92 @@
+# hengshui-tablet-video-rpc 生产配置模板
+# 用法：
+#   1. 复制为 config.yaml.prod（保持此文件名，docker-compose 挂载它作为 /app/config.yaml）
+#   2. 标「必改」的值必须改；标「从本地 config.yaml 复制」的值请从 Mac 的 server/config.yaml 原样复制，
+#      保证 JWT 登录态、邮件、七牛、高德等密钥一致，避免迁移后需要重新登录。
+captcha:
+    height: 80
+    width: 240
+    length: 6
+    max_skew: 0.7
+    dot_count: 80
+email:
+    host: smtp.qq.com
+    port: 465
+    from: 从本地 config.yaml 复制
+    nickname: Xiaoyu_Wang
+    secret: 从本地 config.yaml 复制
+    is_ssl: true
+es:
+    url: http://es:9200            # 必改：compose 网络内用服务名 es
+    username: ""
+    password: ""
+    is_console_print: false
+gaode:
+    enable: true
+    key: 从本地 config.yaml 复制
+jwt:
+    access_token_secret: 从本地 config.yaml 复制
+    refresh_token_secret: 从本地 config.yaml 复制
+    access_token_expiry_time: 2h
+    refresh_token_expiry_time: 7d
+    issuer: go_blog
+mysql:
+    host: mysql                    # 必改：compose 网络内用服务名 mysql
+    port: 3306
+    config: charset=utf8mb4&parseTime=True&loc=Local
+    db_name: blog_db
+    username: root
+    password: 与 deploy/.env 的 MYSQL_ROOT_PASSWORD 保持一致   # 必改
+    max_idle_conns: 10
+    max_open_conns: 100
+    log_mode: info
+qiniu:
+    zone: z0
+    bucket: 从本地 config.yaml 复制
+    img_path: 从本地 config.yaml 复制
+    access_key: 从本地 config.yaml 复制
+    secret_key: 从本地 config.yaml 复制
+    use_https: true
+    use_cdn_domains: true
+redis:
+    address: redis:6379            # 必改：compose 网络内用服务名 redis
+    password: ""
+    db: 0
+system:
+    host: 0.0.0.0
+    port: 8080
+    env: release
+    router_prefix: api
+    use_multipoint: true
+    sessions_secret: 从本地 config.yaml 复制
+    oss_type: local
+upload:
+    size: 20
+    path: uploads
+website:
+    logo: /uploads/image/logo.png
+    full_logo: /uploads/image/logo.png
+    title: Folio
+    slogan: Folio
+    slogan_en: Folio
+    description: Go语言博客
+    version: 1.0.0
+    created_at: "2025-1-15"
+    icp_filing: 你的ICP备案号        # 必改：真实备案号，无则留空
+    public_security_filing: 你的公安备案号
+    bilibili_url: https://space.bilibili.com/435344704?spm_id_from=333.1007.0.0
+    gitee_url: https://gitee.com/wang-wenyu-fdhfj
+    github_url: https://github.com/KOIOIO
+    name: Xiaoyu_Wang
+    job: 工作
+    address: 河南省郑州市
+    email: 2652777599@qq.com
+    qq_image: /uploads/image/34672cbe3812cd56564ed12fa3d67b1e-20250226101740.jpg
+    wechat_image: ""
+zap:
+    level: info
+    filename: log/go_blog.log
+    max_size: 200
+    max_backups: 30
+    max_age: 5
+    is_console_print: false

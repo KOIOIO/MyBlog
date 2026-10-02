@@ -1,46 +1,49 @@
 <template>
   <div class="web-footer">
     <div class="container">
-      <div class="footer-left">
-        <div class="full-logo">
+      <div class="footer-col">
+        <div class="col-title">{{ t('footer.aboutSite') }}</div>
+        <div class="footer-logo">
           <el-image
               :src="websiteStore.state.websiteInfo.full_logo===''?'/image/full_logo.png':websiteStore.state.websiteInfo.full_logo"
               alt=""/>
         </div>
-        <el-text>{{ websiteStore.state.websiteInfo.description }}</el-text>
+        <p class="desc">{{ websiteStore.state.websiteInfo.description }}</p>
       </div>
-      <div class="footer-center">
-        <el-space size="large" spacer="|">
-          <div class="footer-link" v-for="item in footerLinkList" :key="item.title">
-            <el-link :href=item.link>{{ item.title }}</el-link>
-          </div>
-        </el-space>
-        <div class="create-at">
-          <el-text>建站日期：{{ websiteStore.state.websiteInfo.created_at }} 网站已运行：{{ elapsedTime }}</el-text>
-        </div>
-        <div class="filing">
-          <el-image src="/image/filing.png" alt=""/>
-          <el-link href="https://beian.miit.gov.cn/#/Integrated/index" :underline="false">
-            {{ websiteStore.state.websiteInfo.icp_filing }}
+
+      <div class="footer-col">
+        <div class="col-title">{{ t('footer.friendLinks') }}</div>
+        <ul class="link-list">
+          <li v-for="item in footerLinkList" :key="item.title">
+            <el-link :href=item.link :underline="false">{{ item.title }}</el-link>
+          </li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <div class="col-title">{{ t('footer.contact') }}</div>
+        <div class="social-link">
+          <el-link v-for="socialLink in socialLinks" :href=socialLink.url :underline="false" :aria-label="socialLink.alt">
+            <el-image :src=socialLink.src :alt=socialLink.alt></el-image>
           </el-link>
-          <el-link :href=publicSecurityFilingLink :underline="false">
-            {{ websiteStore.state.websiteInfo.public_security_filing }}
-          </el-link>
         </div>
-        <div class="bottom">
-          <div class="version">
-            <el-tag type="primary" size="large">version</el-tag>
-            <el-tag type="info" size="large">{{ websiteStore.state.websiteInfo.version }}</el-tag>
-          </div>
-          <div class="social-link">
-            <el-link v-for="socialLink in socialLinks" :href=socialLink.url :underline="false">
-              <el-image :src=socialLink.src :alt=socialLink.alt></el-image>
-            </el-link>
-          </div>
+        <div class="version">
+          <el-tag size="small">{{ t('footer.version') }}</el-tag>
+          <el-tag size="small" type="info">{{ websiteStore.state.websiteInfo.version }}</el-tag>
         </div>
       </div>
-      <div class="footer-right">
-        <el-image src="/image/xiaochun_character_transparent.png" alt=""/>
+    </div>
+
+    <div class="copyright">
+      <div class="runtime">{{ t('footer.buildDate') }}：{{ websiteStore.state.websiteInfo.created_at }} · {{ t('footer.uptime') }} {{ elapsedTime }}</div>
+      <div class="filing">
+        <el-image src="/image/filing.png" alt=""/>
+        <el-link href="https://beian.miit.gov.cn/#/Integrated/index" :underline="false">
+          {{ websiteStore.state.websiteInfo.icp_filing }}
+        </el-link>
+        <el-link :href=publicSecurityFilingLink :underline="false">
+          {{ websiteStore.state.websiteInfo.public_security_filing }}
+        </el-link>
       </div>
     </div>
   </div>
@@ -52,6 +55,9 @@ import {computed} from "vue";
 import {ref} from "vue";
 import {onUnmounted} from "vue";
 import {type FooterLink, websiteFooterLink} from "@/api/website";
+import {useI18n} from "vue-i18n";
+
+const {t} = useI18n()
 
 const footerLinkList=ref<FooterLink[]>([])
 
@@ -81,7 +87,7 @@ function updateElapsedTime() {
     let minutesRemaining = Math.floor((totalDays - daysPassed - (hoursRemaining / 24)) * 24 * 60);
     let secondsRemaining = Math.floor((totalDays - daysPassed - (hoursRemaining / 24) - (minutesRemaining / 24 / 60)) * 24 * 60 * 60);
 
-    elapsedTime.value = `${daysPassed}天${hoursRemaining}时${minutesRemaining}分${secondsRemaining}秒`;
+    elapsedTime.value = `${daysPassed}${t('footer.days')}${hoursRemaining}${t('footer.hours')}${minutesRemaining}${t('footer.minutes')}${secondsRemaining}${t('footer.seconds')}`;
   }
 }
 
@@ -120,78 +126,107 @@ const socialLinks = computed(() => [
 
 <style scoped lang="scss">
 .web-footer {
-  display: flex;
-  justify-content: center;
+  border-top: 1px solid var(--border);
+  background-color: var(--bg-elevated);
 
   .container {
-    display: flex;
-    max-width: 1400px;
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr;
+    gap: var(--sp-6);
+    max-width: var(--content-width);
     width: 100%;
+    margin: 0 auto;
+    padding: var(--sp-7) var(--sp-5) var(--sp-6);
 
-    .footer-left {
-      width: 25%;
-      margin-bottom: auto;
-      margin-top: auto;
-
-      .el-image {
-        height: 80px;
-      }
-    }
-
-    .footer-center {
-      width: 40%;
-      margin: auto 5%;
-
-      .footer-link {
-        .el-link {
-          margin-top: 20px;
-          margin-bottom: 20px;
-        }
+    .footer-col {
+      .col-title {
+        font-size: var(--fs-12);
+        font-weight: 600;
+        color: var(--text-muted);
+        letter-spacing: 0.05em;
+        margin-bottom: var(--sp-3);
       }
 
-      .create-at {
-        margin-bottom: 20px;
-      }
-
-      .filing {
-        display: flex;
-
+      .footer-logo {
         .el-image {
-          margin-bottom: auto;
-          margin-top: auto;
-        }
-
-        .el-link {
-          margin-left: 5px;
-          margin-right: 10px;
+          height: 40px;
+          width: auto;
         }
       }
 
-      .bottom {
-        display: flex;
-        margin-top: 20px;
+      .desc {
+        margin-top: var(--sp-3);
+        font-size: var(--fs-14);
+        color: var(--text-muted);
+        line-height: var(--lh-body);
+      }
 
-        .social-link {
+      .link-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+
+        li {
+          margin-bottom: var(--sp-2);
+
           .el-link {
-            margin-left: 40px;
+            font-size: var(--fs-14);
+            color: var(--text-body);
+
+            &:hover {
+              color: var(--accent);
+            }
           }
         }
       }
 
+      .social-link {
+        display: flex;
+        gap: var(--sp-3);
+        margin-bottom: var(--sp-4);
 
-    }
-
-    .footer-right {
-      width: 25%;
-      margin-bottom: auto;
-      margin-top: auto;
-      display: flex;
-
-      .el-image {
-        margin-left: auto;
-        height: 200px;
+        .el-link {
+          .el-image {
+            height: 24px;
+            width: 24px;
+          }
+        }
       }
 
+      .version {
+        display: flex;
+        gap: var(--sp-2);
+      }
+    }
+  }
+
+  .copyright {
+    max-width: var(--content-width);
+    width: 100%;
+    margin: 0 auto;
+    padding: var(--sp-4) var(--sp-5);
+    border-top: 1px solid var(--border);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--sp-2);
+    font-size: var(--fs-12);
+    color: var(--text-muted);
+
+    .filing {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-2);
+
+      .el-image {
+        height: 14px;
+        width: auto;
+      }
+
+      .el-link {
+        font-size: var(--fs-12);
+        color: var(--text-muted);
+      }
     }
   }
 }

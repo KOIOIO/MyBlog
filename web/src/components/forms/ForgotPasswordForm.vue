@@ -1,6 +1,5 @@
 <template>
   <div class="forgot-password-form">
-    <el-image class="forgot-password-image" src="/image/xiaochun_character_elements_transparent.png" alt=""/>
     <el-form
         ref="forgotPasswordForm"
         :model="forgotPasswordFormData"
@@ -10,58 +9,58 @@
         @keyup.enter="submitForm"
     >
 
-      <el-form-item label="邮箱" prop="email">
+      <el-form-item :label="t('forms.forgotPassword.email')" prop="email">
         <el-input
             v-model="forgotPasswordFormData.email"
             size="large"
-            placeholder="请输入邮箱"
+            :placeholder="t('forms.forgotPassword.emailPlaceholder')"
         />
       </el-form-item>
       <el-form-item prop="captcha">
         <div class="captcha">
           <el-input
               v-model="emailRequest.captcha"
-              placeholder="请输入图片验证码"
+              :placeholder="t('forms.forgotPassword.imageCaptchaPlaceholder')"
               size="large"
               maxlength="6"
               minlength="6"
           />
           <el-image :src="picPath" alt="" @click="emailVerify"/>
-          <el-button @click="sendCode">发送验证码</el-button>
+          <el-button @click="sendCode">{{ t('forms.forgotPassword.sendCode') }}</el-button>
         </div>
       </el-form-item>
-      <el-form-item label="邮箱验证码" prop="verification_code">
+      <el-form-item :label="t('forms.forgotPassword.emailCaptcha')" prop="verification_code">
         <el-input
             v-model="forgotPasswordFormData.verification_code"
             size="large"
-            placeholder="请输入邮箱验证码"
+            :placeholder="t('forms.forgotPassword.emailCaptchaPlaceholder')"
         />
       </el-form-item>
-      <el-form-item label="密码" prop="new_password">
+      <el-form-item :label="t('forms.forgotPassword.password')" prop="new_password">
         <el-input
             v-model="forgotPasswordFormData.new_password"
             show-password
             size="large"
             type="password"
-            placeholder="请输入新密码"
+            :placeholder="t('forms.forgotPassword.newPasswordPlaceholder')"
         />
       </el-form-item>
-      <el-form-item label="确认密码">
+      <el-form-item :label="t('forms.forgotPassword.confirmPassword')">
         <el-input
             v-model="repeatPassword"
             show-password
             size="large"
             type="password"
-            placeholder="请再次输入新密码"
+            :placeholder="t('forms.forgotPassword.confirmNewPasswordPlaceholder')"
         />
-        <el-text v-if="forgotPasswordFormData.new_password!==repeatPassword">两次密码不一致！</el-text>
+        <el-text v-if="forgotPasswordFormData.new_password!==repeatPassword">{{ t('forms.forgotPassword.passwordMismatch') }}</el-text>
       </el-form-item>
       <el-form-item>
         <el-button
             type="primary"
             size="large"
             @click="submitForm"
-        >确定
+        >{{ t('forms.forgotPassword.submit') }}
         </el-button>
       </el-form-item>
     </el-form>
@@ -74,6 +73,9 @@ import {forgotPassword, type ForgotPasswordRequest} from "@/api/user";
 import {captcha, type EmailRequest, sendEmailVerificationCode} from "@/api/base";
 import type {FormInstance, FormRules} from 'element-plus';
 import {useLayoutStore} from "@/stores/layout";
+import {useI18n} from "vue-i18n";
+
+const {t} = useI18n()
 
 const forgotPasswordForm = ref<FormInstance>()
 
@@ -96,20 +98,20 @@ const rules = reactive<FormRules<ForgotPasswordRequest>>({
     required: true,
     type:'email',
     trigger: 'blur',
-    message: '请输入正确的邮箱格式'
+    message: t('forms.forgotPassword.emailFormat')
   }],
   verification_code: [{
     required: true,
     len: 6,
     trigger: 'blur',
-    message: '请输入6位的验证码'
+    message: t('forms.forgotPassword.codeLength')
   }],
   new_password:[{
     required:true,
     min:8,
     max:20,
     trigger:'change',
-    message:'密码的长度应为8~20位'
+    message:t('forms.forgotPassword.passwordLength')
   }]
 })
 
@@ -159,19 +161,47 @@ const submitForm = async () => {
 
 <style scoped lang="scss">
 .forgot-password-form {
-  display: flex;
-
-  .forgot-password-image {
-    max-width:200px;
-    width: 100%;
-  }
-
   .el-form {
+    flex: 1;
+    min-width: 0;
+
     .captcha {
       display: flex;
+      gap: var(--sp-2);
+      align-items: center;
+      width: 100%;
+
+      .el-input {
+        flex: 1;
+      }
+
+      .el-image {
+        height: 40px;
+        border-radius: var(--radius-sm);
+        overflow: hidden;
+        cursor: pointer;
+        flex-shrink: 0;
+      }
+
+      .el-button {
+        height: 40px;
+        flex-shrink: 0;
+      }
     }
-    .el-text{
-      color: red;
+
+    .el-text {
+      color: var(--el-color-danger);
+      font-size: var(--fs-12);
+    }
+
+    .el-form-item:last-child {
+      margin-bottom: 0;
+
+      .el-button {
+        width: 100%;
+        height: 40px;
+        font-weight: 500;
+      }
     }
   }
 }
@@ -180,5 +210,15 @@ const submitForm = async () => {
 <style lang="scss">
 .forgot-password-form .el-form .captcha .el-input__wrapper {
   height: 40px;
+}
+
+/* 密码可见性切换图标：色渡 150ms + 按压反馈（§8） */
+.forgot-password-form .el-input__password {
+  cursor: pointer;
+  transition: color 150ms ease-out, transform 80ms ease-out;
+
+  &:active {
+    transform: scale(0.92);
+  }
 }
 </style>

@@ -1,51 +1,43 @@
 <template>
-  <div class="news">
+  <div class="news-page">
     <web-navbar :noScroll="true"/>
-    <el-container class="main-content">
-      <div class="container">
-        <el-main>
-          <el-tabs model-value="baidu" @tab-click="handleNewsTabClick">
-            <el-tab-pane v-for="item in newsTypeList" :name="item.name">
-              <template #label>
-                <el-image :src="item.src" alt=""></el-image>
-                <el-row>{{ item.label }}</el-row>
-              </template>
-              <el-table
-                  :data="newsTableData"
-                  :show-header="false"
-                  :row-style="{height: '150px'}"
-              >
-                <el-table-column label="序号" prop="index" width="60"/>
-                <el-table-column label="图片" width="240">
-                  <template #default="scope:{ row: any, column: any, $index: number }">
-                    <el-image style="width: 180px; height: 100px" :src="scope.row.image" alt="" fit="cover"/>
-                  </template>
-                </el-table-column>
-                <el-table-column label="内容">
-                  <template #default="scope:{ row: any, column: any, $index: number }">
-                    <div class="content" @click="handleNewsTableClick(scope.row)">
-                      <el-row class="title">{{ scope.row.title }}</el-row>
-                      <el-text class="description" size="large" line-clamp="4">{{ scope.row.description }}</el-text>
-                    </div>
-                  </template>
-                </el-table-column>
-                <el-table-column label="热度" prop="popularity" width="120"/>
-              </el-table>
-            </el-tab-pane>
-          </el-tabs>
-        </el-main>
-      </div>
-    </el-container>
+    <div class="page">
+      <el-tabs v-model="activeTab" @tab-click="handleNewsTabClick">
+        <el-tab-pane v-for="item in newsTypeList" :key="item.name" :name="item.name">
+          <template #label>
+            <el-image :src="item.src" alt="" class="tab-icon"></el-image>
+            <span>{{ item.label }}</span>
+          </template>
+          <div class="news-list" :key="activeTab">
+            <div v-for="(row, idx) in newsTableData" :key="idx" class="news-item"
+                 :style="{ animationDelay: Math.min(idx, 7) * 60 + 'ms' }"
+                 @click="handleNewsTableClick(row)">
+              <span class="item-index">{{ idx + 1 }}</span>
+              <img v-if="row.image" class="item-cover" :src="row.image" referrerpolicy="no-referrer" alt=""/>
+              <div class="item-body">
+                <h3 class="item-title">{{ row.title }}</h3>
+                <p class="item-desc">{{ row.description }}</p>
+              </div>
+              <span v-if="row.popularity" class="item-popularity">{{ row.popularity }}</span>
+            </div>
+          </div>
+        </el-tab-pane>
+      </el-tabs>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import WebNavbar from "@/components/layout/WebNavbar.vue";
-import {ref} from "vue";
+import {computed, ref} from "vue";
 import {type HotItem, websiteNews, type WebsiteNewsRequest} from "@/api/website";
 import type {TabsPaneContext} from "element-plus";
+import {useI18n} from "vue-i18n";
+
+const {t} = useI18n();
 
 const newsTableData = ref<HotItem[]>()
+const activeTab = ref("baidu")
 
 interface newsTypeItem {
   name: string;
@@ -53,34 +45,34 @@ interface newsTypeItem {
   src: string;
 }
 
-const newsTypeList: newsTypeItem[] = [
+const newsTypeList = computed<newsTypeItem[]>(() => [
   {
     name: "baidu",
-    label: "百度热搜",
+    label: t('pages.news.baidu'),
     src: "/image/baidu.png"
   },
   {
-    name: "zhihu",
-    label: "知乎热榜",
-    src: "/image/zhihu.png"
+    name: "bilibili",
+    label: t('pages.news.bilibili'),
+    src: "/image/bilibili.png"
   },
   {
     name: "kuaishou",
-    label: "快手热榜",
+    label: t('pages.news.kuaishou'),
     src: "/image/kuaishou.png"
   },
   {
     name: "toutiao",
-    label: "头条热榜",
+    label: t('pages.news.toutiao'),
     src: "/image/toutiao.png"
   }
-]
+])
 
 const handleNewsTabClick = (tab: TabsPaneContext, _: Event) => {
   getNewsTableData(tab.paneName as string)
 }
 
-let newsMap = new Map<string, HotItem[]>
+let newsMap = new Map<string, HotItem[]>()
 
 const getNewsTableData = async (source: string) => {
   if (!newsMap.has(source)) {
@@ -103,37 +95,101 @@ const handleNewsTableClick = (item: HotItem) => {
 </script>
 
 <style scoped lang="scss">
-.news {
-  background-color: #1e1e2f;
-  color: #ffffff;
+.news-page {
+  background-color: var(--bg);
+  min-height: 100vh;
 
-  .main-content {
-    margin-top: 70px;
+  .page {
+    max-width: var(--reading-width);
+    margin: 0 auto;
+    padding: calc(70px + var(--sp-6)) var(--sp-4) var(--sp-9);
+  }
+
+  :deep(.el-tabs__item) {
+    .tab-icon {
+      width: 18px;
+      height: 18px;
+      margin-right: var(--sp-1);
+      vertical-align: middle;
+    }
+  }
+
+  .news-list {
+    border-top: 1px solid var(--border);
+  }
+
+  .news-item {
     display: flex;
-    justify-content: center;
+    align-items: flex-start;
+    gap: var(--sp-4);
+    padding: var(--sp-4) var(--sp-2);
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background-color 150ms ease-out, transform 80ms ease-out;
+    animation: kf-fade-up var(--dur-mid) var(--ease-out) backwards;
 
-    .container {
-      display: flex;
-      max-width: 1400px;
-      width: 100%;
+    &:hover {
+      background-color: var(--bg-elevated);
+    }
 
-      .el-tabs {
-        .el-tab-pane {
-          .el-table {
-            .content {
-              .title {
-                font-size: 24px;
-                margin-bottom: 10px;
-                color: #8ab4f8;
-              }
-              .description {
-                color: #b0b0b0;
-              }
-            }
-          }
-        }
+    &:active {
+      transform: translateY(1px);
+    }
+
+    .item-index {
+      flex-shrink: 0;
+      width: 24px;
+      font-size: var(--fs-14);
+      font-weight: 600;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      padding-top: 2px;
+    }
+
+    .item-cover {
+      flex-shrink: 0;
+      width: 120px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: var(--radius-sm);
+    }
+
+    .item-body {
+      flex: 1;
+      min-width: 0;
+
+      .item-title {
+        font-size: var(--fs-16);
+        font-weight: 600;
+        color: var(--text-primary);
+        line-height: var(--lh-title);
+        margin: 0 0 var(--sp-1);
+        transition: color 150ms ease-out;
       }
+
+      &:hover .item-title {
+        color: var(--accent);
+      }
+
+      .item-desc {
+        font-size: var(--fs-14);
+        color: var(--text-muted);
+        line-height: var(--lh-body);
+        margin: 0;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+    }
+
+    .item-popularity {
+      flex-shrink: 0;
+      font-size: var(--fs-12);
+      color: var(--text-muted);
+      font-family: var(--font-mono);
     }
   }
 }
+
 </style>

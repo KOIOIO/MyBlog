@@ -67,8 +67,6 @@ func (userApi *UserApi) Login(c *gin.Context) {
 	switch c.Query("flag") {
 	case "email":
 		userApi.EmailLogin(c)
-	case "qq":
-		userApi.QQLogin(c)
 	default:
 		userApi.EmailLogin(c)
 	}
@@ -98,33 +96,6 @@ func (userApi *UserApi) EmailLogin(c *gin.Context) {
 		return
 	}
 	response.FailWithMessage("Incorrect verification code", c)
-}
-
-// QQLogin QQ登录
-func (userApi *UserApi) QQLogin(c *gin.Context) {
-	code := c.Query("code")
-	if code == "" {
-		response.FailWithMessage("Code is required", c)
-		return
-	}
-
-	// 获取访问令牌
-	accessTokenResponse, err := qqService.GetAccessTokenByCode(code)
-	if err != nil || accessTokenResponse.Openid == "" {
-		global.Log.Error("Invalid code", zap.Error(err))
-		response.FailWithMessage("Invalid code", c)
-	}
-
-	// 根据访问令牌进行QQ登录
-	user, err := userService.QQLogin(accessTokenResponse)
-	if err != nil {
-		global.Log.Error("Failed to login:", zap.Error(err))
-		response.FailWithMessage("Failed to login", c)
-		return
-	}
-
-	// 登录成功后生成 token
-	userApi.TokenNext(c, user)
 }
 
 func (userApi *UserApi) TokenNext(c *gin.Context, user database.User) {
@@ -315,6 +286,28 @@ func (userApi *UserApi) UserInfo(c *gin.Context) {
 		return
 	}
 	response.OkWithData(user, c)
+}
+
+// UploadAvatar 上传头像
+func (userApi *UserApi) UploadAvatar(c *gin.Context) {
+	_, header, err := c.Request.FormFile("avatar")
+	if err != nil {
+		global.Log.Error(err.Error(), zap.Error(err))
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+
+	userID := utils.GetUserID(c)
+	url, err := userService.UploadAvatar(userID, header)
+	if err != nil {
+		global.Log.Error("Failed to upload avatar:", zap.Error(err))
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+	response.OkWithDetailed(response.ImageUpload{
+		Url:     url,
+		OssType: global.Config.System.OssType,
+	}, "Successfully uploaded avatar", c)
 }
 
 // UserChangeInfo 修改个人信息

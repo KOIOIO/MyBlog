@@ -1,24 +1,24 @@
 <template>
   <el-card class="feedback">
-    <el-row class="title">意见反馈</el-row>
+    <el-row class="title">{{ t('components.feedback.title') }}</el-row>
     <el-input type="textarea" :rows="4" v-model="feedbackCreateFormData.content" maxlength="100" show-word-limit
-              placeholder="请输入反馈建议"></el-input>
+              :placeholder="t('components.feedback.placeholder')"></el-input>
     <div class="content">
-      <el-text>tip:请登录后再进行反馈!</el-text>
+      <el-text class="login-tip">{{ t('components.feedback.loginTip') }}</el-text>
       <div class="button-group">
-        <el-button @click="submitForm" type="primary">确定</el-button>
-        <el-button @click="feedbackCreateFormData.content=''">取消</el-button>
+        <el-button @click="submitForm" type="primary">{{ t('common.confirm') }}</el-button>
+        <el-button @click="feedbackCreateFormData.content=''">{{ t('common.cancel') }}</el-button>
       </div>
     </div>
-    <el-row class="title-sub">反馈列表</el-row>
+    <el-row class="title-sub">{{ t('components.feedback.listTitle') }}</el-row>
     <div class="footer">
-      <div class="feedback-new" v-for="item in feedbackInfoList">
+      <div class="feedback-new" v-for="item in feedbackInfoList" :key="item.time">
         <el-row>{{ item.content }}</el-row>
         <el-row class="container">
           <div class="time">{{ item.time }}</div>
         </el-row>
         <div class="reply">
-          <el-text v-if="item.reply!==''">回复：{{ item.reply }}</el-text>
+          <el-text v-if="item.reply!==''">{{ t('components.feedback.replyLabel') }}{{ item.reply }}</el-text>
         </div>
       </div>
     </div>
@@ -28,6 +28,9 @@
 <script setup lang="ts">
 import {reactive, ref, watch} from "vue";
 import {feedbackCreate, type FeedbackCreateRequest, feedbackNew} from "@/api/feedback";
+import {useI18n} from "vue-i18n";
+
+const {t} = useI18n();
 
 const feedbackCreateFormData = reactive<FeedbackCreateRequest>({
   content: '',
@@ -79,47 +82,76 @@ getFeedbackNew()
 
 <style scoped lang="scss">
 .feedback {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  animation: kf-fade-up var(--dur-mid) var(--ease-out) backwards;
+
   .title {
-    font-size: 24px;
-    margin-bottom: 20px;
+    font-size: var(--fs-16);
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--sp-3);
   }
 
   .content {
     display: flex;
-    margin-top: 20px;
-    margin-bottom: 20px;
+    align-items: center;
+    margin: var(--sp-3) 0;
+
+    .login-tip {
+      font-size: var(--fs-12);
+      color: var(--text-muted);
+    }
 
     .button-group {
       margin-left: auto;
     }
   }
 
-  .title-sub{
-    font-size: large;
-    margin-bottom: 20px;
+  .title-sub {
+    font-size: var(--fs-14);
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: var(--sp-4) 0 var(--sp-3);
   }
 
   .footer {
     .feedback-new {
-      border: 1px solid #DCDFE6;
-      margin-bottom: 20px;
-      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: var(--sp-3);
+      margin-bottom: var(--sp-3);
+      font-size: var(--fs-14);
+      color: var(--text-body);
+      transition: background-color 150ms ease-out, transform 80ms ease-out;
+
+      &:hover {
+        background-color: var(--bg-elevated);
+      }
+
+      &:active {
+        transform: translateY(1px);
+      }
 
       .container {
-        border-bottom: 1px solid #DCDFE6;
         display: flex;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: var(--sp-2);
+        margin-bottom: var(--sp-2);
 
         .time {
-          font-size: small;
+          font-size: var(--fs-12);
+          color: var(--text-muted);
           margin-left: auto;
         }
       }
 
       .reply {
-        font-size: small;
-        padding: 10px;
+        font-size: var(--fs-12);
+        color: var(--text-muted);
       }
     }
   }
 }
+
 </style>

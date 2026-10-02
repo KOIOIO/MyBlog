@@ -11,6 +11,7 @@ type RouterGroup struct {
 	FeedbackRouter
 	WebsiteRouter
 	ConfigRouter
+	ForumRouter
 }
 
 var RouterGroupApp = new(RouterGroup)

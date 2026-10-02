@@ -1,100 +1,84 @@
 <template>
-  <div class="search">
+  <div class="search-page">
     <web-navbar :noScroll="true"/>
-    <el-container class="main-content">
-      <div class="container">
-        <el-main>
-          <div class="search">
-            <el-input v-model="articleSearchRequest.query" placeholder="请输入搜索内容" prefix-icon="Search"
-                      maxlength="50"
-                      @change="changeArticleSearchItem"/>
-            <el-button @click="changeArticleSearchItem">搜索</el-button>
+    <div class="page">
+      <div class="search-area">
+        <div class="search-box">
+          <el-input v-model="articleSearchRequest.query" :placeholder="t('pages.search.searchPlaceholder')" prefix-icon="Search"
+                    maxlength="50" clearable size="large"
+                    @change="changeArticleSearchItem"/>
+        </div>
+
+        <div class="filter-row">
+          <span class="filter-label">{{ t('pages.search.categoryLabel') }}</span>
+          <div class="chip-group">
+            <button type="button" class="chip" :class="{ 'is-selected': articleSearchRequest.category === ''}"
+                    @click="selectCategory('')">{{ t('common.all') }}</button>
+            <button v-for="item in categoryArr" :key="item" type="button" class="chip"
+                    :class="{ 'is-selected': articleSearchRequest.category === item}"
+                    @click="selectCategory(item)">{{ categoryLabel(item) }}</button>
           </div>
+        </div>
 
-          <div class="category">
-            <el-row size="large">类别</el-row>
-            <el-radio-group v-model="articleSearchRequest.category" @change="changeArticleSearchItem">
-              <el-radio-button label="全部" value=""/>
-              <template v-for="item in categoryArr">
-                <el-radio-button :label="item" :value="item"/>
-              </template>
-            </el-radio-group>
+        <div class="filter-row">
+          <span class="filter-label">{{ t('pages.search.tagLabel') }}</span>
+          <div class="chip-group">
+            <button type="button" class="chip" :class="{ 'is-selected': articleSearchRequest.tag === ''}"
+                    @click="selectTag('')">{{ t('common.all') }}</button>
+            <button v-for="item in tagArr" :key="item" type="button" class="chip"
+                    :class="{ 'is-selected': articleSearchRequest.tag === item}"
+                    @click="selectTag(item)">{{ tagLabel(item) }}</button>
           </div>
+        </div>
 
-          <div class="tag">
-            <el-row size="large">标签</el-row>
-            <el-radio-group v-model="articleSearchRequest.tag" @change="changeArticleSearchItem">
-              <el-radio-button label="全部" value=""/>
-              <template v-for="item in tagArr">
-                <el-radio-button :label="item" :value="item"/>
-              </template>
-            </el-radio-group>
+        <div class="filter-row">
+          <span class="filter-label">{{ t('pages.search.sortLabel') }}</span>
+          <button type="button" class="sort-btn press" @click="handleSortClick();changeArticleSearchItem()">
+            <el-icon :color="downColor"><component is="SortDown"/></el-icon>
+            <el-icon :color="upColor"><component is="SortUp"/></el-icon>
+          </button>
+          <div class="chip-group">
+            <button v-for="item in sortArr" :key="item.value" type="button" class="chip"
+                    :class="{ 'is-selected': articleSearchRequest.sort === item.value}"
+                    @click="selectSort(item.value)">{{ item.label }}</button>
           </div>
-
-          <div class="sort">
-            <el-row size="large">排序</el-row>
-            <el-button @click="handleSortClick();changeArticleSearchItem()">
-              <el-icon :color="downColor">
-                <component is="SortDown"></component>
-              </el-icon>
-              <el-icon :color="upColor">
-                <component is="SortUp"></component>
-              </el-icon>
-            </el-button>
-            <el-radio-group v-model="articleSearchRequest.sort" v-for="item in sortArr"
-                            @change="changeArticleSearchItem">
-              <el-radio-button :label="item.label" :value="item.value"/>
-            </el-radio-group>
-          </div>
-
-          <el-table :data="articleTableData" :show-header="false" :row-style="{height: '150px'}">
-            <el-table-column label="cover" width="200">
-              <template #default="scope:{ row: any, column: any, $index: number }">
-                <el-image style="width: 160px; height: 100px" :src="scope.row._source.cover" alt=""/>
-              </template>
-            </el-table-column>
-            <el-table-column label="description">
-              <template #default="scope:{ row: Hit<Article>, column: any, $index: number }">
-                <div class="description" @click="handleArticleJumps(scope.row._id)">
-                  <el-row class="title">{{ scope.row._source.title }}</el-row>
-                  <el-text class="abstract" size="large">{{ scope.row._source.abstract }}</el-text>
-                  <el-text class="footer">
-                    <div class="tags">
-                      <el-tag v-for="item in scope.row._source.tags">{{ item }}</el-tag>
-                    </div>
-                    <div class="status">
-                      发布时间：{{ scope.row._source.created_at }}
-                      <el-icon>
-                        <component is="View"/>
-                      </el-icon>
-                      {{ scope.row._source.views }}
-                      <el-icon>
-                        <component is="ChatDotRound"/>
-                      </el-icon>
-                      {{ scope.row._source.comments }}
-                      <el-icon>
-                        <component is="Star"/>
-                      </el-icon>
-                      {{ scope.row._source.likes }}
-                    </div>
-                  </el-text>
-                </div>
-              </template>
-            </el-table-column>
-          </el-table>
-
-          <el-pagination
-              :current-page="page"
-              :page-size="page_size"
-              :page-sizes="[10, 30, 50, 100]"
-              :total="total"
-              layout="total, sizes, prev, pager, next, jumper"
-              @current-change="handleCurrentChange"
-              @size-change="handleSizeChange"
-          />
-        </el-main>
+        </div>
       </div>
-    </el-container>
+
+      <div class="results">
+        <div v-for="(row, idx) in articleTableData" :key="row._id" class="result-item"
+             :style="{ animationDelay: Math.min(idx, 7) * 30 + 'ms' }"
+             @click="handleArticleJumps(row._id)">
+          <h3 class="result-title">{{ row._source.title }}</h3>
+          <p class="result-abstract">{{ row._source.abstract }}</p>
+          <div class="result-meta">
+            <span v-if="row._source.category" class="meta-category">{{ categoryLabel(row._source.category) }}</span>
+            <span class="meta-date">{{ row._source.created_at }}</span>
+            <span class="meta-stat">
+              <el-icon><component is="View"/></el-icon> {{ row._source.views }}
+            </span>
+            <span class="meta-stat">
+              <el-icon><component is="Star"/></el-icon> {{ row._source.likes }}
+            </span>
+          </div>
+        </div>
+
+        <!-- 空态：当前无 i18n key（pages.search.empty*），待 i18n 分片补文案后启用；
+             此处仅保留结果行 stagger，空列表不渲染额外结构 -->
+      </div>
+
+      <div class="pagination-wrap">
+        <el-pagination
+            :current-page="page"
+            :page-size="page_size"
+            :page-sizes="[10, 30, 50, 100]"
+            :total="total"
+            layout="total, sizes, prev, pager, next, jumper"
+            @current-change="handleCurrentChange"
+            @size-change="handleSizeChange"
+        />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -104,6 +88,10 @@ import type {Hit} from "@/api/common";
 import {type Article, articleCategory, articleSearch, type ArticleSearchRequest, articleTags} from "@/api/article";
 import {computed, nextTick, onMounted, reactive, ref, watch} from "vue";
 import {useRoute, useRouter} from "vue-router";
+import {useI18n} from "vue-i18n";
+import {categoryLabel, tagLabel} from "@/i18n/meta";
+
+const {t} = useI18n();
 
 const articleSearchRequest = reactive<ArticleSearchRequest>({
   query: "",
@@ -120,13 +108,13 @@ const router = useRouter()
 
 const categoryArr = ref<string[]>([])
 const tagArr = ref<string[]>([])
-const sortArr = [
-  {label: "默认", value: ""},
-  {label: "时间", value: "time"},
-  {label: "评论", value: "comment"},
-  {label: "浏览", value: "view"},
-  {label: "点赞", value: "like"},
-]
+const sortArr = computed(() => [
+  {label: t('pages.search.sortDefault'), value: ""},
+  {label: t('pages.search.sortTime'), value: "time"},
+  {label: t('pages.search.sortComment'), value: "comment"},
+  {label: t('pages.search.sortView'), value: "view"},
+  {label: t('pages.search.sortLike'), value: "like"},
+])
 
 const downColor = computed(() => {
   return articleSearchRequest.order === "desc" ? "blue" : "gray"
@@ -137,6 +125,23 @@ const upColor = computed(() => {
 
 const handleSortClick = () => {
   articleSearchRequest.order = articleSearchRequest.order === "desc" ? "asc" : "desc"
+}
+
+// chip 单选互斥：仅值真正变化时触发请求（对齐原 el-radio-group 语义；URL query 回写逻辑不变）
+const selectCategory = (val: string) => {
+  if (articleSearchRequest.category === val) return
+  articleSearchRequest.category = val
+  changeArticleSearchItem()
+}
+const selectTag = (val: string) => {
+  if (articleSearchRequest.tag === val) return
+  articleSearchRequest.tag = val
+  changeArticleSearchItem()
+}
+const selectSort = (val: string) => {
+  if (articleSearchRequest.sort === val) return
+  articleSearchRequest.sort = val
+  changeArticleSearchItem()
 }
 
 const getArticleCategory = async () => {
@@ -237,100 +242,131 @@ const handleCurrentChange = (val: number) => {
 </script>
 
 <style scoped lang="scss">
-.search {
-  .main-content {
-    margin-top: 70px;
-    display: flex;
-    justify-content: center;
-    background-color: #1e1e2f; /* 深蓝色背景 */
+.search-page {
+  background-color: var(--bg);
+  min-height: 100vh;
 
-    .container {
+  .page {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: calc(70px + var(--sp-7)) var(--sp-4) var(--sp-9);
+  }
+
+  .search-area {
+    margin-bottom: var(--sp-7);
+
+    .search-box {
+      margin-bottom: var(--sp-5);
+
+      :deep(.el-input__wrapper) {
+        height: 56px;
+        border-radius: 12px;
+        padding-left: var(--sp-4);
+        transition: box-shadow 150ms cubic-bezier(.16,1,.3,1);
+      }
+
+    }
+
+    .filter-row {
       display: flex;
-      max-width: 1400px;
-      width: 100%;
+      align-items: center;
+      gap: var(--sp-3);
+      margin-bottom: var(--sp-2);
+      flex-wrap: wrap;
 
-      .search {
+      .filter-label {
+        font-size: var(--fs-12);
+        color: var(--text-muted);
+        min-width: 32px;
+        flex-shrink: 0;
+      }
+
+      .sort-btn {
+        width: 32px;
+        padding: 0;
+        border: none;
+        background: transparent;
+      }
+
+    }
+
+    /* chip 组布局：idle/hover/选中(is-selected)/圆点/pop/press/focus 全部由全局 .chip 提供 */
+    .chip-group {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--sp-2);
+    }
+  }
+
+  .results {
+    .result-item {
+      padding: var(--sp-4) 0;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      transition: background-color 150ms ease-out, transform 80ms ease-out;
+      padding-left: var(--sp-2);
+      padding-right: var(--sp-2);
+      border-radius: var(--radius-sm);
+      animation: kf-fade-up var(--dur-base) var(--ease-out) backwards;
+
+      &:hover {
+        background-color: var(--bg-elevated);
+      }
+
+      &:active {
+        transform: translateY(1px);
+      }
+
+      .result-title {
+        font-size: var(--fs-18);
+        font-weight: 600;
+        color: var(--text-primary);
+        margin: 0 0 var(--sp-1);
+        transition: color 150ms ease-out;
+      }
+
+      &:hover .result-title {
+        color: var(--accent);
+      }
+
+      .result-abstract {
+        font-size: var(--fs-14);
+        color: var(--text-body);
+        line-height: var(--lh-body);
+        margin: 0 0 var(--sp-2);
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      .result-meta {
         display: flex;
+        align-items: center;
+        gap: var(--sp-3);
+        font-size: var(--fs-12);
+        color: var(--text-muted);
 
-        .el-input {
-          margin-left: auto;
-          width: 320px;
-          background-color: #2e2e4f; /* 深蓝色输入框背景 */
-          color: #ffffff; /* 白色文字 */
-        }
-      }
-
-      .category, .tag, .sort {
-        display: flex;
-        margin: 10px;
-        color: #ffffff; /* 白色文字 */
-
-        .el-row {
-          margin-right: 32px;
+        .meta-category {
+          color: var(--accent);
         }
 
-        .el-radio-group {
-          max-width: 1276px;
-
-          .el-radio-button {
-            background-color: #2e2e4f; /* 深蓝色按钮背景 */
-            color: #ffffff; /* 白色文字 */
-          }
+        .meta-stat {
+          display: inline-flex;
+          align-items: center;
+          gap: 2px;
         }
-      }
-
-      .sort {
-        .el-button {
-          width: 32px;
-          padding: unset;
-          border: none;
-          background-color: transparent;
-          color: #ffffff; /* 白色文字 */
-        }
-      }
-
-      .el-table {
-        .description {
-          height: 120px;
-          display: flex;
-          flex-direction: column;
-          color: #ffffff; /* 白色文字 */
-
-          .title {
-            font-size: 24px;
-            margin-bottom: 10px;
-          }
-
-          .abstract {
-            margin-right: auto;
-          }
-
-          .footer {
-            margin-top: auto;
-            display: flex;
-            width: 100%;
-            .tags {
-              margin-right: auto;
-              .el-tag {
-                margin-right: 10px;
-                background-color: #2e2e4f; /* 深蓝色标签背景 */
-                color: #ffffff; /* 白色文字 */
-              }
-            }
-            .status {
-              margin-left: auto;
-            }
-          }
-        }
-      }
-
-      .el-pagination {
-        margin-top: 10px;
-        display: flex;
-        justify-content: center;
-        color: #ffffff; /* 白色文字 */
       }
     }
   }
+
+  .pagination-wrap {
+    display: flex;
+    justify-content: center;
+    margin-top: var(--sp-6);
+  }
 }
+
+
 </style>

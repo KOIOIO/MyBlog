@@ -1,6 +1,5 @@
 <template>
   <div class="login-form">
-    <el-image class="login-image" src="/image/xiaochun_character_elements_transparent.png" alt=""/>
     <el-form
         ref="loginForm"
         :model="loginFormData"
@@ -9,28 +8,28 @@
         hide-required-asterisk
         @keyup.enter="submitForm"
     >
-      <el-form-item label="邮箱" prop="email">
+      <el-form-item :label="t('forms.login.email')" prop="email">
         <el-input
             v-model="loginFormData.email"
             size="large"
-            placeholder="请输入邮箱"
+            :placeholder="t('forms.login.emailPlaceholder')"
             suffix-icon="user"
         />
       </el-form-item>
-      <el-form-item label="密码" prop="password">
+      <el-form-item :label="t('forms.login.password')" prop="password">
         <el-input
             v-model="loginFormData.password"
             show-password
             size="large"
             type="password"
-            placeholder="请输入密码"
+            :placeholder="t('forms.login.passwordPlaceholder')"
         />
       </el-form-item>
-      <el-form-item label="验证码" prop="captcha">
+      <el-form-item :label="t('forms.login.captcha')" prop="captcha">
         <div class="captcha">
           <el-input
               v-model="loginFormData.captcha"
-              placeholder="请输入验证码"
+              :placeholder="t('forms.login.captchaPlaceholder')"
               size="large"
           />
           <el-image :src="picPath" alt="" @click="loginVerify"/>
@@ -41,7 +40,7 @@
             type="primary"
             size="large"
             @click="submitForm"
-        >登 录
+        >{{ t('forms.login.submit') }}
         </el-button>
       </el-form-item>
     </el-form>
@@ -55,6 +54,9 @@ import {useUserStore} from "@/stores/user";
 import {captcha} from "@/api/base";
 import type {FormInstance, FormRules} from 'element-plus';
 import {useLayoutStore} from "@/stores/layout";
+import {useI18n} from "vue-i18n";
+
+const {t} = useI18n()
 
 const loginForm = ref<FormInstance>()
 
@@ -70,20 +72,20 @@ const rules = reactive<FormRules<LoginRequest>>({
     required: true,
     type: 'email',
     trigger: 'blur',
-    message: '请输入正确的邮箱格式'
+    message: t('forms.login.emailFormat')
   }],
   password: [{
     required: true,
     min: 8,
     max: 20,
     trigger: 'change',
-    message: '密码的长度应为8~20位'
+    message: t('forms.login.passwordLength')
   }],
   captcha: [{
     required: true,
     len: 6,
     trigger: 'blur',
-    message: '请输入6位的验证码'
+    message: t('forms.login.captchaLength')
   }],
 })
 
@@ -126,16 +128,35 @@ const submitForm = async () => {
 
 <style scoped lang="scss">
 .login-form {
-  display: flex;
-
-  .login-image {
-    max-width: 160px;
-    width: 100%;
-  }
-
   .el-form {
+
     .captcha {
       display: flex;
+      gap: var(--sp-2);
+      align-items: center;
+      width: 100%;
+
+      .el-input {
+        flex: 1;
+      }
+
+      .el-image {
+        height: 40px;
+        border-radius: var(--radius-sm);
+        overflow: hidden;
+        cursor: pointer;
+        flex-shrink: 0;
+      }
+    }
+
+    .el-form-item:last-child {
+      margin-bottom: 0;
+
+      .el-button {
+        width: 100%;
+        height: 40px;
+        font-weight: 500;
+      }
     }
   }
 }
@@ -144,5 +165,15 @@ const submitForm = async () => {
 <style lang="scss">
 .login-form .el-form .captcha .el-input__wrapper {
   height: 40px;
+}
+
+/* 密码可见性切换图标：色渡 150ms + 按压反馈（§8） */
+.login-form .el-input__password {
+  cursor: pointer;
+  transition: color 150ms ease-out, transform 80ms ease-out;
+
+  &:active {
+    transform: scale(0.92);
+  }
 }
 </style>

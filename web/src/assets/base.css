@@ -1,3 +1,733 @@
+/* ============================================================
+   Folio 设计系统 —— Minimal Editorial（极简编辑风）
+   设计 Token：浅色/深色双主题、Inter 无衬线 + Serif 点缀、
+   8px 栅格、65ch 阅读宽度、细线分割
+   ============================================================ */
+
+/* ---------- 浅色主题（默认） ---------- */
+:root {
+  --bg: #FAFAFA;
+  --bg-elevated: #FFFFFF;
+  --text-primary: #18181B;
+  --text-body: #3F3F46;
+  --text-muted: #71717A;
+  --border: #E4E4E7;
+  --accent: #2563EB;
+  --accent-weak: rgba(37, 99, 235, 0.08);
+
+  /* 字体 */
+  --font-sans: "Inter", "Geist", -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-serif: "Source Serif Pro", "Noto Serif SC", Georgia, "Songti SC", serif;
+  --font-mono: "JetBrains Mono", "Fira Code", "SF Mono", Consolas, monospace;
+
+  /* 字号阶梯 */
+  --fs-12: 12px;
+  --fs-14: 14px;
+  --fs-16: 16px;
+  --fs-18: 18px;
+  --fs-20: 20px;
+  --fs-24: 24px;
+  --fs-30: 30px;
+  --fs-36: 36px;
+  --fs-48: 48px;
+
+  /* 间距（8px 栅格） */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 24px;
+  --sp-6: 32px;
+  --sp-7: 48px;
+  --sp-8: 64px;
+  --sp-9: 96px;
+
+  /* 圆角 */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+
+  /* 阴影：浅色几乎不用，仅浮层 */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.06);
+
+  /* 布局 */
+  --content-width: 1120px;   /* 列表页 */
+  --reading-width: 720px;    /* 文章阅读 */
+
+  /* 行高 */
+  --lh-body: 1.75;
+  --lh-title: 1.25;
+
+  /* ---------- 交互层 token（Folio 交互改造规范 v1.0 §3，浅色/深色同值） ---------- */
+  --dur-instant: 80ms;   /* 按压、点击即时应答 */
+  --dur-fast: 120ms;     /* hover 底色/页码/退场 */
+  --dur-base: 150ms;    /* 色值/边框/焦点过渡（主档位） */
+  --dur-mid: 200ms;     /* 浮层/遮罩/位移/滚入 */
+  --dur-slow: 240ms;    /* 抽屉、列表网格展开 */
+  --dur-max: 300ms;     /* 上限：shake、长位移动画 */
+
+  --ease-out: cubic-bezier(.16, 1, .3, 1);       /* 入场：快启缓停 */
+  --ease-in: cubic-bezier(.4, 0, 1, 1);          /* 退场 */
+  --ease-in-out: cubic-bezier(.4, 0, .2, 1);     /* 标准双向 */
+  --ease-snap: cubic-bezier(.32, .72, 0, 1);     /* 抽屉滑入（近 iOS easeOutQuint） */
+  --ease-snap-out: cubic-bezier(.32, 0, .68, 1);/* 抽屉滑出 */
+  --ease-pop: cubic-bezier(.34, 1.56, .64, 1);   /* 点赞/选中弹跳 */
+
+  --ring: 0 0 0 2px var(--accent); /* focus-visible 实环（outline 另定） */
+
+  /* 以下三项为浅色值，深色在 html[data-theme="dark"] 中覆盖 */
+  --hover-bg: rgba(0, 0, 0, .04);      /* 中性 hover 底色 */
+  --hover-border: #D4D4D8;             /* hover 边框加深档 */
+  --ring-soft: 0 0 0 2px rgba(37, 99, 235, .25); /* 输入聚焦光环 */
+}
+
+/* ---------- 深色主题 ---------- */
+html[data-theme="dark"] {
+  --bg: #09090B;
+  --bg-elevated: #18181B;
+  --text-primary: #FAFAFA;
+  --text-body: #D4D4D8;
+  --text-muted: #71717A;
+  --border: #27272A;
+  --accent: #60A5FA;
+  --accent-weak: rgba(96, 165, 250, 0.1);
+  --shadow-sm: none;
+  --shadow-md: none;
+
+  /* 交互层 token 深色覆盖（规范 §3） */
+  --hover-bg: rgba(255, 255, 255, .06);
+  --hover-border: #3F3F46;
+  --ring-soft: 0 0 0 2px rgba(96, 165, 250, .25);
+}
+
+/* ---------- 基础样式 ---------- */
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  margin: 0;
+  background-color: var(--bg);
+  color: var(--text-body);
+  font-family: var(--font-sans);
+  font-size: var(--fs-16);
+  line-height: var(--lh-body);
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-primary);
+  font-weight: 600;
+  line-height: var(--lh-title);
+  margin: 0 0 var(--sp-4);
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+::selection {
+  background: var(--accent-weak);
+  color: var(--text-primary);
+}
+
+/* 滚动条 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* ============================================================
+   Element Plus 主题变量覆盖（极简化）
+   ============================================================ */
+:root {
+  --el-color-primary: #2563EB;
+  --el-color-primary-light-3: #609bff;
+  --el-color-primary-light-5: #9dc0ff;
+  --el-color-primary-light-7: #c9dcff;
+  --el-color-primary-light-8: #dbe7ff;
+  --el-color-primary-light-9: #edf3ff;
+  --el-color-primary-dark-2: #1d4ed8;
+
+  --el-bg-color: #FFFFFF;
+  --el-bg-color-page: #FAFAFA;
+  --el-bg-color-overlay: #FFFFFF;
+
+  --el-text-color-primary: #18181B;
+  --el-text-color-regular: #3F3F46;
+  --el-text-color-secondary: #71717A;
+  --el-text-color-placeholder: #A1A1AA;
+  --el-text-color-disabled: #A1A1AA;
+
+  --el-border-color: #E4E4E7;
+  --el-border-color-light: #E4E4E7;
+  --el-border-color-lighter: #F4F4F5;
+  --el-border-color-extra-light: #F4F4F5;
+  --el-border-color-dark: #D4D4D8;
+  --el-border-color-darker: #A1A1AA;
+
+  --el-fill-color: #F4F4F5;
+  --el-fill-color-light: #FAFAFA;
+  --el-fill-color-lighter: #FAFAFA;
+  --el-fill-color-blank: #FFFFFF;
+
+  --el-border-radius-base: 6px;
+  --el-border-radius-small: 4px;
+  --el-border-radius-round: 999px;
+
+  --el-font-family: "Inter", "Geist", -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+  --el-font-size-base: 14px;
+
+  --el-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --el-box-shadow-light: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --el-box-shadow-lighter: 0 1px 2px rgba(0, 0, 0, 0.04);
+
+  --el-mask-color: rgba(9, 9, 11, 0.5);
+}
+
+html[data-theme="dark"] {
+  --el-color-primary: #60A5FA;
+  --el-avatar-bg-color: #27272A;
+  --el-color-primary-light-3: #3b82f6;
+  --el-color-primary-light-5: #2563eb;
+  --el-color-primary-light-7: #1d4ed8;
+  --el-color-primary-light-8: #1e40af;
+  --el-color-primary-light-9: rgba(96, 165, 250, 0.1);
+  --el-color-primary-dark-2: #93c5fd;
+
+  --el-bg-color: #18181B;
+  --el-bg-color-page: #09090B;
+  --el-bg-color-overlay: #18181B;
+
+  --el-text-color-primary: #FAFAFA;
+  --el-text-color-regular: #D4D4D8;
+  --el-text-color-secondary: #71717A;
+  --el-text-color-placeholder: #52525B;
+  --el-text-color-disabled: #52525B;
+
+  --el-border-color: #27272A;
+  --el-border-color-light: #27272A;
+  --el-border-color-lighter: #27272A;
+  --el-border-color-extra-light: #18181B;
+  --el-border-color-dark: #3F3F46;
+  --el-border-color-darker: #52525B;
+
+  --el-fill-color: #27272A;
+  --el-fill-color-light: #27272A;
+  --el-fill-color-lighter: #27272A;
+  --el-fill-color-blank: #18181B;
+
+  --el-box-shadow: none;
+  --el-box-shadow-light: none;
+  --el-box-shadow-lighter: none;
+}
+
+/* 极简化 Element Plus 细节 */
+.el-card {
+  border: 1px solid var(--el-border-color);
+  border-radius: var(--radius-md);
+  box-shadow: none !important;
+  --el-card-padding: 24px;
+}
+
+.el-button {
+  border-radius: var(--radius-sm);
+  font-weight: 500;
+}
+
+.el-button--primary {
+  --el-button-bg-color: var(--el-color-primary);
+}
+
+.el-input__wrapper,
+.el-textarea__inner {
+  border-radius: var(--radius-sm);
+  box-shadow: 0 0 0 1px var(--el-border-color) inset !important;
+  border: none;
+  caret-color: var(--el-color-primary);
+}
+
+.el-textarea__inner {
+  border: 1px solid transparent !important;
+  background-color: var(--el-fill-color-blank) !important;
+  color: var(--el-text-color-regular) !important;
+  outline: none;
+}
+
+.el-input__wrapper.is-focus {
+  box-shadow: 0 0 0 1px var(--el-color-primary) inset !important;
+}
+
+.el-tag {
+  border-radius: var(--radius-sm);
+  border-color: var(--el-border-color);
+}
+
+/* 表格：去斑马纹、细线、无边框底 */
+.el-table {
+  --el-table-border-color: var(--el-border-color);
+  --el-table-header-bg-color: transparent;
+  --el-table-header-text-color: var(--el-text-color-secondary);
+  --el-table-row-hover-bg-color: var(--accent-weak);
+  --el-table-bg-color: transparent;
+  --el-table-tr-bg-color: transparent;
+  border-radius: 0;
+}
+
+.el-table th.el-table__cell {
+  font-weight: 500;
+  font-size: var(--fs-12);
+  text-transform: none;
+  letter-spacing: 0.02em;
+}
+
+.el-table .el-table__inner-wrapper::before {
+  display: none;
+}
+
+/* 分页 */
+.el-pagination {
+  --el-pagination-button-bg-color: transparent;
+  --el-pagination-hover-color: var(--el-color-primary);
+}
+
+/* 弹窗/抽屉 */
+.el-dialog,
+.el-message-box {
+  border-radius: var(--radius-md);
+  border: 1px solid var(--el-border-color);
+  box-shadow: var(--shadow-md) !important;
+}
+
+/* 表单标签 */
+.el-form-item__label {
+  color: var(--el-text-color-secondary);
+  font-weight: 500;
+}
+
+/* 菜单（水平导航用） */
+.el-menu {
+  --el-menu-hover-bg-color: transparent;
+  --el-menu-active-color: var(--el-color-primary);
+}
+
+/* ============================================================
+   md-editor-v3 预览（MdPreview）双主题适配
+   覆盖其内置 --md-theme-* 变量为 Folio token，
+   浅色/深色自动跟随 html[data-theme]，修复深色下评论/正文白底
+   ============================================================ */
+/* MdPreview 外层容器 .md-editor 也带库内置白底，一并透明化 */
+div.md-editor {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+div.md-editor-preview {
+  --md-theme-color: var(--text-body) !important;
+  --md-theme-heading-color: var(--text-primary) !important;
+  --md-theme-link-color: var(--accent) !important;
+  --md-theme-link-hover-color: var(--accent) !important;
+  --md-theme-border-color: var(--border) !important;
+  --md-theme-border-color-inset: var(--border) !important;
+  --md-theme-bg-color: transparent !important;
+  --md-theme-bg-color-inset: var(--bg-elevated) !important;
+  --md-theme-bg-color-scrollbar-track: transparent !important;
+  --md-theme-bg-color-scrollbar-thumb: var(--border) !important;
+  --md-theme-bg-color-scrollbar-thumb-hover: var(--text-muted) !important;
+  --md-theme-bg-color-scrollbar-thumb-active: var(--text-muted) !important;
+  --md-theme-table-stripe-color: var(--bg-elevated) !important;
+  --md-theme-table-tr-bg-color: transparent !important;
+  --md-theme-table-td-border-color: var(--border) !important;
+  --md-theme-quote-bg-color: var(--bg-elevated) !important;
+  --md-theme-quote-border: 3px solid var(--accent) !important;
+  --md-theme-code-block-bg-color: var(--bg-elevated) !important;
+  --md-theme-code-before-bg-color: var(--bg-elevated) !important;
+  --md-theme-code-block-color: var(--text-body) !important;
+  --md-theme-code-inline-bg-color: var(--accent-weak) !important;
+  --md-theme-code-inline-color: var(--accent) !important;
+  --md-theme-code-copy-tips-bg-color: var(--bg-elevated) !important;
+  background: transparent !important;
+  color: var(--text-body) !important;
+}
+
+div.md-editor-preview blockquote {
+  color: var(--text-body) !important;
+}
+
+/* ============================================================
+   交互层基座（Folio 交互改造规范 v1.0 §4）
+   仅追加，不改动上方视觉 token；浅色/深色复用参数，仅色值不同
+   ============================================================ */
+
+/* ---------- §4.1 关键帧 ---------- */
+/* 选中/点赞弹跳：150ms ease-pop */
+@keyframes kf-pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+/* 表单校验失败：±4px 三段，300ms ease-out，只播一次 */
+@keyframes kf-shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(4px); }
+  50% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+  100% { transform: translateX(0); }
+}
+/* 文案/新评论入场：opacity 0 + translateY(6px) */
+@keyframes kf-fade-up {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+/* 骨架屏呼吸：2s ease-in-out infinite */
+@keyframes kf-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .5; }
+}
+/* 目录点击确认：accent-weak → 透明，300ms */
+@keyframes kf-toc-flash {
+  from { background-color: var(--accent-weak); }
+  to { background-color: transparent; }
+}
+
+/* ---------- §4.3 全局 focus-visible ---------- */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+/* 默认 :focus 不强制 outline（鼠标点击） */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* ---------- §4.2 reveal 指令配套类 ----------
+   注意：.reveal 类只由 v-reveal 指令在 JS 挂载时添加；
+   JS 完全不可用时元素不会获得 .reveal，内容默认可见（不吞内容）。 */
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 250ms var(--ease-out), transform 250ms var(--ease-out);
+  will-change: opacity, transform;
+}
+.reveal.is-revealed {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---------- §4.4 路由过渡（App.vue <transition name="page" mode="out-in">） ---------- */
+.page-enter-active {
+  transition: opacity var(--dur-base) var(--ease-out);
+}
+.page-leave-active {
+  transition: opacity var(--dur-instant) var(--ease-in);
+}
+.page-enter-from,
+.page-leave-to {
+  opacity: 0;
+}
+
+/* ---------- §4.5 主题切换过渡 ----------
+   .theme-switching 的挂/摘由 S2 的 ThemeToggle 负责（setAttribute 前后挂、300ms 后摘）。 */
+html.theme-switching,
+html.theme-switching *,
+html.theme-switching *::before,
+html.theme-switching *::after {
+  transition:
+    background-color 250ms var(--ease-out) !important,
+    color 250ms var(--ease-out) !important,
+    border-color 250ms var(--ease-out) !important,
+    box-shadow 250ms var(--ease-out) !important;
+}
+
+/* ---------- §4.6 Element Plus 全局覆盖（类名已对照 theme-chalk 2.8.4 核实） ---------- */
+
+/* el-button：色渡 150ms + 按压 translateY(1px) 80ms + focus ring + disabled .5 */
+.el-button {
+  transition:
+    background-color var(--dur-base) var(--ease-out),
+    border-color var(--dur-base) var(--ease-out),
+    color var(--dur-base) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out),
+    transform var(--dur-instant) var(--ease-out);
+}
+.el-button:active {
+  transform: translateY(1px);
+}
+.el-button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.el-button.is-disabled,
+.el-button.is-disabled:hover,
+.el-button.is-disabled:focus {
+  opacity: .5;
+}
+
+/* el-input / el-textarea：box-shadow 过渡 150ms；focus = 1px accent 内描边 + --ring-soft */
+.el-input__wrapper,
+.el-textarea__inner {
+  transition: box-shadow var(--dur-base) var(--ease-out);
+}
+/* 与上方既有 .el-input__wrapper.is-focus 规则合并升级（后写覆盖，同为 !important） */
+.el-input__wrapper.is-focus {
+  box-shadow: 0 0 0 1px var(--accent) inset, var(--ring-soft) !important;
+}
+
+/* el-form 校验失败：输入框 shake 300ms；错误文案插入 fade-up 150ms */
+.el-form-item.is-error .el-input__wrapper,
+.el-form-item.is-error .el-textarea__inner {
+  animation: kf-shake var(--dur-max) var(--ease-out);
+}
+.el-form-item__error {
+  animation: kf-fade-up var(--dur-base) var(--ease-out);
+}
+
+/* el-message：进 fade + translateY(-8px→0) 150ms ease-out；出 100ms ease-in */
+/* EP 原类名：.el-message-fade-enter-from / .el-message-fade-leave-to */
+.el-message {
+  transition: opacity var(--dur-base) var(--ease-out),
+              transform var(--dur-base) var(--ease-out),
+              top .4s ease;
+}
+.el-message-fade-enter-from {
+  opacity: 0;
+  transform: translate(-50%, -8px);
+}
+.el-message-fade-enter-active {
+  transition: opacity var(--dur-base) var(--ease-out),
+              transform var(--dur-base) var(--ease-out),
+              top .4s ease;
+}
+.el-message-fade-leave-to {
+  opacity: 0;
+  transform: translate(-50%, -8px);
+}
+.el-message-fade-leave-active {
+  transition: opacity 100ms var(--ease-in),
+              transform 100ms var(--ease-in),
+              top .4s ease;
+}
+
+/* el-dialog / el-message-box：开 遮罩 160ms ∥ 内容 scale(.96→1)+fade 180ms ease-out；关 120ms ease-in */
+/* EP 原类名：dialog-fade-*（el-dialog 用 .el-overlay-dialog，message-box 用 .el-overlay-message-box） */
+/* 遮罩动画 modal-fade-in/out 挂在 .dialog-fade-enter-active 元素本身，该元素同时是 .el-overlay 根节点；
+   用 .el-overlay.dialog-fade-*（0,2,0）压过 EP 同权重单类规则（0,1,0），避免被加载顺序压回 */
+.el-overlay.dialog-fade-enter-active {
+  animation: modal-fade-in 160ms var(--ease-out);
+}
+.el-overlay.dialog-fade-leave-active {
+  animation: modal-fade-out 120ms var(--ease-in);
+}
+.dialog-fade-enter-active .el-overlay-dialog,
+.dialog-fade-enter-active .el-overlay-message-box {
+  animation: dialog-fade-in 180ms var(--ease-out);
+}
+.dialog-fade-leave-active .el-overlay-dialog,
+.dialog-fade-leave-active .el-overlay-message-box {
+  animation: dialog-fade-out 120ms var(--ease-in);
+}
+/* 覆盖 EP 原 dialog-fade-in/out（原 translateY(-20px)）为 scale(.96) */
+@keyframes dialog-fade-in {
+  from { opacity: 0; transform: scale(.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes dialog-fade-out {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 0; transform: scale(.96); }
+}
+
+/* el-drawer：滑入 240ms ease-snap / 滑出 200ms ease-snap-out；遮罩 200ms */
+/* EP 原类名：el-drawer-fade-*，方向 .ltr/.rtl/.ttb/.btt */
+.el-drawer-fade-enter-active {
+  transition: transform var(--dur-slow) var(--ease-snap),
+              background-color var(--dur-mid) var(--ease-out);
+}
+.el-drawer-fade-leave-active {
+  transition: transform var(--dur-mid) var(--ease-snap-out),
+              background-color var(--dur-mid) var(--ease-out);
+}
+.el-drawer-fade-enter-active .el-overlay,
+.el-drawer-fade-leave-active .el-overlay {
+  transition: opacity var(--dur-mid) var(--ease-out);
+}
+
+/* el-popper（dropdown/popover/tooltip）：展开 140ms fade+scale(.98)+translateY(4px)；收起 100ms */
+/* EP 原类名：el-zoom-in-top-*（scaleY 原实现） */
+.el-zoom-in-top-enter-active,
+.el-zoom-in-top-leave-active {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+  transform-origin: center top;
+  transition: opacity 140ms var(--ease-out), transform 140ms var(--ease-out);
+}
+.el-zoom-in-top-enter-active[data-popper-placement^="top"],
+.el-zoom-in-top-leave-active[data-popper-placement^="top"] {
+  transform-origin: center bottom;
+}
+.el-zoom-in-top-enter-from {
+  opacity: 0;
+  transform: scale(.98) translateY(4px);
+}
+.el-zoom-in-top-leave-to {
+  opacity: 0;
+  transform: scale(.98) translateY(4px);
+  transition-duration: 100ms;
+  transition-timing-function: var(--ease-in);
+}
+
+/* el-pagination：页码 hover --hover-bg 120ms；当前页 accent 文字无动画；箭头 hover translateX(∓2px) 150ms */
+.el-pagination .el-pager li {
+  transition: background-color var(--dur-fast) var(--ease-out),
+              color var(--dur-fast) var(--ease-out);
+}
+.el-pagination .el-pager li:hover {
+  background-color: var(--hover-bg);
+}
+.el-pagination .el-pager li.is-active {
+  /* 当前页 accent 文字、无动画 */
+  background-color: transparent;
+  transition: none;
+}
+.el-pagination .btn-prev,
+.el-pagination .btn-next {
+  transition: transform var(--dur-base) var(--ease-out),
+              color var(--dur-base) var(--ease-out);
+}
+.el-pagination .btn-prev:hover { transform: translateX(-2px); }
+.el-pagination .btn-next:hover { transform: translateX(2px); }
+
+/* el-radio-button：bg/color/border 150ms（前台筛选组将被 chip 替代） */
+.el-radio-button__inner {
+  transition: background-color var(--dur-base) var(--ease-out),
+              border-color var(--dur-base) var(--ease-out),
+              color var(--dur-base) var(--ease-out);
+}
+
+/* el-switch / el-checkbox：knob 位移 + 轨道色 200ms ease-in-out */
+.el-switch__core {
+  transition: border-color var(--dur-mid) var(--ease-in-out),
+              background-color var(--dur-mid) var(--ease-in-out);
+}
+.el-switch__action {
+  transition: left var(--dur-mid) var(--ease-in-out),
+              color var(--dur-mid) var(--ease-in-out);
+}
+.el-checkbox__inner {
+  transition: border-color var(--dur-mid) var(--ease-in-out),
+              background-color var(--dur-mid) var(--ease-in-out);
+}
+
+/* el-table 行 hover：底色 150ms */
+.el-table--enable-row-hover .el-table__body tr:hover > td.el-table__cell {
+  transition: background-color var(--dur-base) var(--ease-out);
+}
+
+/* el-tag：bg/color/border 150ms */
+.el-tag {
+  transition: background-color var(--dur-base) var(--ease-out),
+              border-color var(--dur-base) var(--ease-out),
+              color var(--dur-base) var(--ease-out);
+}
+
+/* el-skeleton：覆盖为 kf-pulse（去掉原 shimmer 扫射） */
+.el-skeleton__item {
+  animation: kf-pulse 2s ease-in-out infinite;
+  background: var(--el-fill-color-light);
+}
+
+/* ---------- §4.7 reduced-motion 全局兜底 ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+  html {
+    scroll-behavior: auto !important;
+  }
+  /* reveal 在 reduced-motion 下直接可见 */
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* ---------- 工具类（S2/S3a/S3b 复用） ---------- */
+/* .chip：§7 芯片式选择器 */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-body);
+  font-size: var(--fs-14);
+  line-height: 1.6;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color var(--dur-base) var(--ease-out),
+              border-color var(--dur-base) var(--ease-out),
+              color var(--dur-base) var(--ease-out),
+              transform var(--dur-instant) var(--ease-out);
+}
+.chip:hover {
+  background: var(--hover-bg);
+  border-color: var(--hover-border);
+  color: var(--text-primary);
+}
+.chip.is-selected {
+  border-color: var(--accent);
+  background: var(--accent-weak);
+  color: var(--accent);
+  animation: kf-pop var(--dur-base) var(--ease-pop);
+}
+.chip.is-selected::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+.chip:active {
+  transform: translateY(1px);
+}
+.chip:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* .press：通用按压反馈 */
+.press {
+  transition: transform var(--dur-instant) var(--ease-out);
+}
+.press:active {
+  transform: translateY(1px);
+}
+
+/* .skeleton-pulse：骨架屏呼吸 */
+.skeleton-pulse {
+  animation: kf-pulse 2s ease-in-out infinite;
 }

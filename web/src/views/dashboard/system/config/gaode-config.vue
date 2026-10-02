@@ -2,9 +2,7 @@
   <div class="gaode-config">
     <el-col :span="12">
       <div class="info">
-        <div class="title">
-          <el-row>高德配置</el-row>
-        </div>
+        <div class="page-title">{{ t('system.config.gaode.title') }}</div>
         <div class="content">
           <el-form
               :model="gaodeInfo"
@@ -12,10 +10,10 @@
               label-width="auto"
               style="max-width: 400px"
           >
-            <el-form-item label="是否开启">
+            <el-form-item :label="t('system.config.gaode.enable')">
               <el-switch v-model="gaodeInfo.enable" @change="updateGaodeInfo"/>
             </el-form-item>
-            <el-form-item label="高德密钥">
+            <el-form-item :label="t('system.config.gaode.key')">
               <el-input @change="updateGaodeInfo" v-model="gaodeInfo.key" type="password" show-password/>
             </el-form-item>
           </el-form>
@@ -28,6 +26,9 @@
 <script setup lang="ts">
 import {ref, watch} from "vue";
 import {type Gaode, getGaode, updateGaode} from "@/api/config";
+import {useI18n} from "vue-i18n";
+
+const {t} = useI18n()
 
 const gaodeInfo = ref<Gaode>({
   enable: false,
@@ -64,39 +65,19 @@ const updateGaodeInfo = async () => {
 
 <style scoped lang="scss">
 .gaode-config {
-  display: flex;
-
-  .info {
-    .title {
-      border-left: 5px solid #8A2BE2; /* 蓝紫色 */
-      padding-left: 10px;
-      color: #8A2BE2; /* 蓝紫色 */
-    }
-
-    .content {
-      margin: 20px;
-      background-color: #F0F8FF; /* 浅蓝色背景 */
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(138, 43, 178, 0.5); /* 蓝紫色阴影 */
-    }
+  .page-title {
+    font-size: var(--fs-20);
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: var(--lh-title);
+    margin-bottom: var(--sp-4);
   }
 
-  .el-form-item__label {
-    color: #8A2BE2; /* 蓝紫色 */
-  }
-
-  .el-switch__core {
-    background-color: #8A2BE2; /* 蓝紫色 */
-  }
-
-  .el-input__inner {
-    border-color: #8A2BE2; /* 蓝紫色 */
-  }
-
-  .el-input__inner:focus {
-    border-color: #8A2BE2; /* 蓝紫色 */
-    box-shadow: 0 0 5px rgba(138, 43, 178, 0.5); /* 蓝紫色阴影 */
+  .content {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: var(--sp-5);
   }
 }
 </style>

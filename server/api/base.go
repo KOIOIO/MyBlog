@@ -64,8 +64,3 @@ func (baseApi *BaseApi) SendEmailVerificationCode(c *gin.Context) {
 	response.FailWithMessage("Incorrect verification code", c)
 }
 
-// QQLoginURL 返回 QQ 登录链接
-func (baseApi *BaseApi) QQLoginURL(c *gin.Context) {
-	url := global.Config.QQ.QQLoginURL()
-	response.OkWithData(url, c)
-}

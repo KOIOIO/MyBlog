@@ -4,7 +4,7 @@
         :model="articleUpdateFormData"
         :validate-on-rule-change="false"
     >
-      <el-form-item label="文章封面" prop="cover">
+      <el-form-item :label="t('forms.articleUpdate.cover')" prop="cover">
         <el-upload
             :action="`${path}/image/upload`"
             drag
@@ -22,14 +22,14 @@
             <div class="container">
               <component is="UploadFilled" class="upload-filled"></component>
               <div class="el-upload__text">
-                Drop file here or <em>click to upload</em>
+                {{ t('forms.articleUpdate.dragPrefix') }}<em>{{ t('forms.articleUpdate.dragClick') }}</em>
               </div>
             </div>
           </div>
 
           <template #tip>
             <div class="el-upload__tip">
-              jpg/png/jpeg/ico/tiff/gif/svg/webp files with a size less than 20MB.
+              {{ t('forms.articleUpdate.uploadTip') }}
             </div>
           </template>
         </el-upload>
@@ -40,58 +40,63 @@
             disabled
         />
       </el-form-item>
-      <el-form-item label="文章标题" prop="title">
+      <el-form-item :label="t('forms.articleUpdate.title')" prop="title" class="form-item--title">
         <el-input
             v-model="articleUpdateFormData.title"
             size="large"
-            placeholder="请输入文章标题"
+            :placeholder="t('forms.articleUpdate.titlePlaceholder')"
         />
       </el-form-item>
-      <el-form-item label="文章类别" prop="category">
-        <el-input
+      <el-form-item :label="t('forms.articleUpdate.category')" prop="category">
+        <el-select
             v-model="articleUpdateFormData.category"
             size="large"
-            placeholder="请输入文章类别"
-        />
+            :placeholder="t('forms.articleUpdate.categoryPlaceholder')"
+            style="width: 100%"
+            @change="handleCategoryChange"
+        >
+          <el-option :label="categoryLabel('技术')" value="技术"/>
+          <el-option :label="categoryLabel('生活')" value="生活"/>
+        </el-select>
       </el-form-item>
-      <el-form-item label="文章标签" prop="tags">
-        <el-tag v-for="tag in articleUpdateFormData.tags"
-                :key="tag"
-                closable
-                :disable-transitions="false"
-                size="large"
-                @close="handleClose(tag)">
-          {{ tag }}
-        </el-tag>
-        <el-input
-            v-if="inputVisible"
-            ref="InputRef"
-            v-model="inputValue"
-            style="width: 80px"
-            @keyup.enter="handleInputConfirm"
-            @blur="handleInputConfirm"
-        />
-        <el-button v-else @click="showInput">+ 新建标签</el-button>
+      <el-form-item :label="t('forms.articleUpdate.tags')" prop="tags">
+        <el-select
+            v-model="articleUpdateFormData.tags"
+            multiple
+            filterable
+            collapse-tags
+            collapse-tags-tooltip
+            size="large"
+            style="width: 100%"
+            :placeholder="articleUpdateFormData.category ? t('forms.articleUpdate.tagPlaceholder') : t('forms.articleUpdate.tagPlaceholderNoCategory')"
+        >
+          <el-option
+              v-for="item in filteredTagOptions"
+              :key="item.tag"
+              :label="tagLabel(item.tag)"
+              :value="item.tag"
+          />
+        </el-select>
       </el-form-item>
-      <el-form-item label="文章简介" prop="abstract">
+      <el-form-item :label="t('forms.articleUpdate.abstract')" prop="abstract">
         <el-input
             v-model="articleUpdateFormData.abstract"
             type="textarea"
-            placeholder="请输入文章简介"
+            :placeholder="t('forms.articleUpdate.abstractPlaceholder')"
         />
       </el-form-item>
 
-      <el-form-item label="文章内容" prop="content">
-        <el-button @click="drawer = true" icon="EditPen">编辑内容</el-button>
+      <el-form-item :label="t('forms.articleUpdate.content')" prop="content">
+        <el-button @click="drawer = true" icon="EditPen">{{ t('forms.articleUpdate.editContent') }}</el-button>
           <el-drawer v-model="drawer" :direction="direction" size="80%">
             <template #header>
-              编辑内容
+              {{ t('forms.articleUpdate.editContent') }}
             </template>
             <template #default>
               <MdEditor v-model="articleUpdateFormData.content" @onUploadImg="onUploadImg"/>
             </template>
             <template #footer>
-              <el-text>点击上方X或外部任意区域即可退出编辑</el-text>
+              <el-text>{{ t('forms.articleUpdate.drawerFooter') }}</el-text>
             </template>
           </el-drawer>
       </el-form-item>
@@ -102,12 +107,12 @@
               type="primary"
               size="large"
               @click="submitForm"
-          >确定
+          >{{ t('common.confirm') }}
           </el-button>
           <el-button
               size="large"
               @click="layoutStore.state.articleUpdateVisible = false"
-          >取消
+          >{{ t('common.cancel') }}
           </el-button>
         </div>
       </el-form-item>
@@ -116,9 +121,9 @@
 </template>
 
 <script setup lang="ts">
-import {defineProps, nextTick, reactive, ref} from "vue";
-import {type DrawerProps, ElMessage, type InputInstance} from "element-plus";
-import {type Article, articleUpdate, type ArticleUpdateRequest} from "@/api/article";
+import {computed, defineProps, onMounted, reactive, ref} from "vue";
+import {type DrawerProps, ElMessage} from "element-plus";
+import {type Article, articleTags, articleUpdate, type ArticleUpdateRequest} from "@/api/article";
 import type {ApiResponse} from "@/utils/request";
 import type {ImageUploadResponse} from "@/api/image";
 import {useUserStore} from "@/stores/user";
@@ -127,6 +132,16 @@ import type {Hit} from "@/api/common";
 import {MdEditor} from 'md-editor-v3';
 import 'md-editor-v3/lib/style.css';
 import axios, {type AxiosResponse} from "axios";
+import {useI18n} from "vue-i18n";
+import {categoryLabel, tagLabel} from "@/i18n/meta";
+
+const {t} = useI18n()
+
+interface TagOption {
+  tag: string;
+  group: string;
+  number: number;
+}
 
 const props = defineProps<{
   article: Hit<Article>;
@@ -147,28 +162,27 @@ const articleUpdateFormData = reactive<ArticleUpdateRequest>({
   content: props.article._source.content,
 })
 
-const inputValue = ref('')
-const inputVisible = ref(false)
-const InputRef = ref<InputInstance>()
+const tagOptions = ref<TagOption[]>([])
 
-const handleClose = (tag: string) => {
-  articleUpdateFormData.tags.splice(articleUpdateFormData.tags.indexOf(tag), 1)
-}
-
-const showInput = () => {
-  inputVisible.value = true
-  nextTick(() => {
-    InputRef.value!.input!.focus()
-  })
-}
-
-const handleInputConfirm = () => {
-  if (inputValue.value) {
-    articleUpdateFormData.tags.push(inputValue.value)
+const filteredTagOptions = computed<TagOption[]>(() => {
+  if (!articleUpdateFormData.category) {
+    return tagOptions.value
   }
-  inputVisible.value = false
-  inputValue.value = ''
+  const group = articleUpdateFormData.category === '技术' ? 'tech' : 'life'
+  return tagOptions.value.filter(item => item.group === group)
+})
+
+const handleCategoryChange = () => {
+  // 切换分类后清空已选标签，避免跨分类残留
+  articleUpdateFormData.tags = []
 }
+
+onMounted(async () => {
+  const res = await articleTags()
+  if (res.code === 0) {
+    tagOptions.value = res.data as TagOption[]
+  }
+})
 
 const handleSuccess = (res: ApiResponse<ImageUploadResponse>) => {
   if (res.code === 0) {
@@ -218,24 +232,66 @@ const submitForm = async () => {
     .el-form-item {
       .el-image {
         height: 120px;
+        width: 100%;
+        object-fit: cover;
+        border-radius: var(--radius-sm);
       }
 
       .upload-content {
         display: flex;
-        height: 120px;
+        height: 140px;
+        width: 100%;
+        border: 1px dashed var(--accent);
+        border-radius: var(--radius-sm);
+        background-color: transparent;
+        transition: background-color 0.15s ease-out;
+
+        &:hover {
+          background-color: var(--accent-weak);
+        }
 
         .container {
           margin: auto;
+          text-align: center;
+          color: var(--text-muted);
 
           .upload-filled {
             height: 32px;
             width: 32px;
+            color: var(--accent);
+          }
+
+          .el-upload__text {
+            font-size: var(--fs-14);
+            margin-top: var(--sp-2);
+
+            em {
+              color: var(--accent);
+              font-style: normal;
+            }
           }
         }
       }
 
+      .el-upload__tip {
+        color: var(--text-muted);
+        font-size: var(--fs-12);
+      }
+
+      .form-item--title .el-input__wrapper {
+        font-size: var(--fs-18);
+      }
+
       .button-group {
         margin-left: auto;
+        display: flex;
+        gap: var(--sp-2);
+
+        .el-button {
+          height: 40px;
+          min-width: 88px;
+          font-weight: 500;
+        }
       }
     }
   }
@@ -249,10 +305,17 @@ const submitForm = async () => {
   line-height: 0;
 }
 
-.el-drawer{
+.el-drawer {
   .md-editor .md-editor-toolbar-wrapper .md-editor-toolbar svg.md-editor-icon {
     height: 24px;
     width: 24px;
+  }
+
+  .el-drawer__footer {
+    .el-text {
+      color: var(--text-muted);
+      font-size: var(--fs-12);
+    }
   }
 }
 </style>

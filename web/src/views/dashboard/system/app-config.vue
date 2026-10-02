@@ -18,41 +18,42 @@
 </template>
 
 <script setup lang="ts">
+import {computed} from "vue";
+import {useI18n} from "vue-i18n";
+
+const {t} = useI18n()
+
 interface MenuItem {
   title: string;
   name: string;
 }
 
-const menuList: MenuItem[] = [
+const menuList = computed<MenuItem[]>(() => [
   {
-    title: "网站配置",
+    title: t('system.appConfig.site'),
     name: "site-config",
   },
   {
-    title: "系统配置",
+    title: t('system.appConfig.system'),
     name: "system-config",
   },
   {
-    title: "邮箱配置",
+    title: t('system.appConfig.email'),
     name: "email-config",
   },
   {
-    title: "QQ登录配置",
-    name: "qq-config",
-  },
-  {
-    title: "七牛云配置",
+    title: t('system.appConfig.qiniu'),
     name: "qiniu-config",
   },
   {
-    title: "jwt配置",
+    title: t('system.appConfig.jwt'),
     name: "jwt-config",
   },
   {
-    title: "高德配置",
+    title: t('system.appConfig.gaode'),
     name: "gaode-config",
   }
-]
+])
 
 function generatePathForSingleItem(item: MenuItem): string {
   return '/dashboard/system/app-config/' + item.name;
@@ -61,35 +62,42 @@ function generatePathForSingleItem(item: MenuItem): string {
 
 <style scoped lang="scss">
 .system-config {
-  background-color: #1e1e2f;
-  color: #ffffff;
+  color: var(--text-body);
+}
+
+.el-container {
+  background: transparent;
+}
+
+.el-aside {
+  border-right: 1px solid var(--border);
 }
 
 .el-menu {
   height: 100%;
-  background-color: #2e2e4f;
-  color: #ffffff;
+  background: transparent;
+  border-right: none;
 }
 
 .el-menu-item {
+  color: var(--text-body);
+  border-radius: var(--radius-sm);
+  margin: 2px var(--sp-2);
+  transition: background-color 150ms ease-out, color 150ms ease-out;
+
   &:hover {
-    background-color: #3e3e6f;
+    background-color: var(--accent-weak);
+    color: var(--accent);
   }
 }
 
 .el-menu-item.is-active {
-  background-color: #4e4e8f;
-}
-
-.el-container {
-  background-color: #1e1e2f;
-}
-
-.el-aside {
-  background-color: #2e2e4f;
+  background-color: var(--accent-weak);
+  color: var(--accent);
 }
 
 .el-main {
-  background-color: #1e1e2f;
+  background: transparent;
+  padding: var(--sp-5);
 }
 </style>

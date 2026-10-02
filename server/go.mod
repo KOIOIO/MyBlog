@@ -29,6 +29,7 @@ require (
 )
 
 require (
+	github.com/6tail/lunar-go v1.4.6 // indirect
 	github.com/BurntSushi/toml v1.4.0 // indirect
 	github.com/alex-ant/gomath v0.0.0-20160516115720-89013a210a82 // indirect
 	github.com/bytedance/sonic v1.11.6 // indirect

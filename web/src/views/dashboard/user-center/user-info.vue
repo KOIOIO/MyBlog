@@ -2,9 +2,7 @@
   <div class="user-info">
     <el-col :span="12">
       <div class="info">
-        <div class="title">
-          <el-row>用户信息</el-row>
-        </div>
+        <div class="page-title">{{ t('system.userCenter.info.title') }}</div>
         <div class="content">
           <el-form
               ref="userChangeInfoForm"
@@ -15,39 +13,37 @@
               label-width="auto"
               style="max-width: 400px"
           >
-            <el-form-item label="头像">
-              <el-image :src="userInfo.avatar" alt=""/>
+            <el-form-item :label="t('system.userCenter.info.avatar')">
+              <avatar-uploader @changed="onAvatarChanged"/>
             </el-form-item>
             <el-form-item label="uuid">
               {{ userInfo.uuid }}
             </el-form-item>
-            <el-form-item label="用户名" prop="username">
+            <el-form-item :label="t('system.userCenter.info.username')" prop="username">
               <el-input @change="updateUserInfo" v-model="userChangeInfoFormData.username"/>
             </el-form-item>
-            <el-form-item label="地址" prop="address">
+            <el-form-item :label="t('system.userCenter.info.address')" prop="address">
               <el-input @change="updateUserInfo" v-model="userChangeInfoFormData.address"/>
             </el-form-item>
-            <el-form-item label="签名" prop="signature">
+            <el-form-item :label="t('system.userCenter.info.signature')" prop="signature">
               <el-input @change="updateUserInfo" v-model="userChangeInfoFormData.signature" type="textarea" :rows="2"/>
             </el-form-item>
-            <el-form-item label="邮箱">
+            <el-form-item :label="t('system.userCenter.info.email')">
               {{ userInfo.email }}
             </el-form-item>
-            <el-form-item label="用户权限">
-              {{ userInfo.role_id === 1 ? "普通用户" : "管理员" }}
+            <el-form-item :label="t('system.userCenter.info.role')">
+              {{ userInfo.role_id === 1 ? t('system.userCenter.info.normalUser') : t('system.userCenter.info.admin') }}
             </el-form-item>
-            <el-form-item label="注册来源">
+            <el-form-item :label="t('system.userCenter.info.registerSource')">
               {{ userInfo.register }}
             </el-form-item>
           </el-form>
         </div>
       </div>
       <div class="operation" v-if="userStore.state.userInfo.register==='邮箱'">
-        <div class="title">
-          <el-row>操作</el-row>
-        </div>
+        <div class="page-title">{{ t('system.userCenter.info.operation') }}</div>
         <div class="content">
-          <el-button @click="layoutStore.state.passwordResetVisible = true">修改密码</el-button>
+          <el-button @click="layoutStore.state.passwordResetVisible = true">{{ t('system.userCenter.info.changePassword') }}</el-button>
         </div>
         <el-dialog
             v-model="passwordResetVisible"
@@ -57,7 +53,7 @@
             :before-close="passwordResetVisibleSynchronization"
         >
           <template #header>
-            修改密码
+            {{ t('system.userCenter.info.changePassword') }}
           </template>
           <password-reset-form/>
           <template #footer>
@@ -67,9 +63,7 @@
     </el-col>
     <el-col :span="12">
       <div class="card">
-        <div class="title">
-          <el-row>用户卡片</el-row>
-        </div>
+        <div class="page-title">{{ t('system.userCenter.info.userCard') }}</div>
       </div>
       <div class="content">
         <user-card :key="cardKey" :uuid="userInfo.uuid" :user-card-info="null"/>
@@ -86,6 +80,10 @@ import type {FormInstance, FormRules} from "element-plus";
 import UserCard from "@/components/widgets/UserCard.vue";
 import {useLayoutStore} from "@/stores/layout";
 import PasswordResetForm from "@/components/forms/PasswordResetForm.vue";
+import AvatarUploader from "@/components/common/AvatarUploader.vue";
+import {useI18n} from "vue-i18n";
+
+const {t} = useI18n()
 
 const userStore = useUserStore()
 const layoutStore = useLayoutStore()
@@ -105,21 +103,25 @@ const rules = reactive<FormRules<UserChangeInfoRequest>>({
     required:true,
     max:20,
     trigger:'blur',
-    message:'用户名长度不应大于20位'
+    message:t('system.userCenter.info.usernameMax')
   }],
   address: [{
     max: 200,
     trigger: 'blur',
-    message:'地址长度不应大于200位'
+    message:t('system.userCenter.info.addressMax')
   }],
   signature: [{
     max: 320,
     trigger: 'blur',
-    message:'签名长度不应大于320位'
+    message:t('system.userCenter.info.signatureMax')
   }]
 })
 
 const cardKey = ref(0)
+
+const onAvatarChanged = () => {
+  cardKey.value += 1
+}
 
 const updateUserInfo = async () => {
   const isValid: boolean = await new Promise((resolve) => {
@@ -152,46 +154,39 @@ const passwordResetVisibleSynchronization = () => {
 <style scoped lang="scss">
 .user-info {
   display: flex;
+  gap: var(--sp-5);
+  align-items: flex-start;
 
-  .info {
-    .title {
-      border-left: 5px solid #4B0082; /* 蓝紫色 */
-      padding-left: 10px;
-    }
-
-    .content {
-      margin: 20px;
-
-      .el-form {
-        .el-form-item {
-          .el-image {
-            height: 50px;
-            width: 50px;
-          }
-        }
-      }
-    }
+  .page-title {
+    font-size: var(--fs-20);
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: var(--lh-title);
+    margin-bottom: var(--sp-4);
   }
 
-  .operation {
-    .title {
-      border-left: 5px solid #4B0082; /* 蓝紫色 */
-      padding-left: 10px;
-    }
+  .info,
+  .operation,
+  .card {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: var(--sp-5);
+    margin-bottom: var(--sp-5);
+  }
 
-    .content {
-      margin: 20px;
+  .info .content,
+  .operation .content {
+    .avatar-uploader {
+      margin-bottom: var(--sp-2);
     }
   }
 
   .card {
-    .title {
-      border-left: 5px solid #4B0082; /* 蓝紫色 */
-      padding-left: 10px;
-    }
+    margin-bottom: var(--sp-3);
 
-    .content {
-      margin: 20px;
+    .page-title {
+      margin-bottom: 0;
     }
   }
 }

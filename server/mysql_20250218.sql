@@ -385,3 +385,139 @@ UNLOCK TABLES;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2025-02-18 11:21:41
+
+--
+-- ===== 论坛模块 & 固定标签库（2026-09-28 追加）=====
+--
+
+--
+-- Table structure for table `blog_tags`（固定标签库）
+--
+CREATE TABLE IF NOT EXISTS `blog_tags` (
+  `tag` varchar(191) NOT NULL,
+  `group` varchar(20) NOT NULL DEFAULT 'tech',
+  `number` int NOT NULL DEFAULT 0,
+  PRIMARY KEY (`tag`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Table structure for table `forum_posts`（论坛帖子）
+--
+CREATE TABLE IF NOT EXISTS `forum_posts` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` datetime(3) DEFAULT NULL,
+  `updated_at` datetime(3) DEFAULT NULL,
+  `delete_at` datetime(3) DEFAULT NULL,
+  `deleted_at` datetime(3) DEFAULT NULL,
+  `user_id` bigint unsigned NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `content` longtext NOT NULL,
+  `category` varchar(50) NOT NULL DEFAULT '技术',
+  `tags` varchar(500) DEFAULT NULL,
+  `images` json DEFAULT NULL,
+  `like_count` int NOT NULL DEFAULT 0,
+  `comment_count` int NOT NULL DEFAULT 0,
+  `view_count` int NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`),
+  KEY `idx_forum_posts_delete_at` (`delete_at`),
+  KEY `idx_forum_posts_deleted_at` (`deleted_at`),
+  KEY `idx_forum_posts_user_id` (`user_id`),
+  KEY `idx_forum_posts_category` (`category`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Table structure for table `forum_comments`（论坛评论，二级嵌套）
+--
+CREATE TABLE IF NOT EXISTS `forum_comments` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` datetime(3) DEFAULT NULL,
+  `updated_at` datetime(3) DEFAULT NULL,
+  `delete_at` datetime(3) DEFAULT NULL,
+  `deleted_at` datetime(3) DEFAULT NULL,
+  `post_id` bigint unsigned NOT NULL,
+  `parent_id` bigint unsigned NOT NULL DEFAULT 0,
+  `user_id` bigint unsigned NOT NULL,
+  `content` longtext NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idx_forum_comments_delete_at` (`delete_at`),
+  KEY `idx_forum_comments_deleted_at` (`deleted_at`),
+  KEY `idx_forum_comments_post_id` (`post_id`),
+  KEY `idx_forum_comments_parent_id` (`parent_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Table structure for table `forum_likes`（论坛点赞，防重复）
+--
+CREATE TABLE IF NOT EXISTS `forum_likes` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` datetime(3) DEFAULT NULL,
+  `updated_at` datetime(3) DEFAULT NULL,
+  `post_id` bigint unsigned NOT NULL,
+  `user_id` bigint unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_forum_likes_post_user` (`post_id`,`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- 预置固定标签库 30 条
+--
+INSERT IGNORE INTO `blog_tags` (`tag`, `group`, `number`) VALUES
+('Go', 'tech', 0),
+('Vue', 'tech', 0),
+('前端开发', 'tech', 0),
+('后端开发', 'tech', 0),
+('数据库', 'tech', 0),
+('MySQL', 'tech', 0),
+('Redis', 'tech', 0),
+('Elasticsearch', 'tech', 0),
+('微服务', 'tech', 0),
+('云原生', 'tech', 0),
+('Docker', 'tech', 0),
+('Kubernetes', 'tech', 0),
+('架构设计', 'tech', 0),
+('性能优化', 'tech', 0),
+('网络安全', 'tech', 0),
+('算法', 'tech', 0),
+('人工智能', 'tech', 0),
+('开源', 'tech', 0),
+('编程语言', 'tech', 0),
+('开发工具', 'tech', 0),
+('生活随笔', 'life', 0),
+('读书笔记', 'life', 0),
+('影视', 'life', 0),
+('音乐', 'life', 0),
+('旅行', 'life', 0),
+('美食', 'life', 0),
+('运动健身', 'life', 0),
+('数码', 'life', 0),
+('工作日常', 'life', 0),
+('情感杂谈', 'life', 0);
+
+--
+-- 追加：对齐现有 mock 文章标签（避免"标签不存在"校验错误）
+--
+INSERT IGNORE INTO `blog_tags` (`tag`, `group`, `number`) VALUES
+('后端', 'tech', 0),
+('架构', 'tech', 0),
+('运维', 'tech', 0),
+('Nginx', 'tech', 0),
+('前端', 'tech', 0),
+('Vite', 'tech', 0),
+('搜索', 'tech', 0),
+('索引', 'tech', 0),
+('缓存', 'tech', 0),
+('认证', 'tech', 0),
+('负载均衡', 'tech', 0),
+('部署', 'tech', 0),
+('工程化', 'tech', 0),
+('安全', 'tech', 0),
+('代码规范', 'tech', 0),
+('中间件', 'tech', 0),
+('Webpack', 'tech', 0),
+('TypeScript', 'tech', 0),
+('JWT', 'tech', 0),
+('GORM', 'tech', 0),
+('Gin', 'tech', 0),
+('随笔', 'life', 0),
+('博客', 'life', 0),
+('经验', 'life', 0);

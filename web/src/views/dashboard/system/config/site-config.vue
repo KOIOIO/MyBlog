@@ -2,9 +2,7 @@
   <div class="site-config">
     <el-col :span="12">
       <div class="website-info">
-        <div class="title">
-          <el-row>网站信息</el-row>
-        </div>
+        <div class="page-title">{{ t('system.config.site.websiteInfo') }}</div>
         <div class="content">
           <el-form
               :model="websiteInfo"
@@ -12,7 +10,7 @@
               label-width="auto"
               style="max-width: 400px"
           >
-            <el-form-item label="Logo图片">
+            <el-form-item :label="t('system.config.site.logo')">
               <el-upload
                   :action="`${path}/image/upload`"
                   drag
@@ -30,7 +28,7 @@
                   <div class="container">
                     <component is="UploadFilled" class="upload-filled"></component>
                     <div class="el-upload__text">
-                      Drop file here or <em>click to upload</em>
+                      {{ t('system.config.site.dragPrefix') }}<em>{{ t('system.config.site.dragClick') }}</em>
                     </div>
                   </div>
                 </div>
@@ -40,7 +38,7 @@
                     <el-button v-if="websiteInfo.logo" icon="Delete" type="danger" @click="clearLogo"/>
                   </div>
                   <div class="el-upload__tip">
-                    jpg/png/jpeg/ico/tiff/gif/svg/webp files with a size less than 20MB.
+                    {{ t('system.config.site.uploadTip') }}
                   </div>
                 </template>
               </el-upload>
@@ -51,7 +49,7 @@
                   disabled
               />
             </el-form-item>
-            <el-form-item label="FullLogo图片">
+            <el-form-item :label="t('system.config.site.fullLogo')">
               <el-upload
                   :action="`${path}/image/upload`"
                   drag
@@ -70,7 +68,7 @@
                   <div class="container">
                     <component is="UploadFilled" class="upload-filled"></component>
                     <div class="el-upload__text">
-                      Drop file here or <em>click to upload</em>
+                      {{ t('system.config.site.dragPrefix') }}<em>{{ t('system.config.site.dragClick') }}</em>
                     </div>
                   </div>
                 </div>
@@ -80,7 +78,7 @@
                     <el-button v-if="websiteInfo.full_logo" icon="Delete" type="danger" @click="clearFullLogo"/>
                   </div>
                   <div class="el-upload__tip">
-                    jpg/png/jpeg/ico/tiff/gif/svg/webp files with a size less than 20MB.
+                    {{ t('system.config.site.uploadTip') }}
                   </div>
                 </template>
               </el-upload>
@@ -91,37 +89,37 @@
                   disabled
               />
             </el-form-item>
-            <el-form-item label="网站标题">
+            <el-form-item :label="t('system.config.site.siteTitle')">
               <el-input @change="updateWebsiteInfo" v-model="websiteInfo.title"/>
             </el-form-item>
-            <el-form-item label="网站标语">
+            <el-form-item :label="t('system.config.site.slogan')">
               <el-input @change="updateWebsiteInfo" v-model="websiteInfo.slogan"/>
             </el-form-item>
-            <el-form-item label="英文标语">
+            <el-form-item :label="t('system.config.site.sloganEn')">
               <el-input @change="updateWebsiteInfo" v-model="websiteInfo.slogan_en"/>
             </el-form-item>
-            <el-form-item label="网站描述">
+            <el-form-item :label="t('system.config.site.description')">
               <el-input @change="updateWebsiteInfo" v-model="websiteInfo.description" type="textarea" :rows="4"/>
             </el-form-item>
-            <el-form-item label="网站版本">
+            <el-form-item :label="t('system.config.site.version')">
               <el-input @change="updateWebsiteInfo" v-model="websiteInfo.version"/>
             </el-form-item>
-            <el-form-item label="创建时间">
+            <el-form-item :label="t('system.config.site.createdAt')">
               <el-input @change="updateWebsiteInfo" v-model="websiteInfo.created_at"/>
             </el-form-item>
-            <el-form-item label="ICP备案">
+            <el-form-item :label="t('system.config.site.icp')">
               <el-input @change="updateWebsiteInfo" v-model="websiteInfo.icp_filing"/>
             </el-form-item>
-            <el-form-item label="公安备案">
+            <el-form-item :label="t('system.config.site.police')">
               <el-input @change="updateWebsiteInfo" v-model="websiteInfo.public_security_filing"/>
             </el-form-item>
-            <el-form-item label="bilibili链接">
+            <el-form-item :label="t('system.config.site.bilibili')">
               <el-input @change="updateWebsiteInfo" v-model="websiteInfo.bilibili_url"/>
             </el-form-item>
-            <el-form-item label="gitee链接">
+            <el-form-item :label="t('system.config.site.gitee')">
               <el-input @change="updateWebsiteInfo" v-model="websiteInfo.gitee_url"/>
             </el-form-item>
-            <el-form-item label="github链接">
+            <el-form-item :label="t('system.config.site.github')">
               <el-input @change="updateWebsiteInfo" v-model="websiteInfo.github_url"/>
             </el-form-item>
           </el-form>
@@ -130,9 +128,7 @@
     </el-col>
     <el-col :span="12">
       <div class="personal-info">
-        <div class="title">
-          <el-row>个人信息</el-row>
-        </div>
+        <div class="page-title">{{ t('system.config.site.personalInfo') }}</div>
         <div class="content">
           <el-form
               :model="websiteInfo"
@@ -140,19 +136,19 @@
               label-width="auto"
               style="max-width: 400px"
           >
-            <el-form-item label="昵称">
+            <el-form-item :label="t('system.config.site.nickname')">
               <el-input @change="updateWebsiteInfo" v-model="websiteInfo.name"/>
             </el-form-item>
-            <el-form-item label="职业">
+            <el-form-item :label="t('system.config.site.job')">
               <el-input @change="updateWebsiteInfo" v-model="websiteInfo.job"/>
             </el-form-item>
-            <el-form-item label="地址">
+            <el-form-item :label="t('system.config.site.address')">
               <el-input @change="updateWebsiteInfo" v-model="websiteInfo.address"/>
             </el-form-item>
-            <el-form-item label="邮箱">
+            <el-form-item :label="t('system.config.site.email')">
               <el-input @change="updateWebsiteInfo" v-model="websiteInfo.email"/>
             </el-form-item>
-            <el-form-item label="QQ图片">
+            <el-form-item :label="t('system.config.site.qqImage')">
               <el-upload
                   :action="`${path}/image/upload`"
                   drag
@@ -171,7 +167,7 @@
                   <div class="container">
                     <component is="UploadFilled" class="upload-filled"></component>
                     <div class="el-upload__text">
-                      Drop file here or <em>click to upload</em>
+                      {{ t('system.config.site.dragPrefix') }}<em>{{ t('system.config.site.dragClick') }}</em>
                     </div>
                   </div>
                 </div>
@@ -181,7 +177,7 @@
                     <el-button v-if="websiteInfo.qq_image" icon="Delete" type="danger" @click="clearQQImageLogo"/>
                   </div>
                   <div class="el-upload__tip">
-                    jpg/png/jpeg/ico/tiff/gif/svg/webp files with a size less than 20MB.
+                    {{ t('system.config.site.uploadTip') }}
                   </div>
                 </template>
               </el-upload>
@@ -192,7 +188,7 @@
                   disabled
               />
             </el-form-item>
-            <el-form-item label="微信图片">
+            <el-form-item :label="t('system.config.site.wechatImage')">
               <el-upload
                   :action="`${path}/image/upload`"
                   drag
@@ -211,7 +207,7 @@
                   <div class="container">
                     <component is="UploadFilled" class="upload-filled"></component>
                     <div class="el-upload__text">
-                      Drop file here or <em>click to upload</em>
+                      {{ t('system.config.site.dragPrefix') }}<em>{{ t('system.config.site.dragClick') }}</em>
                     </div>
                   </div>
                 </div>
@@ -222,7 +218,7 @@
                                @click="clearWechatImageLogo"/>
                   </div>
                   <div class="el-upload__tip">
-                    jpg/png/jpeg/ico/tiff/gif/svg/webp files with a size less than 20MB.
+                    {{ t('system.config.site.uploadTip') }}
                   </div>
                 </template>
               </el-upload>
@@ -238,9 +234,7 @@
       </div>
 
       <div class="footer-link">
-        <div class="title">
-          <el-row>页脚链接</el-row>
-        </div>
+        <div class="page-title">{{ t('system.config.site.footerLink') }}</div>
         <div class="content">
           <el-form
               :model="footerLinkList"
@@ -262,9 +256,9 @@
             </template>
           </el-form>
           <div class="button-group">
-            <el-button v-if="!isShow" type="success" @click="isShow=true">新建</el-button>
-            <el-button v-if="isShow" type="primary" @click="isShow=false;handleCreateFooterLink(footerLink)">确定</el-button>
-            <el-button v-if="isShow" @click="isShow=false">取消</el-button>
+            <el-button v-if="!isShow" type="success" @click="isShow=true">{{ t('system.config.site.create') }}</el-button>
+            <el-button v-if="isShow" type="primary" @click="isShow=false;handleCreateFooterLink(footerLink)">{{ t('common.confirm') }}</el-button>
+            <el-button v-if="isShow" @click="isShow=false">{{ t('common.cancel') }}</el-button>
           </div>
           <el-form
               v-if="isShow"
@@ -273,13 +267,13 @@
               label-width="auto"
               style="max-width: 400px"
           >
-            <el-form-item label="标题">
+            <el-form-item :label="t('system.config.site.title')">
               <el-input
                   v-model="footerLink.title"
                   size="large"
               />
             </el-form-item>
-            <el-form-item label="链接">
+            <el-form-item :label="t('system.config.site.link')">
               <el-input
                   v-model="footerLink.link"
                   size="large"
@@ -290,9 +284,7 @@
       </div>
 
       <div class="carousel-info">
-        <div class="title">
-          <el-row>首页图片</el-row>
-        </div>
+        <div class="page-title">{{ t('system.config.site.homeImage') }}</div>
         <div class="content">
           <template v-for="item in carouselList">
             <div class="carousel-item">
@@ -305,7 +297,7 @@
               label-width="auto"
               style="max-width: 400px"
           >
-            <el-form-item label="图片上传">
+            <el-form-item :label="t('system.config.site.imageUpload')">
               <el-upload
                   :action="`${path}/image/upload`"
                   drag
@@ -321,14 +313,14 @@
                   <div class="container">
                     <component is="UploadFilled" class="upload-filled"></component>
                     <div class="el-upload__text">
-                      Drop file here or <em>click to upload</em>
+                      {{ t('system.config.site.dragPrefix') }}<em>{{ t('system.config.site.dragClick') }}</em>
                     </div>
                   </div>
                 </div>
 
                 <template #tip>
                   <div class="el-upload__tip">
-                    jpg/png/jpeg/ico/tiff/gif/svg/webp files with a size less than 20MB.
+                    {{ t('system.config.site.uploadTip') }}
                   </div>
                 </template>
               </el-upload>
@@ -355,6 +347,9 @@ import {
   websiteCarousel,
   type WebsiteCarouselOperation, websiteCreateFooterLink, websiteDeleteFooterLink, websiteFooterLink
 } from "@/api/website";
+import {useI18n} from "vue-i18n";
+
+const {t} = useI18n()
 
 const path = ref(import.meta.env.VITE_BASE_API)
 const userStore = useUserStore()
@@ -419,11 +414,11 @@ const handleLogoSuccess = (res: ApiResponse<ImageUploadResponse>) => {
 
 const clearLogo = () => {
   ElMessageBox.confirm(
-      '是否清空Logo图片？',
-      'Warning',
+      t('system.config.site.clearLogoConfirm'),
+      t('system.config.site.warning'),
       {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+        confirmButtonText: t('common.confirm'),
+        cancelButtonText: t('common.cancel'),
         type: 'warning',
       })
       .then(() => {
@@ -433,7 +428,7 @@ const clearLogo = () => {
       .catch(() => {
         ElMessage({
           type: 'info',
-          message: '操作取消',
+          message: t('system.config.site.operationCancelled'),
         })
       })
 }
@@ -448,11 +443,11 @@ const handleFullLogoSuccess = (res: ApiResponse<ImageUploadResponse>) => {
 
 const clearFullLogo = () => {
   ElMessageBox.confirm(
-      '是否清空FullLogo图片？',
-      'Warning',
+      t('system.config.site.clearFullLogoConfirm'),
+      t('system.config.site.warning'),
       {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+        confirmButtonText: t('common.confirm'),
+        cancelButtonText: t('common.cancel'),
         type: 'warning',
       })
       .then(() => {
@@ -462,7 +457,7 @@ const clearFullLogo = () => {
       .catch(() => {
         ElMessage({
           type: 'info',
-          message: '操作取消',
+          message: t('system.config.site.operationCancelled'),
         })
       })
 }
@@ -477,11 +472,11 @@ const handleQQImageSuccess = (res: ApiResponse<ImageUploadResponse>) => {
 
 const clearQQImageLogo = () => {
   ElMessageBox.confirm(
-      '是否清空QQ图片？',
-      'Warning',
+      t('system.config.site.clearQqImageConfirm'),
+      t('system.config.site.warning'),
       {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+        confirmButtonText: t('common.confirm'),
+        cancelButtonText: t('common.cancel'),
         type: 'warning',
       })
       .then(() => {
@@ -491,7 +486,7 @@ const clearQQImageLogo = () => {
       .catch(() => {
         ElMessage({
           type: 'info',
-          message: '操作取消',
+          message: t('system.config.site.operationCancelled'),
         })
       })
 }
@@ -506,11 +501,11 @@ const handleWechatImageSuccess = (res: ApiResponse<ImageUploadResponse>) => {
 
 const clearWechatImageLogo = () => {
   ElMessageBox.confirm(
-      '是否清空微信图片？',
-      'Warning',
+      t('system.config.site.clearWechatImageConfirm'),
+      t('system.config.site.warning'),
       {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+        confirmButtonText: t('common.confirm'),
+        cancelButtonText: t('common.cancel'),
         type: 'warning',
       })
       .then(() => {
@@ -520,7 +515,7 @@ const clearWechatImageLogo = () => {
       .catch(() => {
         ElMessage({
           type: 'info',
-          message: '操作取消',
+          message: t('system.config.site.operationCancelled'),
         })
       })
 }
@@ -599,11 +594,11 @@ const handleCarouselSuccess = (res: ApiResponse<ImageUploadResponse>) => {
 
 const cancelCarousel = (url: string) => {
   ElMessageBox.confirm(
-      '是否移除该首页图片？',
-      'Warning',
+      t('system.config.site.removeCarouselConfirm'),
+      t('system.config.site.warning'),
       {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+        confirmButtonText: t('common.confirm'),
+        cancelButtonText: t('common.cancel'),
         type: 'warning',
       })
       .then(async () => {
@@ -619,7 +614,7 @@ const cancelCarousel = (url: string) => {
       .catch(() => {
         ElMessage({
           type: 'info',
-          message: '操作取消',
+          message: t('system.config.site.operationCancelled'),
         })
       })
 
@@ -628,21 +623,26 @@ const cancelCarousel = (url: string) => {
 
 <style scoped lang="scss">
 .site-config {
-  display: flex;
-
-  .title {
-    border-left: 5px solid #6a0dad; // 更改为蓝紫色
-    padding-left: 10px;
-    color: #6a0dad; // 更改为蓝紫色
+  .page-title {
+    font-size: var(--fs-20);
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: var(--lh-title);
+    margin-bottom: var(--sp-4);
   }
 
   .content {
-    margin: 20px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: var(--sp-5);
+    margin-bottom: var(--sp-5);
 
     .el-form {
       .el-form-item {
         .el-image {
           height: 120px;
+          border-radius: var(--radius-sm);
         }
 
         .upload-content {
@@ -655,52 +655,23 @@ const cancelCarousel = (url: string) => {
             .upload-filled {
               height: 32px;
               width: 32px;
-              color: #6a0dad; // 更改为蓝紫色
+              color: var(--text-muted);
             }
           }
         }
-
-        .clear-button {
-          display: flex;
-
-          .el-button {
-            margin-left: auto;
-            background-color: #6a0dad; // 更改为蓝紫色
-            border-color: #6a0dad; // 更改为蓝紫色
-          }
-        }
-      }
-
-      .delete-button {
-        display: flex;
-
-        .el-button {
-          margin-left: auto;
-          margin-bottom: 20px;
-          background-color: #6a0dad; // 更改为蓝紫色
-          border-color: #6a0dad; // 更改为蓝紫色
-        }
-      }
-    }
-
-    .button-group {
-      .el-button {
-        margin-bottom: 20px;
-        background-color: #6a0dad; // 更改为蓝紫色
-        border-color: #6a0dad; // 更改为蓝紫色
       }
     }
 
     .carousel-item {
       display: flex;
-      padding: 20px;
+      align-items: center;
+      padding: var(--sp-3);
       max-width: 400px;
 
       .el-image {
         height: 160px;
-        margin-right: 20px;
-        margin-bottom: 20px;
-        margin-left: auto;
+        margin-right: var(--sp-4);
+        border-radius: var(--radius-sm);
       }
     }
   }
@@ -711,6 +682,12 @@ const cancelCarousel = (url: string) => {
   --el-upload-dragger-padding-horizontal: 0px;
   --el-upload-dragger-padding-vertical: 0px;
   line-height: 0;
-  border: 2px dashed #6a0dad; // 更改为蓝紫色
+  border: 2px dashed var(--border);
+  border-radius: var(--radius-sm);
+  transition: border-color 150ms ease-out;
+}
+
+.el-upload:hover {
+  border-color: var(--accent);
 }
 </style>

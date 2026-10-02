@@ -43,6 +43,7 @@ func ArticleMapping() *types.TypeMapping {
 			"views":      types.IntegerNumberProperty{},
 			"comments":   types.IntegerNumberProperty{},
 			"likes":      types.IntegerNumberProperty{},
+			"is_top":     types.IntegerNumberProperty{},
 		},
 	}
 }

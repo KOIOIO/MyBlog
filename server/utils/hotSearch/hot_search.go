@@ -16,6 +16,8 @@ func NewSource(sourceStr string) Source {
 		return &Toutiao{}
 	case "zhihu":
 		return &Zhihu{}
+	case "bilibili":
+		return &Bilibili{}
 	default:
 		return nil
 	}

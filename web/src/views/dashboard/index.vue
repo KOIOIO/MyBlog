@@ -39,11 +39,20 @@ const isCollapse = computed(() => store.state.isCollapse)
 <style scoped lang="scss">
 .dashboard {
   display: flex;
+  min-height: 100vh;
+  background-color: var(--bg);
+
+  .el-container {
+    background-color: transparent;
+  }
 
   .el-aside {
-    border: 1px solid #4B0082; /* 蓝紫色 */
     width: 240px;
     height: 100vh;
+    background-color: var(--bg-elevated);
+    border-right: 1px solid var(--border);
+    transition: width 200ms ease;
+    overflow-x: hidden;
     &::-webkit-scrollbar{
       display: none;
     }
@@ -55,24 +64,28 @@ const isCollapse = computed(() => store.state.isCollapse)
 
   .el-header {
     height: auto;
-    border: 1px solid #DCDFE6;
+    padding: 0;
+    background-color: var(--bg-elevated);
+    border-bottom: 1px solid var(--border);
 
     .header-top {
       display: flex;
-      border-bottom: 1px solid #DCDFE6;
+      align-items: center;
+      height: 56px;
+      padding: 0 var(--sp-5);
 
       .header-top-right {
         margin-left: auto;
         margin-top: auto;
         margin-bottom: auto;
-
-
       }
     }
   }
 
   .el-main{
-    height: calc(100vh - 100px);
+    height: calc(100vh - 56px);
+    padding: var(--sp-5);
+    background-color: var(--bg);
     &::-webkit-scrollbar{
       display: none;
     }

@@ -1,10 +1,13 @@
 <template>
   <div class="friend-link-list">
-    <div class="title">
-      <el-row>友链列表</el-row>
-      <el-button-group>
-        <el-button type="success" icon="Plus" @click="layoutStore.state.friendLinkCreateVisible = true">
-          新建友链
+    <div class="page-header">
+      <div>
+        <div class="page-title">{{ t('system.friendLink.title') }}</div>
+        <div class="page-desc">{{ t('system.friendLink.desc') }}</div>
+      </div>
+      <div class="page-actions">
+        <el-button type="primary" icon="Plus" @click="layoutStore.state.friendLinkCreateVisible = true">
+          {{ t('system.friendLink.create') }}
         </el-button>
 
         <el-dialog
@@ -15,15 +18,15 @@
             :before-close="friendLinkCreateVisibleSynchronization"
         >
           <template #header>
-            新建友链
+            {{ t('system.friendLink.create') }}
           </template>
           <friend-link-create-form/>
           <template #footer>
           </template>
         </el-dialog>
 
-        <el-button type="danger" icon="Delete" @click="friendLinkBulkDeleteVisible = true;handleIdsToDelete()">
-          批量删除
+        <el-button type="danger" plain icon="Delete" @click="friendLinkBulkDeleteVisible = true;handleIdsToDelete()">
+          {{ t('common.batchDelete') }}
         </el-button>
 
         <el-dialog
@@ -33,29 +36,29 @@
             destroy-on-close
         >
           <template #header>
-            删除友链
+            {{ t('system.friendLink.delete') }}
           </template>
-          您已选中 [{{ idsToDelete.length }}] 项资源，删除后将无法恢复，是否确认删除？
+          {{ t('system.friendLink.confirmDeleteWithCount', {count: idsToDelete.length}) }}
           <template #footer>
             <el-button type="primary" @click="handleBulkDelete(idsToDelete)">
-              确定
+              {{ t('common.confirm') }}
             </el-button>
-            <el-button @click="friendLinkBulkDeleteVisible = false">取消</el-button>
+            <el-button @click="friendLinkBulkDeleteVisible = false">{{ t('common.cancel') }}</el-button>
           </template>
         </el-dialog>
-      </el-button-group>
+      </div>
     </div>
 
     <div class="friend-link-list-request">
       <el-form :inline="true" :model="friendLinkListRequest">
-        <el-form-item label="友链名称">
-          <el-input v-model="friendLinkListRequest.name" placeholder="请输入友链名称" clearable/>
+        <el-form-item :label="t('system.friendLink.name')">
+          <el-input v-model="friendLinkListRequest.name" :placeholder="t('system.friendLink.namePlaceholder')" clearable/>
         </el-form-item>
-        <el-form-item label="友链描述">
-          <el-input v-model="friendLinkListRequest.description" placeholder="请输入友链描述" clearable/>
+        <el-form-item :label="t('system.friendLink.description')">
+          <el-input v-model="friendLinkListRequest.description" :placeholder="t('system.friendLink.descriptionPlaceholder')" clearable/>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" icon="Search" @click="getFriendLinkTableData">查询</el-button>
+          <el-button type="primary" icon="Search" @click="getFriendLinkTableData">{{ t('common.query') }}</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -70,22 +73,24 @@
           <el-image :src="scope.row.logo" alt=""/>
         </template>
       </el-table-column>
-      <el-table-column prop="link" label="链接"/>
-      <el-table-column prop="name" label="名称"/>
-      <el-table-column prop="description" label="描述"/>
-      <el-table-column label="操作">
+      <el-table-column prop="link" :label="t('system.friendLink.link')"/>
+      <el-table-column prop="name" :label="t('common.name')"/>
+      <el-table-column prop="description" :label="t('system.friendLink.descCol')"/>
+      <el-table-column :label="t('common.actions')">
         <template #default="scope:{ row: any, column: any, $index: number }">
           <el-button
-              type="warning"
+              link
+              type="primary"
               @click="layoutStore.state.friendLinkUpdateVisible=true;friendLinkInfo=scope.row"
           >
-            更新
+            {{ t('system.friendLink.updateAction') }}
           </el-button>
           <el-button
+              link
               type="danger"
               @click="friendLinkDeleteVisible=true;friendLinkInfo=scope.row"
           >
-            删除
+            {{ t('common.delete') }}
           </el-button>
         </template>
       </el-table-column>
@@ -99,7 +104,7 @@
         :before-close="friendLinkUpdateVisibleSynchronization"
     >
       <template #header>
-        更新友链
+        {{ t('system.friendLink.update') }}
       </template>
       <friend-link-update-form :friendLink=friendLinkInfo />
       <template #footer>
@@ -113,14 +118,14 @@
         destroy-on-close
     >
       <template #header>
-        删除友链
+        {{ t('system.friendLink.delete') }}
       </template>
-      您已选中 [1] 项资源，删除后将无法恢复，是否确认删除？
+      {{ t('system.friendLink.confirmDeleteWithCount', {count: 1}) }}
       <template #footer>
         <el-button type="primary" @click="handleDelete(friendLinkInfo.id)">
-          确定
+          {{ t('common.confirm') }}
         </el-button>
-        <el-button @click="friendLinkDeleteVisible = false">取消</el-button>
+        <el-button @click="friendLinkDeleteVisible = false">{{ t('common.cancel') }}</el-button>
       </template>
     </el-dialog>
 
@@ -150,7 +155,9 @@ import {useLayoutStore} from "@/stores/layout";
 import FriendLinkUpdateForm from "@/components/forms/FriendLinkUpdateForm.vue";
 import {useRoute, useRouter} from "vue-router";
 import {ElMessage} from "element-plus";
+import {useI18n} from "vue-i18n";
 
+const {t} = useI18n()
 
 const layoutStore = useLayoutStore()
 
@@ -317,82 +324,63 @@ watch(() => route.query, (newQuery) => {
 
 <style scoped lang="scss">
 .friend-link-list {
-  .title {
+  .page-header {
     display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--sp-4);
+    margin-bottom: var(--sp-5);
 
-    .el-row {
-      font-size: 24px;
-      color: #4A90E2; /* 蓝色 */
+    .page-title {
+      font-size: var(--fs-24);
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: var(--lh-title);
     }
 
-    .el-button-group {
-      margin-left: auto;
-      margin-top: auto;
-      margin-bottom: auto;
+    .page-desc {
+      margin-top: var(--sp-1);
+      font-size: var(--fs-14);
+      color: var(--text-muted);
+    }
 
-      .el-button {
-        margin-left: 32px;
-        background-color: #4A90E2; /* 蓝色 */
-        border-color: #4A90E2; /* 蓝色 */
-        color: #fff;
-
-        &:hover {
-          background-color: #3A70C2; /* 深蓝色 */
-          border-color: #3A70C2; /* 深蓝色 */
-        }
-      }
+    .page-actions {
+      display: flex;
+      gap: var(--sp-2);
+      flex-shrink: 0;
     }
   }
 
   .friend-link-list-request {
-    border: 1px solid #4A90E2; /* 蓝色 */
-    padding-top: 20px;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    display: flex;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: var(--sp-4) var(--sp-5);
+    margin-bottom: var(--sp-5);
 
     .el-form {
-      margin-left: auto;
-
-      .el-form-item__label {
-        color: #4A90E2; /* 蓝色 */
-      }
-
-      .el-input__inner {
-        border-color: #4A90E2; /* 蓝色 */
-      }
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--sp-2);
     }
   }
 
   .el-table {
-    border: 1px solid #4A90E2; /* 蓝色 */
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
 
     .el-image {
       height: 48px;
-    }
-
-    .el-table__header-wrapper {
-      background-color: #4A90E2; /* 蓝色 */
-      color: #fff;
-    }
-
-    .el-table__body-wrapper {
-      .el-table__row {
-        &:hover {
-          background-color: #E6F7FF; /* 浅蓝色 */
-        }
-      }
+      border-radius: var(--radius-sm);
     }
   }
 
   .el-pagination {
     display: flex;
-    justify-content: center;
-
-    .el-pager li.active {
-      background-color: #4A90E2; /* 蓝色 */
-      border-color: #4A90E2; /* 蓝色 */
-    }
+    justify-content: flex-end;
+    margin-top: var(--sp-5);
   }
 }
 </style>

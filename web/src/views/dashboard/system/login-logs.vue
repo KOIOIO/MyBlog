@@ -1,16 +1,19 @@
 <template>
   <div class="login-logs">
-    <div class="title">
-      <el-row>登录日志</el-row>
+    <div class="page-header">
+      <div>
+        <div class="page-title">{{ t('system.loginLogs.title') }}</div>
+        <div class="page-desc">{{ t('system.loginLogs.desc') }}</div>
+      </div>
     </div>
 
     <div class="user-login-list-request">
       <el-form :inline="true" :model="userLoginListRequest">
         <el-form-item label="uuid">
-          <el-input v-model="userLoginListRequest.uuid" placeholder="请输入用户UUID" clearable/>
+          <el-input v-model="userLoginListRequest.uuid" :placeholder="t('system.loginLogs.uuidPlaceholder')" clearable/>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" icon="Search" @click="getUserLoginTableData">查询</el-button>
+          <el-button type="primary" icon="Search" @click="getUserLoginTableData">{{ t('common.query') }}</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -18,7 +21,7 @@
     <el-table
         :data="userLoginTableData"
     >
-      <el-table-column label="用户" width="80">
+      <el-table-column :label="t('system.loginLogs.user')" width="80">
         <template #default="scope:{ row: Login, column: any, $index: number }">
           <el-popover width="280">
             <template #reference>
@@ -31,23 +34,23 @@
           </el-popover>
         </template>
       </el-table-column>
-      <el-table-column label="用户名" width="80">
+      <el-table-column :label="t('system.loginLogs.username')" width="80">
         <template #default="scope:{ row: Login, column: any, $index: number }">
           {{ scope.row.user.username }}
         </template>
       </el-table-column>
-      <el-table-column label="登录时间">
+      <el-table-column :label="t('system.loginLogs.loginTime')">
         <template #default="scope:{ row: Login, column: any, $index: number }">
           {{ getTime(scope.row.created_at) }}
         </template>
       </el-table-column>
-      <el-table-column prop="login_method" label="登录方式"/>
+      <el-table-column prop="login_method" :label="t('system.loginLogs.loginMethod')"/>
       <el-table-column prop="ip" label="IP"/>
-      <el-table-column prop="address" label="登录地址"/>
-      <el-table-column prop="os" label="操作系统"/>
-      <el-table-column prop="device_info" label="设备信息"/>
-      <el-table-column prop="browser_info" label="浏览器信息"/>
-      <el-table-column prop="status" label="登录状态"/>
+      <el-table-column prop="address" :label="t('system.loginLogs.loginAddress')"/>
+      <el-table-column prop="os" :label="t('system.loginLogs.os')"/>
+      <el-table-column prop="device_info" :label="t('system.loginLogs.deviceInfo')"/>
+      <el-table-column prop="browser_info" :label="t('system.loginLogs.browserInfo')"/>
+      <el-table-column prop="status" :label="t('system.loginLogs.loginStatus')"/>
     </el-table>
 
     <el-pagination
@@ -71,6 +74,9 @@ import {
   type UserLoginListRequest,
 } from "@/api/user";
 import UserCard from "@/components/widgets/UserCard.vue";
+import {useI18n} from "vue-i18n";
+
+const {t} = useI18n()
 
 const userLoginTableData = ref<Login[]>()
 const page = ref(1)
@@ -146,59 +152,48 @@ const handleCurrentChange = (val: number) => {
 
 <style scoped lang="scss">
 .login-logs {
-  .title {
-    display: flex;
+  .page-header {
+    margin-bottom: var(--sp-5);
 
-    .el-row {
-      font-size: 24px;
-      color: #4A90E2; /* 蓝色字体 */
+    .page-title {
+      font-size: var(--fs-24);
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: var(--lh-title);
+    }
+
+    .page-desc {
+      margin-top: var(--sp-1);
+      font-size: var(--fs-14);
+      color: var(--text-muted);
     }
   }
 
   .user-login-list-request {
-    border: 1px solid #4A90E2; /* 蓝色边框 */
-    padding-top: 20px;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    display: flex;
-    background-color: #F0F4FF; /* 淡蓝色背景 */
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: var(--sp-4) var(--sp-5);
+    margin-bottom: var(--sp-5);
 
     .el-form {
-      margin-left: auto;
-
-      .el-form-item__label {
-        color: #4A90E2; /* 蓝色标签 */
-      }
-
-      .el-input__inner {
-        border-color: #4A90E2; /* 蓝色输入框边框 */
-      }
-
-      .el-button--primary {
-        background-color: #4A90E2; /* 蓝色按钮 */
-        border-color: #4A90E2;
-      }
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--sp-2);
     }
   }
 
   .el-table {
-    border: 1px solid #4A90E2; /* 蓝色边框 */
-    background-color: #F0F4FF; /* 淡蓝色背景 */
-
-    .el-table__header-wrapper {
-      background-color: #4A90E2; /* 蓝色表头背景 */
-      color: #FFFFFF; /* 白色表头字体 */
-    }
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
   }
 
   .el-pagination {
     display: flex;
-    justify-content: center;
-
-    .el-pager li.active {
-      background-color: #4A90E2; /* 蓝色分页器 */
-      border-color: #4A90E2;
-    }
+    justify-content: flex-end;
+    margin-top: var(--sp-5);
   }
 }
 </style>

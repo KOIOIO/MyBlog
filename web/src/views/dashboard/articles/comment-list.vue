@@ -1,11 +1,11 @@
 <template>
   <div class="comment-list">
     <div class="title">
-      <el-row>评论列表</el-row>
+      <el-row>{{ t('dashboard.comments.title') }}</el-row>
       <el-button-group>
 
         <el-button type="danger" icon="Delete" @click="commentBulkDeleteVisible = true;handleIdsToDelete()">
-          批量删除
+          {{ t('common.batchDelete') }}
         </el-button>
 
         <el-dialog
@@ -15,14 +15,14 @@
             destroy-on-close
         >
           <template #header>
-            删除评论
+            {{ t('dashboard.comments.deleteTitle') }}
           </template>
-          您已选中 [{{ idsToDelete.length }}] 项资源，删除后将无法恢复，是否确认删除？
+          {{ t('dashboard.common.deleteConfirm', { count: idsToDelete?.length ?? 0 }) }}
           <template #footer>
             <el-button type="primary" @click="handleBulkDelete(idsToDelete)">
-              确定
+              {{ t('common.confirm') }}
             </el-button>
-            <el-button @click="commentBulkDeleteVisible = false">取消</el-button>
+            <el-button @click="commentBulkDeleteVisible = false">{{ t('common.cancel') }}</el-button>
           </template>
         </el-dialog>
       </el-button-group>
@@ -30,17 +30,17 @@
 
     <div class="comment-list-request">
       <el-form :inline="true" :model="commentListRequest">
-        <el-form-item label="文章id">
-          <el-input v-model="commentListRequest.article_id" placeholder="请输入文章id" clearable/>
+        <el-form-item :label="t('dashboard.comments.filter.articleId')">
+          <el-input v-model="commentListRequest.article_id" :placeholder="t('dashboard.comments.filter.articleIdPh')" clearable/>
         </el-form-item>
-        <el-form-item label="用户uuid">
-          <el-input v-model="commentListRequest.user_uuid" placeholder="请输入用户uuid" clearable/>
+        <el-form-item :label="t('dashboard.comments.filter.userUuid')">
+          <el-input v-model="commentListRequest.user_uuid" :placeholder="t('dashboard.comments.filter.userUuidPh')" clearable/>
         </el-form-item>
-        <el-form-item label="评论内容">
-          <el-input v-model="commentListRequest.content" placeholder="请输入评论内容" clearable/>
+        <el-form-item :label="t('dashboard.comments.filter.content')">
+          <el-input v-model="commentListRequest.content" :placeholder="t('dashboard.comments.filter.contentPh')" clearable/>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" icon="Search" @click="getCommentTableData">查询</el-button>
+          <el-button type="primary" icon="Search" @click="getCommentTableData">{{ t('common.query') }}</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -50,28 +50,28 @@
         :data="commentTableData"
     >
       <el-table-column type="selection" width="60"/>
-      <el-table-column label="文章id" width="200">
+      <el-table-column :label="t('dashboard.comments.column.articleId')" width="200">
         <template #default="scope:{ row: Comment, column: any, $index: number }">
           <el-link :href="'/article/'+scope.row.article_id">{{ scope.row.article_id }}</el-link>
         </template>
       </el-table-column>
-      <el-table-column label="用户" width="80">
+      <el-table-column :label="t('dashboard.comments.column.user')" width="80">
         <template #default="scope:{ row: Comment, column: any, $index: number }">
           <user-card-popover :uuid="scope.row.user_uuid"/>
         </template>
       </el-table-column>
-      <el-table-column label="内容">
+      <el-table-column :label="t('dashboard.comments.column.content')">
         <template #default="scope:{ row: Comment, column: any, $index: number }">
           <MdPreview class="content" :modelValue="scope.row.content"/>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="100">
+      <el-table-column :label="t('dashboard.comments.column.actions')" width="100">
         <template #default="scope:{ row: Comment, column: any, $index: number }">
           <el-button
               type="danger"
               @click="commentDeleteVisible=true;commentInfo=scope.row"
           >
-            删除
+            {{ t('common.delete') }}
           </el-button>
         </template>
       </el-table-column>
@@ -84,14 +84,14 @@
         destroy-on-close
     >
       <template #header>
-        删除评论
+        {{ t('dashboard.comments.deleteTitle') }}
       </template>
-      您已选中 [1] 项资源，删除后将无法恢复，是否确认删除？
+      {{ t('dashboard.common.deleteConfirm', { count: 1 }) }}
       <template #footer>
         <el-button type="primary" @click="handleDelete(commentInfo.id)">
-          确定
+          {{ t('common.confirm') }}
         </el-button>
-        <el-button @click="commentDeleteVisible = false">取消</el-button>
+        <el-button @click="commentDeleteVisible = false">{{ t('common.cancel') }}</el-button>
       </template>
     </el-dialog>
 
@@ -118,9 +118,11 @@ import {
 import {useLayoutStore} from "@/stores/layout";
 import {ElMessage} from "element-plus";
 import {useRoute, useRouter} from "vue-router";
+import {useI18n} from "vue-i18n";
 import UserCardPopover from "@/components/common/UserCardPopover.vue";
 import {MdPreview} from "md-editor-v3";
 
+const {t} = useI18n()
 
 const multipleCommentTableRef = ref()
 const commentTableData = ref<Comment[]>()
@@ -259,64 +261,77 @@ const handleCurrentChange = (val: number) => {
 .comment-list {
   .title {
     display: flex;
+    align-items: center;
+    margin-bottom: var(--sp-5);
 
     .el-row {
-      font-size: 24px;
-      color: #4A90E2; // 修改字体颜色为蓝色
+      font-size: var(--fs-24);
+      font-weight: 600;
+      color: var(--text-primary);
     }
 
     .el-button-group {
       margin-left: auto;
-      margin-top: auto;
-      margin-bottom: auto;
 
       .el-button {
-        margin-left: 32px;
-        background-color: #4A90E2; // 修改按钮背景颜色为蓝色
-        border-color: #4A90E2; // 修改按钮边框颜色为蓝色
-        color: #fff; // 修改按钮字体颜色为白色
+        margin-left: var(--sp-3);
       }
     }
   }
 
   .comment-list-request {
-    border: 1px solid #4A90E2; // 修改边框颜色为蓝色
-    padding-top: 20px;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    display: flex;
+    background-color: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: var(--sp-4) var(--sp-5);
+    margin-bottom: var(--sp-5);
 
     .el-form {
-      margin-left: auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
 
-      .el-form-item__label {
-        color: #4A90E2; // 修改表单标签颜色为蓝色
+      .el-form-item {
+        margin-right: var(--sp-4);
+        margin-bottom: 0;
       }
 
-      .el-input__inner {
-        border-color: #4A90E2; // 修改输入框边框颜色为蓝色
-      }
-
-      .el-button {
-        background-color: #4A90E2; // 修改按钮背景颜色为蓝色
-        border-color: #4A90E2; // 修改按钮边框颜色为蓝色
-        color: #fff; // 修改按钮字体颜色为白色
+      .el-input__wrapper {
+        height: 40px;
+        border-radius: var(--radius-sm);
       }
     }
   }
 
   .el-table {
-    border: 1px solid #4A90E2; // 修改表格边框颜色为蓝色
+    --el-table-border-color: var(--border);
+
+    /* 评论摘要：限高收起 */
+    .content {
+      max-height: 96px;
+      overflow: hidden;
+      color: var(--text-body);
+      font-size: var(--fs-14);
+    }
+  }
+
+  /* 操作列：文字删除按钮 */
+  .el-table .cell .el-button--danger {
+    --el-button-bg-color: transparent;
+    --el-button-border-color: transparent;
+    --el-button-text-color: var(--el-color-danger);
+    --el-button-hover-bg-color: var(--el-color-danger-light-9);
+    --el-button-hover-text-color: var(--el-color-danger);
+    --el-button-hover-border-color: transparent;
+    --el-button-active-bg-color: var(--el-color-danger-light-9);
+    --el-button-active-text-color: var(--el-color-danger);
+    padding: 4px 0;
   }
 
   .el-pagination {
     display: flex;
-    justify-content: center;
-
-    .el-pager li.active {
-      background-color: #4A90E2; // 修改分页器活动页背景颜色为蓝色
-      border-color: #4A90E2; // 修改分页器活动页边框颜色为蓝色
-    }
+    justify-content: flex-end;
+    margin-top: var(--sp-5);
   }
 }
 </style>

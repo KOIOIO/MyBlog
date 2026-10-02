@@ -69,7 +69,15 @@ func (articleService *ArticleService) ArticleSearch(info request.ArticleSearch) 
 		req.Query.MatchAll = &types.MatchAllQuery{}
 	}
 
-	// 设置排序字段
+	// 设置排序字段：置顶文章固定排在最前，其余按所选字段排序
+	topOrder := sortorder.Desc
+	sortCombinations := []types.SortCombinations{
+		types.SortOptions{
+			SortOptions: map[string]types.FieldSort{
+				"is_top": {Order: &topOrder},
+			},
+		},
+	}
 	if info.Sort != "" {
 		var sortField string
 		switch info.Sort {
@@ -92,20 +100,27 @@ func (articleService *ArticleService) ArticleSearch(info request.ArticleSearch) 
 			order = sortorder.Asc
 		}
 
-		req.Sort = []types.SortCombinations{
-			types.SortOptions{
-				SortOptions: map[string]types.FieldSort{
-					sortField: {Order: &order},
-				},
+		sortCombinations = append(sortCombinations, types.SortOptions{
+			SortOptions: map[string]types.FieldSort{
+				sortField: {Order: &order},
 			},
-		}
+		})
+	} else {
+		// 默认按创建时间倒序
+		createdOrder := sortorder.Desc
+		sortCombinations = append(sortCombinations, types.SortOptions{
+			SortOptions: map[string]types.FieldSort{
+				"created_at": {Order: &createdOrder},
+			},
+		})
 	}
+	req.Sort = sortCombinations
 
 	option := other.EsOption{
 		PageInfo:       info.PageInfo,
 		Index:          elasticsearch.ArticleIndex(),
 		Request:        req,
-		SourceIncludes: []string{"created_at", "cover", "title", "abstract", "category", "tags", "views", "comments", "likes"},
+		SourceIncludes: []string{"created_at", "cover", "title", "abstract", "category", "tags", "views", "comments", "likes", "is_top"},
 	}
 	return utils.EsPagination(context.TODO(), option)
 }
@@ -118,12 +133,30 @@ func (articleService *ArticleService) ArticleCategory() ([]database.ArticleCateg
 	return category, nil
 }
 
-func (articleService *ArticleService) ArticleTags() ([]database.ArticleTag, error) {
-	var tags []database.ArticleTag
-	if err := global.DB.Find(&tags).Error; err != nil {
+func (articleService *ArticleService) ArticleTags() ([]database.BlogTag, error) {
+	var tags []database.BlogTag
+	if err := global.DB.Order("`group` ASC, number DESC, tag ASC").Find(&tags).Error; err != nil {
 		return nil, err
 	}
 	return tags, nil
+}
+
+// checkArticleTagsExist 校验文章分类与标签是否合法（标签必须存在于固定标签库）
+func (articleService *ArticleService) checkArticleTagsExist(category string, tags []string) error {
+	if category != "技术" && category != "生活" {
+		return errors.New("分类只能是 技术 或 生活")
+	}
+	if len(tags) == 0 {
+		return nil
+	}
+	var count int64
+	if err := global.DB.Model(&database.BlogTag{}).Where("tag IN ?", tags).Count(&count).Error; err != nil {
+		return err
+	}
+	if int(count) != len(tags) {
+		return errors.New("标签不存在")
+	}
+	return nil
 }
 
 func (articleService *ArticleService) ArticleLike(req request.ArticleLike) error {
@@ -198,6 +231,10 @@ func (articleService *ArticleService) ArticleCreate(req request.ArticleCreate) e
 	}
 	if b {
 		return errors.New("the article already exists")
+	}
+	// 校验分类与标签（标签必须存在于固定标签库 blog_tags）
+	if err := articleService.checkArticleTagsExist(req.Category, req.Tags); err != nil {
+		return err
 	}
 	now := time.Now().Format("2006-01-02 15:04:05")
 	articleToCreate := elasticsearch.Article{
@@ -277,6 +314,10 @@ func (articleService *ArticleService) ArticleDelete(req request.ArticleDelete) e
 }
 
 func (articleService *ArticleService) ArticleUpdate(req request.ArticleUpdate) error {
+	// 校验分类与标签（标签必须存在于固定标签库 blog_tags）
+	if err := articleService.checkArticleTagsExist(req.Category, req.Tags); err != nil {
+		return err
+	}
 	now := time.Now().Format("2006-01-02 15:04:05")
 	articleToUpdate := struct {
 		UpdatedAt string   `json:"updated_at"`
@@ -342,6 +383,15 @@ func (articleService *ArticleService) ArticleUpdate(req request.ArticleUpdate) e
 	})
 }
 
+// ArticleSetTop 设置文章置顶状态（仅更新 is_top 字段，不影响 updated_at 与其它内容）
+func (articleService *ArticleService) ArticleSetTop(req request.ArticleSetTop) error {
+	topValue := 0
+	if req.IsTop {
+		topValue = 1
+	}
+	return articleService.Update(req.ID, map[string]any{"is_top": topValue})
+}
+
 func (articleService *ArticleService) ArticleList(info request.ArticleList) (list interface{}, total int64, err error) {
 	req := &search.Request{
 		Query: &types.Query{},
@@ -375,13 +425,21 @@ func (articleService *ArticleService) ArticleList(info request.ArticleList) (lis
 		req.Query.Bool = boolQuery
 	} else {
 		req.Query.MatchAll = &types.MatchAllQuery{}
-		req.Sort = []types.SortCombinations{
-			types.SortOptions{
-				SortOptions: map[string]types.FieldSort{
-					"created_at": {Order: &sortorder.Desc},
-				},
+	}
+
+	// 后台列表：置顶优先，其次按创建时间倒序
+	topOrder := sortorder.Desc
+	req.Sort = []types.SortCombinations{
+		types.SortOptions{
+			SortOptions: map[string]types.FieldSort{
+				"is_top": {Order: &topOrder},
 			},
-		}
+		},
+		types.SortOptions{
+			SortOptions: map[string]types.FieldSort{
+				"created_at": {Order: &sortorder.Desc},
+			},
+		},
 	}
 
 	option := other.EsOption{

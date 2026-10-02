@@ -17,6 +17,7 @@ export interface Article {
     views: number;
     comments: number;
     likes: number;
+    is_top: number;
 }
 
 export interface ArticleLikeRequest {
@@ -89,6 +90,19 @@ export interface ArticleUpdateRequest {
 export const articleUpdate = (data: ArticleUpdateRequest): Promise<ApiResponse<undefined>> => {
     return service({
         url: '/article/update',
+        method: 'put',
+        data: data
+    });
+}
+
+export interface ArticleSetTopRequest {
+    id: string;
+    is_top: boolean;
+}
+
+export const articleSetTop = (data: ArticleSetTopRequest): Promise<ApiResponse<undefined>> => {
+    return service({
+        url: '/article/setTop',
         method: 'put',
         data: data
     });

@@ -1,11 +1,9 @@
 <template>
   <div class="logo">
-    <el-image
-        :src="websiteStore.state.websiteInfo.logo===''?'/image/logo.png':websiteStore.state.websiteInfo.logo"
-        alt=""/>
+    <span class="brand-word">Folio<span class="brand-dot">.</span></span>
     <div class="brand-info">
-      <div>{{ websiteStore.state.websiteInfo.slogan }}</div>
-      <div>{{ websiteStore.state.websiteInfo.slogan_en }}</div>
+      <div class="slogan">{{ websiteStore.state.websiteInfo.slogan }}</div>
+      <div class="slogan-en">{{ websiteStore.state.websiteInfo.slogan_en }}</div>
     </div>
   </div>
 </template>
@@ -18,64 +16,72 @@ const websiteStore = useWebsiteStore()
 </script>
 
 <style scoped lang="scss">
-.dashboard {
-  .logo {
-    display: flex;
-    padding: 10px;
+.logo {
+  display: flex;
+  align-items: center;
 
-    .el-image {
-      height: 60px;
-      width: 60px;
-    }
+  .brand-word {
+    font-size: var(--fs-20);
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.01em;
+    line-height: var(--lh-title);
 
-    .brand-info {
-      margin-top: 5px;
-      margin-left: 20px;
-
-      > div:nth-child(1) {
-        font-size: 24px;
-      }
-
-      > div:nth-child(2) {
-        font-size: 13px;
-      }
+    .brand-dot {
+      color: var(--accent);
     }
   }
 
+  .brand-info {
+    display: flex;
+    flex-direction: column;
+    margin-left: var(--sp-3);
 
-  .collapsed {
-    .logo {
-      .el-image {
-        height: 44px;
-        width: 44px;
-      }
+    .slogan {
+      font-size: var(--fs-14);
+      color: var(--text-primary);
+      line-height: var(--lh-title);
+    }
 
-      .brand-info {
-        display: none;
-      }
+    .slogan-en {
+      font-size: var(--fs-12);
+      color: var(--text-muted);
+      line-height: var(--lh-title);
     }
   }
 }
 
+/* 后台侧栏：Logo 区域 */
+.dashboard .logo {
+  padding: var(--sp-4) var(--sp-5);
+  height: 56px;
 
-.web-navbar .logo {
-  display: flex;
-
-  .el-image {
-    padding: 5px;
+  .brand-word {
+    font-size: var(--fs-20);
   }
 
   .brand-info {
-    margin-top: 5px;
+    display: flex;
+  }
+}
 
-    > div:nth-child(1) {
-      font-size: 22px;
+/* 后台折叠态：只留图标字 */
+.dashboard .collapsed .logo {
+  justify-content: center;
+  padding: var(--sp-4) 0;
 
-    }
+  .brand-info {
+    display: none;
+  }
+}
 
-    > div:nth-child(2) {
-      font-size: 12px;
-    }
+/* 前台导航中的 Logo */
+.web-navbar .logo {
+  height: 56px;
+  padding: 0;
+
+  .brand-info {
+    display: none;
   }
 }
 </style>

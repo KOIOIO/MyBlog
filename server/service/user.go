@@ -3,6 +3,10 @@ package service
 import (
 	"errors"
 	"fmt"
+	"io"
+	"mime/multipart"
+	"os"
+	"path/filepath"
 	"server/global"
 	"server/model/appTypes"
 	"server/model/database"
@@ -10,6 +14,8 @@ import (
 	"server/model/request"
 	"server/model/response"
 	"server/utils"
+	"server/utils/upload"
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -48,36 +54,6 @@ func (userService *UserService) EmailLogin(u database.User) (database.User, erro
 		return user, nil
 	}
 	return database.User{}, err
-}
-
-func (userService *UserService) QQLogin(accessTokenResponse other.AccessTokenResponse) (database.User, error) {
-	var user database.User
-
-	// 尝试查找用户
-	err := global.DB.Where("openid = ?", accessTokenResponse.Openid).First(&user).Error
-	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
-		return database.User{}, err
-	}
-
-	// 如果用户不存在，则创建新用户
-	if errors.Is(err, gorm.ErrRecordNotFound) {
-		userInfoResponse, err := ServiceGroupApp.QQService.GetUserInfoByAccessTokenAndOpenid(accessTokenResponse.AccessToken, accessTokenResponse.Openid)
-		if err != nil {
-			return database.User{}, err
-		}
-		user.UUID = uuid.Must(uuid.NewV4())
-		user.Username = userInfoResponse.Nickname
-		user.Openid = accessTokenResponse.Openid
-		user.Avatar = userInfoResponse.FigureurlQQ2
-		user.RoleID = appTypes.User
-		user.Register = appTypes.QQ
-
-		if err := global.DB.Create(&user).Error; err != nil {
-			return database.User{}, err
-		}
-	}
-
-	return user, nil
 }
 
 func (userService *UserService) ForgotPassword(req request.ForgotPassword) error {
@@ -137,6 +113,64 @@ func (userService *UserService) UserChangeInfo(req request.UserChangeInfo) error
 		return err
 	}
 	return global.DB.Model(&user).Updates(req).Error
+}
+
+// UploadAvatar 上传用户头像，文件保存在本地 uploads/avatar/ 目录并更新用户头像字段
+func (userService *UserService) UploadAvatar(userID uint, file *multipart.FileHeader) (string, error) {
+	// 大小校验（与图片上传保持一致，单位 MB）
+	size := float64(file.Size) / float64(1024*1024)
+	if size >= float64(global.Config.Upload.Size) {
+		return "", fmt.Errorf("the image size exceeds the set size, the current size is: %.2f MB, the set size is: %d MB", size, global.Config.Upload.Size)
+	}
+
+	// 类型校验，只允许图片类型
+	ext := filepath.Ext(file.Filename)
+	if _, exists := upload.WhiteImageList[ext]; !exists {
+		return "", errors.New("don't upload files that aren't image types")
+	}
+
+	// 生成随机文件名并保存到 uploads/avatar/ 目录
+	name := strings.TrimSuffix(file.Filename, ext)
+	filename := utils.MD5V([]byte(name)) + "-" + time.Now().Format("20060102150405") + ext
+	dir := global.Config.Upload.Path + "/avatar/"
+
+	if err := os.MkdirAll(dir, os.ModePerm); err != nil {
+		return "", err
+	}
+
+	dst, err := os.Create(dir + filename)
+	if err != nil {
+		return "", err
+	}
+	defer dst.Close()
+
+	src, err := file.Open()
+	if err != nil {
+		return "", err
+	}
+	defer src.Close()
+
+	if _, err = io.Copy(dst, src); err != nil {
+		return "", err
+	}
+
+	// 更新用户头像字段
+	var user database.User
+	if err := global.DB.Take(&user, userID).Error; err != nil {
+		return "", err
+	}
+	oldAvatar := user.Avatar
+	avatarURL := "/" + dir + filename
+	if err := global.DB.Model(&user).Update("avatar", avatarURL).Error; err != nil {
+		return "", err
+	}
+
+	// 清理旧头像文件（仅当旧头像位于头像上传目录时，避免误删默认头像或第三方头像）
+	if strings.HasPrefix(oldAvatar, "/"+dir) {
+		_ = os.Remove(strings.TrimPrefix(oldAvatar, "/"))
+	}
+
+	return avatarURL, nil
 }
 
 func (userService *UserService) UserWeather(ip string) (string, error) {

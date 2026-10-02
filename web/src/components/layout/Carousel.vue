@@ -33,6 +33,7 @@ getWebsiteCarousel()
 .carousel {
   width: 100%;
   position: relative;
+  background: var(--bg);
 
   .el-carousel {
     .el-image {

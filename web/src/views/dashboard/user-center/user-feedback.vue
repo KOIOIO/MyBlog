@@ -1,18 +1,21 @@
 <template>
   <div class="user-feedback">
-    <el-row class="title">我的反馈</el-row>
+    <div class="page-header">
+      <div class="page-title">{{ t('system.userCenter.feedback.title') }}</div>
+      <div class="page-desc">{{ t('system.userCenter.feedback.desc') }}</div>
+    </div>
 
     <el-table
         :data="userFeedbackTableData"
         :row-style="{height: '80px'}"
     >
-      <el-table-column label="时间" width="150">
+      <el-table-column :label="t('common.time')" width="150">
         <template #default="scope:{ row: Feedback, column: any, $index: number }">
           {{ getTime(scope.row.created_at) }}
         </template>
       </el-table-column>
-      <el-table-column prop="content" label="内容"/>
-      <el-table-column prop="reply" label="回复"/>
+      <el-table-column prop="content" :label="t('common.content')"/>
+      <el-table-column prop="reply" :label="t('system.userCenter.feedback.reply')"/>
     </el-table>
   </div>
 </template>
@@ -20,6 +23,9 @@
 <script setup lang="ts">
 import {ref} from "vue";
 import {type Feedback, feedbackInfo} from "@/api/feedback";
+import {useI18n} from "vue-i18n";
+
+const {t} = useI18n()
 
 const getTime = (date: Date): string => {
   const time = new Date(date)
@@ -39,19 +45,27 @@ getUserFeedbackTableData()
 
 <style scoped lang="scss">
 .user-feedback {
-  .title {
-    margin-bottom: 20px;
-    font-size: 24px;
-    color: #4B0082; /* 蓝紫色 */
+  .page-header {
+    margin-bottom: var(--sp-5);
+
+    .page-title {
+      font-size: var(--fs-24);
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: var(--lh-title);
+    }
+
+    .page-desc {
+      margin-top: var(--sp-1);
+      font-size: var(--fs-14);
+      color: var(--text-muted);
+    }
   }
 
   .el-table {
-    border: 1px solid #4B0082; /* 蓝紫色 */
-
-    .el-table__header-wrapper th {
-      background-color: #4B0082; /* 蓝紫色 */
-      color: #fff;
-    }
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
   }
 }
 </style>
