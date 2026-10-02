@@ -17,4 +17,9 @@ docs/*.png
 docs/*.jpg
 deploy/backup/
 /img*.png
+/产品架构.png
+/前端架构.png
+/后端架构.png
+/数据库设计.png
+/数据流.png
 web/public/vendor/*.bak*
