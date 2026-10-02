@@ -16,7 +16,8 @@
           📄 {{ t('pages.agent.referencedArticles', {n: msg.article_ids.length}) }}
         </div>
         <div class="bubble">
-          <span v-if="msg.content" class="content">{{ msg.content }}</span>
+          <div v-if="msg.role === 'assistant' && msg.content" class="md-body" v-html="renderMarkdown(msg.content)"></div>
+          <span v-else-if="msg.content" class="content">{{ msg.content }}</span>
           <span v-else-if="streaming" class="typing">▍</span>
         </div>
       </div>
@@ -25,9 +26,11 @@
 </template>
 
 <script setup lang="ts">
-import {computed, nextTick, ref, watch} from "vue";
+import {computed, nextTick, onMounted, onUnmounted, ref, watch} from "vue";
 import {useI18n} from "vue-i18n";
 import {useUserStore} from "@/stores/user";
+import mermaid from "mermaid";
+import {renderMarkdown} from "@/utils/markdown";
 import type {AgentMessage} from "@/api/agent";
 
 const props = defineProps<{
@@ -51,6 +54,59 @@ const scrollToBottom = (): void => {
         }
     });
 };
+
+/**
+ * 将消息中未处理的 ```mermaid 代码块渲染为图表。
+ * 流式输出期间内容不断变化，由 MutationObserver 防抖触发；
+ * mermaid 对已处理节点（data-processed）幂等跳过，失败仅告警保留源码。
+ */
+const renderMermaid = async (): Promise<void> => {
+    const nodes = scrollRef.value?.querySelectorAll('.mermaid:not([data-processed="true"])');
+    if (!nodes || nodes.length === 0) {
+        return;
+    }
+    const isDark = document.documentElement.classList.contains('dark');
+    mermaid.initialize({
+        startOnLoad: false,
+        securityLevel: 'strict',
+        theme: isDark ? 'dark' : 'default',
+    });
+    try {
+        await mermaid.run({nodes: Array.from(nodes) as HTMLElement[]});
+    } catch (e) {
+        // 单个图解析失败不影响其他消息；保留源码文本便于排查
+        console.warn('mermaid render failed:', e);
+    }
+};
+
+let mmObserver: MutationObserver | null = null;
+let mmTimer: number | undefined;
+
+const scheduleMermaid = (): void => {
+    if (mmTimer) {
+        window.clearTimeout(mmTimer);
+    }
+    mmTimer = window.setTimeout(() => {
+        renderMermaid();
+    }, 400);
+};
+
+onMounted(() => {
+    if (scrollRef.value) {
+        mmObserver = new MutationObserver(scheduleMermaid);
+        mmObserver.observe(scrollRef.value, {childList: true, subtree: true, characterData: true});
+    }
+});
+
+onUnmounted(() => {
+    if (mmObserver) {
+        mmObserver.disconnect();
+        mmObserver = null;
+    }
+    if (mmTimer) {
+        window.clearTimeout(mmTimer);
+    }
+});
 
 watch(() => [props.messages, props.streaming], scrollToBottom, {deep: true});
 </script>
@@ -141,6 +197,103 @@ watch(() => [props.messages, props.streaming], scrollToBottom, {deep: true});
     white-space: pre-wrap;
 
     .typing { animation: blink 1s step-end infinite; }
+
+    .md-body {
+      white-space: normal;
+
+      > :first-child { margin-top: 0; }
+      > :last-child { margin-bottom: 0; }
+
+      p { margin: 0.5em 0; }
+      h1, h2, h3, h4 { margin: 0.8em 0 0.4em; font-weight: 600; line-height: 1.3; }
+      h1 { font-size: 1.4em; }
+      h2 { font-size: 1.25em; }
+      h3 { font-size: 1.15em; }
+      h4 { font-size: 1.05em; }
+
+      ul, ol { margin: 0.5em 0; padding-left: 1.5em; }
+      li { margin: 0.25em 0; }
+
+      blockquote {
+        margin: 0.5em 0;
+        padding: 4px 12px;
+        border-left: 3px solid var(--el-color-primary);
+        color: var(--text-secondary);
+        background: var(--el-fill-color-blank);
+        border-radius: 0 6px 6px 0;
+      }
+
+      a {
+        color: var(--el-color-primary);
+        text-decoration: underline;
+      }
+
+      code {
+        font-family: "SF Mono", "JetBrains Mono", Consolas, "Courier New", monospace;
+        font-size: 0.9em;
+        background: var(--el-fill-color);
+        padding: 1px 5px;
+        border-radius: 4px;
+      }
+
+      pre {
+        margin: 0.6em 0;
+        padding: 10px 12px;
+        background: var(--el-fill-color-dark);
+        border-radius: 8px;
+        overflow-x: auto;
+        white-space: pre;
+        line-height: 1.5;
+
+        code {
+          background: transparent;
+          padding: 0;
+        }
+      }
+
+      table {
+        margin: 0.6em 0;
+        border-collapse: collapse;
+        font-size: 0.95em;
+
+        th, td {
+          border: 1px solid var(--el-border-color-lighter);
+          padding: 6px 10px;
+        }
+
+        th {
+          background: var(--el-fill-color);
+          font-weight: 600;
+        }
+      }
+
+      hr {
+        border: none;
+        border-top: 1px solid var(--el-border-color-lighter);
+        margin: 0.8em 0;
+      }
+
+      /* Mermaid：未渲染时展示源码，渲染后由 mermaid 生成 SVG */
+      .mermaid {
+        margin: 0.6em 0;
+        text-align: center;
+        font-family: "SF Mono", "JetBrains Mono", Consolas, monospace;
+        font-size: 12px;
+        line-height: 1.5;
+        white-space: pre-wrap;
+        word-break: break-all;
+        background: var(--el-fill-color);
+        border-radius: 8px;
+        padding: 10px;
+        overflow-x: auto;
+
+        svg {
+          max-width: 100%;
+          height: auto;
+          display: inline-block;
+        }
+      }
+    }
   }
 }
 
