@@ -521,3 +521,75 @@ INSERT IGNORE INTO `blog_tags` (`tag`, `group`, `number`) VALUES
 ('随笔', 'life', 0),
 ('博客', 'life', 0),
 ('经验', 'life', 0);
+
+--
+-- 追加：AI Agent 模块表（2026-10-02）
+--
+
+--
+-- Table structure for table `agent_conversations`
+--
+
+DROP TABLE IF EXISTS `agent_conversations`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `agent_conversations` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` datetime(3) DEFAULT NULL,
+  `updated_at` datetime(3) DEFAULT NULL,
+  `deleted_at` datetime(3) DEFAULT NULL,
+  `user_id` bigint unsigned DEFAULT NULL,
+  `uuid` varchar(36) DEFAULT NULL,
+  `title` varchar(100) DEFAULT NULL,
+  `summary` longtext,
+  `status` bigint DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_agent_conversations_uuid` (`uuid`),
+  KEY `idx_agent_conversations_user_id` (`user_id`),
+  KEY `idx_agent_conversations_deleted_at` (`deleted_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `agent_messages`
+--
+
+DROP TABLE IF EXISTS `agent_messages`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `agent_messages` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` datetime(3) DEFAULT NULL,
+  `updated_at` datetime(3) DEFAULT NULL,
+  `deleted_at` datetime(3) DEFAULT NULL,
+  `conversation_id` bigint unsigned DEFAULT NULL,
+  `role` varchar(10) DEFAULT NULL,
+  `content` longtext,
+  `article_ids` json DEFAULT NULL,
+  `tokens` bigint DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idx_agent_messages_conversation_id` (`conversation_id`),
+  KEY `idx_agent_messages_deleted_at` (`deleted_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `agent_memories`
+--
+
+DROP TABLE IF EXISTS `agent_memories`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `agent_memories` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` datetime(3) DEFAULT NULL,
+  `updated_at` datetime(3) DEFAULT NULL,
+  `deleted_at` datetime(3) DEFAULT NULL,
+  `user_id` bigint unsigned DEFAULT NULL,
+  `content` varchar(500) DEFAULT NULL,
+  `source` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idx_agent_memories_user_id` (`user_id`),
+  KEY `idx_agent_memories_deleted_at` (`deleted_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;

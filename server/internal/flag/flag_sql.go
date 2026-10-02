@@ -19,5 +19,8 @@ func SQL(deps Deps) error {
 		&database.JwtBlacklist{},
 		&database.Login{},
 		&database.User{},
+		&database.AgentConversation{},
+		&database.AgentMessage{},
+		&database.AgentMemory{},
 	)
 }
