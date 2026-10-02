@@ -5,6 +5,8 @@ import (
 
 	"server/internal/application/article"
 	"server/internal/application/auth"
+	"server/internal/application/comment"
+	"server/internal/application/forum"
 	"server/internal/application/user"
 	"server/internal/common/email"
 	"server/internal/common/jwt"
@@ -15,6 +17,8 @@ import (
 	ihttp "server/internal/interface/http"
 	articlehandler "server/internal/interface/http/handler/article"
 	basehandler "server/internal/interface/http/handler/base"
+	commenthandler "server/internal/interface/http/handler/comment"
+	forumhandler "server/internal/interface/http/handler/forum"
 	userhandler "server/internal/interface/http/handler/user"
 
 	"github.com/mojocn/base64Captcha"
@@ -75,12 +79,22 @@ func BuildApp(infra *Infra) *ihttp.Deps {
 	viewCounter := redis.NewViewCounter(&infra.Redis)
 	articleApp := article.NewService(articleRepo, esArticleStore, viewCounter)
 
+	// ---- comment BC ----
+	commentRepo := mysql.NewCommentRepo(infra.DB)
+	commentApp := comment.NewService(commentRepo, log)
+
+	// ---- forum BC ----
+	forumRepo := mysql.NewForumRepo(infra.DB)
+	forumApp := forum.NewService(forumRepo, cfg, log)
+
 	// ---- interface ----
 	captchaStore := base64Captcha.DefaultMemStore
 	emailSender := email.New(cfg.Email)
 	baseHandler := basehandler.NewHandler(cfg, captchaStore, emailSender, log)
 	userHandler := userhandler.NewHandler(userApp, authApp, captchaStore, cfg, log)
 	articleHandler := articlehandler.NewHandler(articleApp, log)
+	commentHandler := commenthandler.NewHandler(commentApp, log)
+	forumHandler := forumhandler.NewHandler(forumApp, cfg, log)
 
 	return &ihttp.Deps{
 		Config:         cfg,
@@ -88,9 +102,13 @@ func BuildApp(infra *Infra) *ihttp.Deps {
 		Auth:           authApp,
 		User:           userApp,
 		Article:        articleApp,
+		Comment:        commentApp,
+		Forum:          forumApp,
 		BaseHandler:    baseHandler,
 		UserHandler:    userHandler,
 		ArticleHandler: articleHandler,
+		CommentHandler: commentHandler,
+		ForumHandler:   forumHandler,
 		Geo:            geoClient,
 		Logins:         loginRepo,
 	}

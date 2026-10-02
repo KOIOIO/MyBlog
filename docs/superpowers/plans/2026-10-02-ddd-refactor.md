@@ -299,15 +299,15 @@ type FileStoragePort interface { Upload(ctx context.Context, f File, dir string)
 
 
 
-* [ ] `domain/comment`：Comment 树实体（LoadChildren / 级联删除行为收敛）、CommentRepository
+* [x] `domain/comment`：Comment 树实体（LoadChildren / 级联删除行为收敛）、CommentRepository
 
-* [ ] `domain/forum`：ForumPost/ForumComment/ForumLike 实体、ForumRepository
+* [x] `domain/forum`：ForumPost/ForumComment/ForumLike 实体、ForumRepository
 
-* [ ] `infrastructure/mysql`：comment/forum 仓储；`application/comment|forum` 用例（树加载、级联删除事务、点赞幂等）
+* [x] `infrastructure/mysql`：comment/forum 仓储；`application/comment|forum` 用例（树加载、级联删除事务、点赞幂等）
 
-* [ ] handler 与 cron 迁移；单测覆盖树构建与级联删除
+* [x] handler 与 cron 迁移；单测覆盖树构建与级联删除
 
-* [ ] commit：`refactor(ddd): migrate comment & forum bounded contexts`
+* [x] commit：`refactor(ddd): migrate comment & forum bounded contexts`
 
 ### Phase 4：image /website/advertisement /friendlink/feedback + 外部防腐层
 

@@ -12,10 +12,14 @@ import (
 	"server/config"
 	articleapp "server/internal/application/article"
 	authapp "server/internal/application/auth"
+	commentapp "server/internal/application/comment"
+	forumapp "server/internal/application/forum"
 	userapp "server/internal/application/user"
 	userdomain "server/internal/domain/user"
 	articlehandler "server/internal/interface/http/handler/article"
 	basehandler "server/internal/interface/http/handler/base"
+	commenthandler "server/internal/interface/http/handler/comment"
+	forumhandler "server/internal/interface/http/handler/forum"
 	userhandler "server/internal/interface/http/handler/user"
 	"server/internal/interface/http/middleware"
 	oldrouter "server/router"
@@ -33,9 +37,13 @@ type Deps struct {
 	Auth           *authapp.AuthService
 	User           *userapp.UserService
 	Article        *articleapp.Service
+	Comment        *commentapp.Service
+	Forum          *forumapp.Service
 	BaseHandler    *basehandler.Handler
 	UserHandler    *userhandler.Handler
 	ArticleHandler *articlehandler.Handler
+	CommentHandler *commenthandler.Handler
+	ForumHandler   *forumhandler.Handler
 	Geo            userdomain.GeoProvider
 	Logins         userdomain.LoginRecordRepository
 }
@@ -125,11 +133,51 @@ func NewRouter(deps *Deps) *gin.Engine {
 		}
 	}
 
+	// ---- 已迁移 BC：comment ----
+	{
+		commentRouter := privateGroup.Group("comment")
+		commentPublicRouter := publicGroup.Group("comment")
+		commentAdminRouter := adminGroup.Group("comment")
+		commentHandler := deps.CommentHandler
+		{
+			commentRouter.POST("create", commentHandler.Create)
+			commentRouter.DELETE("delete", commentHandler.Delete)
+			commentRouter.GET("info", commentHandler.Info)
+		}
+		{
+			commentPublicRouter.GET(":article_id", commentHandler.InfoByArticleID)
+			commentPublicRouter.GET("new", commentHandler.New)
+		}
+		{
+			commentAdminRouter.GET("list", commentHandler.List)
+		}
+	}
+
+	// ---- 已迁移 BC：forum ----
+	{
+		forumRouter := privateGroup.Group("forum")
+		forumPublicRouter := publicGroup.Group("forum")
+		forumHandler := deps.ForumHandler
+		{
+			forumPublicRouter.GET("list", forumHandler.List)
+			forumPublicRouter.GET("detail", forumHandler.Detail)
+			forumPublicRouter.GET("tags", forumHandler.Tags)
+		}
+		{
+			forumRouter.POST("publish", forumHandler.Publish)
+			forumRouter.POST("upload", forumHandler.Upload)
+			forumRouter.POST("like", forumHandler.Like)
+			forumRouter.POST("comment", forumHandler.Comment)
+			forumRouter.GET("manageList", forumHandler.ManageList)
+			forumRouter.DELETE("delete", forumHandler.Delete)
+			forumRouter.GET("manageComments", forumHandler.ManageComments)
+			forumRouter.DELETE("comment", forumHandler.CommentDelete)
+		}
+	}
+
 	// ---- 未迁移 BC：委托旧 router 注册（保持路由不丢失） ----
 	{
-		routerGroup.InitCommentRouter(privateGroup, publicGroup, adminGroup)
 		routerGroup.InitFeedbackRouter(privateGroup, publicGroup, adminGroup)
-		routerGroup.InitForumRouter(privateGroup, publicGroup, adminGroup)
 	}
 	{
 		routerGroup.InitImageRouter(adminGroup)
