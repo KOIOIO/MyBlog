@@ -4,6 +4,7 @@ export default {
     search: '搜尋',
     news: '新聞',
     forum: '論壇',
+    agent: 'AI Agent',
     friendLink: '友鏈',
     about: '關於'
   },

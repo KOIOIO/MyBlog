@@ -4,6 +4,7 @@ export default {
     search: 'Search',
     news: 'News',
     forum: 'Forum',
+    agent: 'AI Agent',
     friendLink: 'Links',
     about: 'About'
   },

@@ -64,6 +64,15 @@ const routes = [
                 meta: {
                     title: "帖子详情"
                 }
+            },
+            {
+                path: "agent",
+                name: "agent",
+                component: () => import('@/views/web/agent/index.vue'),
+                meta: {
+                    title: "AI Agent",
+                    requiresAuth: true
+                }
             }
         ]
     },

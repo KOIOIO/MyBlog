@@ -89,6 +89,7 @@ const menuList: MenuItem[] = [
   {titleKey: "nav.search", name: "/search"},
   {titleKey: "nav.news", name: "/news"},
   {titleKey: "nav.forum", name: "/forum"},
+  {titleKey: "nav.agent", name: "/agent"},
   {titleKey: "nav.friendLink", name: "/friend-link"}
 ]
 
