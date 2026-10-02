@@ -313,15 +313,15 @@ type FileStoragePort interface { Upload(ctx context.Context, f File, dir string)
 
 
 
-* [ ] `infrastructure/storage`：FileStoragePort 实现（local/qiniu，替代 utils/upload）；`domain/image`、application/handler 迁移
+* [x] `infrastructure/storage`：FileStoragePort 实现（local/qiniu，替代 utils/upload）；`domain/image`、application/handler 迁移
 
-* [ ] `infrastructure/geo`（高德）、`infrastructure/hotsearch`（多平台爬虫）、CalendarPort 实现；`domain/website`（配置聚合 + 消费以上 Port）、application/handler 迁移；`service/gaode.go`、`service/calendar.go`、`service/hot_search.go` 停用
+* [x] `infrastructure/geo`（高德）、`infrastructure/hotsearch`（多平台爬虫）、CalendarPort 实现；`domain/website`（配置聚合 + 消费以上 Port）、application/handler 迁移；`service/gaode.go`、`service/calendar.go`、`service/hot_search.go` 停用
 
-* [ ] advertisement、friendlink、feedback、config BC 迁移（轻量）
+* [x] advertisement、friendlink、feedback、config BC 迁移（轻量）
 
-* [ ] `internal/interface/cron`：热搜、日历定时任务改注入
+* [x] `internal/interface/cron`：热搜、日历定时任务改注入
 
-* [ ] commit：`refactor(ddd): migrate support contexts & external adapters`
+* [x] commit：`refactor(ddd): migrate support contexts & external adapters`
 
 ### Phase 5：收尾清理与全量回归
 

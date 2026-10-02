@@ -1,0 +1,1 @@
+{"name": "public_get_3", "method": "GET", "path": "/api/article/search?query=Gin", "status": 200, "body": "{\"code\":7,\"data\":{},\"msg\":\"Key: 'ArticleSearch.Order' Error:Field validation for 'Order' failed on the 'required' tag\"}"}

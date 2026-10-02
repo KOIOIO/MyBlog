@@ -10,19 +10,30 @@ import (
 	"net/http"
 
 	"server/config"
+	advertisementapp "server/internal/application/advertisement"
 	articleapp "server/internal/application/article"
 	authapp "server/internal/application/auth"
 	commentapp "server/internal/application/comment"
+	configapp "server/internal/application/config"
+	feedbackapp "server/internal/application/feedback"
 	forumapp "server/internal/application/forum"
+	friendlinkapp "server/internal/application/friendlink"
+	imageapp "server/internal/application/image"
 	userapp "server/internal/application/user"
+	websiteapp "server/internal/application/website"
 	userdomain "server/internal/domain/user"
+	advertisementhandler "server/internal/interface/http/handler/advertisement"
 	articlehandler "server/internal/interface/http/handler/article"
 	basehandler "server/internal/interface/http/handler/base"
 	commenthandler "server/internal/interface/http/handler/comment"
+	confighandler "server/internal/interface/http/handler/config"
+	feedbackhandler "server/internal/interface/http/handler/feedback"
 	forumhandler "server/internal/interface/http/handler/forum"
+	friendlinkhandler "server/internal/interface/http/handler/friendlink"
+	imagehandler "server/internal/interface/http/handler/image"
 	userhandler "server/internal/interface/http/handler/user"
+	websitehandler "server/internal/interface/http/handler/website"
 	"server/internal/interface/http/middleware"
-	oldrouter "server/router"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
@@ -32,20 +43,32 @@ import (
 
 // Deps 路由装配依赖。
 type Deps struct {
-	Config         *config.Config
-	Log            *zap.Logger
-	Auth           *authapp.AuthService
-	User           *userapp.UserService
-	Article        *articleapp.Service
-	Comment        *commentapp.Service
-	Forum          *forumapp.Service
-	BaseHandler    *basehandler.Handler
-	UserHandler    *userhandler.Handler
-	ArticleHandler *articlehandler.Handler
-	CommentHandler *commenthandler.Handler
-	ForumHandler   *forumhandler.Handler
-	Geo            userdomain.GeoProvider
-	Logins         userdomain.LoginRecordRepository
+	Config               *config.Config
+	Log                  *zap.Logger
+	Auth                 *authapp.AuthService
+	User                 *userapp.UserService
+	Article              *articleapp.Service
+	Comment              *commentapp.Service
+	Forum                *forumapp.Service
+	Image                *imageapp.Service
+	Website              *websiteapp.Service
+	Advertisement        *advertisementapp.Service
+	FriendLink           *friendlinkapp.Service
+	Feedback             *feedbackapp.Service
+	ConfigSvc            *configapp.Service
+	BaseHandler          *basehandler.Handler
+	UserHandler          *userhandler.Handler
+	ArticleHandler       *articlehandler.Handler
+	CommentHandler       *commenthandler.Handler
+	ForumHandler         *forumhandler.Handler
+	ImageHandler         *imagehandler.Handler
+	WebsiteHandler       *websitehandler.Handler
+	AdvertisementHandler *advertisementhandler.Handler
+	FriendLinkHandler    *friendlinkhandler.Handler
+	FeedbackHandler      *feedbackhandler.Handler
+	ConfigHandler        *confighandler.Handler
+	Geo                  userdomain.GeoProvider
+	Logins               userdomain.LoginRecordRepository
 }
 
 // NewRouter 构建 Gin Engine（中间件链 + 三组路由 + 已迁移/未迁移 BC 路由）。
@@ -59,8 +82,6 @@ func NewRouter(deps *Deps) *gin.Engine {
 	engine.Use(sessions.Sessions("session", store))
 
 	engine.StaticFS(cfg.Upload.Path, http.Dir(cfg.Upload.Path))
-
-	routerGroup := oldrouter.RouterGroupApp
 
 	publicGroup := engine.Group(cfg.System.RouterPrefix)
 	privateGroup := engine.Group(cfg.System.RouterPrefix)
@@ -175,16 +196,109 @@ func NewRouter(deps *Deps) *gin.Engine {
 		}
 	}
 
-	// ---- 未迁移 BC：委托旧 router 注册（保持路由不丢失） ----
+	// ---- 已迁移 BC：image ----
 	{
-		routerGroup.InitFeedbackRouter(privateGroup, publicGroup, adminGroup)
+		imageRouter := adminGroup.Group("image")
+		imageHandler := deps.ImageHandler
+		{
+			imageRouter.POST("upload", imageHandler.Upload)
+			imageRouter.DELETE("delete", imageHandler.Delete)
+			imageRouter.GET("list", imageHandler.List)
+		}
 	}
+
+	// ---- 已迁移 BC：website ----
 	{
-		routerGroup.InitImageRouter(adminGroup)
-		routerGroup.InitAdvertisementRouter(adminGroup, publicGroup)
-		routerGroup.InitFriendLinkRouter(adminGroup, publicGroup)
-		routerGroup.InitWebsiteRouter(adminGroup, publicGroup)
-		routerGroup.InitConfigRouter(adminGroup)
+		websiteRouter := privateGroup.Group("website")
+		websitePublicRouter := publicGroup.Group("website")
+		websiteHandler := deps.WebsiteHandler
+		{
+			websiteRouter.POST("addCarousel", websiteHandler.AddCarousel)
+			websiteRouter.PUT("cancelCarousel", websiteHandler.CancelCarousel)
+			websiteRouter.POST("createFooterLink", websiteHandler.CreateFooterLink)
+			websiteRouter.DELETE("deleteFooterLink", websiteHandler.DeleteFooterLink)
+		}
+		{
+			websitePublicRouter.GET("logo", websiteHandler.Logo)
+			websitePublicRouter.GET("title", websiteHandler.Title)
+			websitePublicRouter.GET("info", websiteHandler.Info)
+			websitePublicRouter.GET("carousel", websiteHandler.Carousel)
+			websitePublicRouter.GET("news", websiteHandler.News)
+			websitePublicRouter.GET("calendar", websiteHandler.Calendar)
+			websitePublicRouter.GET("footerLink", websiteHandler.FooterLink)
+		}
+	}
+
+	// ---- 已迁移 BC：advertisement ----
+	{
+		advertisementRouter := privateGroup.Group("advertisement")
+		advertisementPublicRouter := publicGroup.Group("advertisement")
+		advertisementHandler := deps.AdvertisementHandler
+		{
+			advertisementRouter.POST("create", advertisementHandler.Create)
+			advertisementRouter.DELETE("delete", advertisementHandler.Delete)
+			advertisementRouter.PUT("update", advertisementHandler.Update)
+			advertisementRouter.GET("list", advertisementHandler.List)
+		}
+		{
+			advertisementPublicRouter.GET("info", advertisementHandler.Info)
+		}
+	}
+
+	// ---- 已迁移 BC：friendLink ----
+	{
+		friendLinkRouter := privateGroup.Group("friendLink")
+		friendLinkPublicRouter := publicGroup.Group("friendLink")
+		friendLinkHandler := deps.FriendLinkHandler
+		{
+			friendLinkRouter.POST("create", friendLinkHandler.Create)
+			friendLinkRouter.DELETE("delete", friendLinkHandler.Delete)
+			friendLinkRouter.PUT("update", friendLinkHandler.Update)
+			friendLinkRouter.GET("list", friendLinkHandler.List)
+		}
+		{
+			friendLinkPublicRouter.GET("info", friendLinkHandler.Info)
+		}
+	}
+
+	// ---- 已迁移 BC：feedback ----
+	{
+		feedbackRouter := privateGroup.Group("feedback")
+		feedbackPublicRouter := publicGroup.Group("feedback")
+		feedbackAdminRouter := adminGroup.Group("feedback")
+		feedbackHandler := deps.FeedbackHandler
+		{
+			feedbackRouter.POST("create", feedbackHandler.Create)
+			feedbackRouter.GET("info", feedbackHandler.Info)
+		}
+		{
+			feedbackPublicRouter.GET("new", feedbackHandler.New)
+		}
+		{
+			feedbackAdminRouter.DELETE("delete", feedbackHandler.Delete)
+			feedbackAdminRouter.PUT("reply", feedbackHandler.Reply)
+			feedbackAdminRouter.GET("list", feedbackHandler.List)
+		}
+	}
+
+	// ---- 已迁移 BC：config ----
+	{
+		configRouter := privateGroup.Group("config")
+		configHandler := deps.ConfigHandler
+		{
+			configRouter.GET("website", configHandler.GetWebsite)
+			configRouter.PUT("website", configHandler.UpdateWebsite)
+			configRouter.GET("system", configHandler.GetSystem)
+			configRouter.PUT("system", configHandler.UpdateSystem)
+			configRouter.GET("email", configHandler.GetEmail)
+			configRouter.PUT("email", configHandler.UpdateEmail)
+			configRouter.GET("qiniu", configHandler.GetQiniu)
+			configRouter.PUT("qiniu", configHandler.UpdateQiniu)
+			configRouter.GET("jwt", configHandler.GetJwt)
+			configRouter.PUT("jwt", configHandler.UpdateJwt)
+			configRouter.GET("gaode", configHandler.GetGaode)
+			configRouter.PUT("gaode", configHandler.UpdateGaode)
+		}
 	}
 
 	return engine

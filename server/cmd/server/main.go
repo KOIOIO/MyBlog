@@ -10,7 +10,6 @@ import (
 	"time"
 
 	"server/flag"
-	"server/initialize"
 	"server/internal/bootstrap"
 	ihttp "server/internal/interface/http"
 
@@ -33,7 +32,6 @@ func main() {
 
 	flag.InitFlag()
 
-	initialize.InitCron()
 	bootstrap.InitCron(deps, zl)
 
 	runServer(cfg.System.Addr(), deps)
