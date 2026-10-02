@@ -1,0 +1,1 @@
+{"name": "private_noauth_18", "method": "POST", "path": "/api/forum/like", "status": 200, "body": "{\"code\":7,\"data\":{\"reload\":true},\"msg\":\"Refresh token expired or invalid\"}"}

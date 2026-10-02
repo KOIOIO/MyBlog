@@ -7,13 +7,7 @@ import (
 )
 
 func RegisterScheduledTasks(c *cron.Cron) error {
-	if _, err := c.AddFunc("@hourly", func() {
-		if err := UpdateArticleViewsSyncTask(); err != nil {
-			global.Log.Error("Failed to update article views:", zap.Error(err))
-		}
-	}); err != nil {
-		return err
-	}
+	// 文章浏览量同步已迁移至 internal/application/article（bootstrap.InitCron 注册），此处不再注册旧任务。
 	if _, err := c.AddFunc("@hourly", func() {
 		if err := GetHotListSyncTask(); err != nil {
 			global.Log.Error("Failed to get hot list:", zap.Error(err))

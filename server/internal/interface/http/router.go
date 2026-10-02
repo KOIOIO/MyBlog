@@ -10,9 +10,11 @@ import (
 	"net/http"
 
 	"server/config"
+	articleapp "server/internal/application/article"
 	authapp "server/internal/application/auth"
 	userapp "server/internal/application/user"
 	userdomain "server/internal/domain/user"
+	articlehandler "server/internal/interface/http/handler/article"
 	basehandler "server/internal/interface/http/handler/base"
 	userhandler "server/internal/interface/http/handler/user"
 	"server/internal/interface/http/middleware"
@@ -26,14 +28,16 @@ import (
 
 // Deps 路由装配依赖。
 type Deps struct {
-	Config      *config.Config
-	Log         *zap.Logger
-	Auth        *authapp.AuthService
-	User        *userapp.UserService
-	BaseHandler *basehandler.Handler
-	UserHandler *userhandler.Handler
-	Geo         userdomain.GeoProvider
-	Logins      userdomain.LoginRecordRepository
+	Config         *config.Config
+	Log            *zap.Logger
+	Auth           *authapp.AuthService
+	User           *userapp.UserService
+	Article        *articleapp.Service
+	BaseHandler    *basehandler.Handler
+	UserHandler    *userhandler.Handler
+	ArticleHandler *articlehandler.Handler
+	Geo            userdomain.GeoProvider
+	Logins         userdomain.LoginRecordRepository
 }
 
 // NewRouter 构建 Gin Engine（中间件链 + 三组路由 + 已迁移/未迁移 BC 路由）。
@@ -95,9 +99,34 @@ func NewRouter(deps *Deps) *gin.Engine {
 		}
 	}
 
+	// ---- 已迁移 BC：article ----
+	{
+		articleRouter := privateGroup.Group("article")
+		articlePublicRouter := publicGroup.Group("article")
+		articleAdminRouter := adminGroup.Group("article")
+		articleHandler := deps.ArticleHandler
+		{
+			articleRouter.POST("like", articleHandler.Like)
+			articleRouter.GET("isLike", articleHandler.IsLike)
+			articleRouter.GET("likesList", articleHandler.LikesList)
+		}
+		{
+			articlePublicRouter.GET(":id", articleHandler.InfoByID)
+			articlePublicRouter.GET("search", articleHandler.Search)
+			articlePublicRouter.GET("category", articleHandler.Category)
+			articlePublicRouter.GET("tags", articleHandler.Tags)
+		}
+		{
+			articleAdminRouter.POST("create", articleHandler.Create)
+			articleAdminRouter.DELETE("delete", articleHandler.Delete)
+			articleAdminRouter.PUT("update", articleHandler.Update)
+			articleAdminRouter.PUT("setTop", articleHandler.SetTop)
+			articleAdminRouter.GET("list", articleHandler.List)
+		}
+	}
+
 	// ---- 未迁移 BC：委托旧 router 注册（保持路由不丢失） ----
 	{
-		routerGroup.InitArticleRouter(privateGroup, publicGroup, adminGroup)
 		routerGroup.InitCommentRouter(privateGroup, publicGroup, adminGroup)
 		routerGroup.InitFeedbackRouter(privateGroup, publicGroup, adminGroup)
 		routerGroup.InitForumRouter(privateGroup, publicGroup, adminGroup)

@@ -34,6 +34,7 @@ func main() {
 	flag.InitFlag()
 
 	initialize.InitCron()
+	bootstrap.InitCron(deps, zl)
 
 	runServer(cfg.System.Addr(), deps)
 }

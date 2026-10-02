@@ -1,0 +1,1 @@
+{"name": "public_get_18", "method": "GET", "path": "/api/website/carousel", "status": 200, "body": "{\"code\":0,\"data\":[],\"msg\":\"success\"}"}

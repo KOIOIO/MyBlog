@@ -281,17 +281,17 @@ type FileStoragePort interface { Upload(ctx context.Context, f File, dir string)
 
 
 
-* [ ] `domain/article`：Article/Category/Tag/ArticleLike 实体、ArticleRepository、EsArticlePort、ViewCounter 接口
+* [x] `domain/article`：Article/Category/Tag/ArticleLike 实体、ArticleRepository、EsArticlePort、ViewCounter 接口
 
-* [ ] `infrastructure/mysql/article.go`：仓储实现（含 Create/Delete 时分类与标签计数的**事务联动**，事务边界暴露给 application）；`infrastructure/es`：搜索 / 索引 / 浏览量回写实现；`infrastructure/redis`：浏览量计数实现
+* [x] `infrastructure/mysql/article.go`：仓储实现（含 Create/Delete 时分类与标签计数的**事务联动**，事务边界暴露给 application）；`infrastructure/es`：搜索 / 索引 / 浏览量回写实现；`infrastructure/redis`：浏览量计数实现
 
-* [ ] `application/article`：Create（事务）/Update/Delete/Top/Search/Get/View 用例
+* [x] `application/article`：Create（事务）/Update/Delete/Top/Search/Get/View 用例
 
-* [ ] `interface/http/handler/article`：迁移 article 路由；`interface/cron`：浏览量同步任务改注入 article 用例
+* [x] `interface/http/handler/article`：迁移 article 路由；`interface/cron`：浏览量同步任务改注入 article 用例
 
-* [ ] 单测：article 实体规则、创建事务联动（stub/mock 仓储）、ES 搜索查询构建（不连真实 ES，验证 query 结构）
+* [x] 单测：article 实体规则、创建事务联动（stub/mock 仓储）、ES 搜索查询构建（不连真实 ES，验证 query 结构）
 
-* [ ] commit：`refactor(ddd): migrate article bounded context with es & view counter`
+* [x] commit：`refactor(ddd): migrate article bounded context with es & view counter`
 
 **验收**：文章创建→分类 / 标签计数一致、搜索行为不变、浏览量 redis→ES 回写任务正常；旧 `service/article*.go` 停止被引用。
 

@@ -1,0 +1,1 @@
+{"name": "public_get_20", "method": "GET", "path": "/api/website/calendar", "status": 200, "body": "{\"code\":0,\"data\":{\"date\":\"2026年10月2日 五\",\"lunar_date\":\"八月廿二\",\"ganzhi\":\"丙午年 丁酉月 己酉日\",\"zodiac\":\"处女座\",\"day_of_year\":\"今年第275天\",\"solar_term\":\"秋分第9天　距离寒露还有6天\",\"auspicious\":\"祭祀 出行\",\"inauspicious\":\"嫁娶 入宅 修造 动土 会亲友 破土\"},\"msg\":\"success\"}"}
