@@ -6,6 +6,7 @@ type Config struct {
 	ES      ES      `json:"es" yaml:"es"`
 	Gaode   Gaode   `json:"gaode" yaml:"gaode"`
 	Jwt     Jwt     `json:"jwt" yaml:"jwt"`
+	LLM     LLM     `json:"llm" yaml:"llm"`
 	Mysql   Mysql   `json:"mysql" yaml:"mysql"`
 	Qiniu   Qiniu   `json:"qiniu" yaml:"qiniu"`
 	Redis   Redis   `json:"redis" yaml:"redis"`

@@ -25,6 +25,12 @@ jwt:
     access_token_expiry_time: 2h
     refresh_token_expiry_time: 7d
     issuer: go_blog
+llm:
+    base_url: "https://dashscope.aliyuncs.com/compatible-mode/v1"
+    api_key: "${DASHSCOPE_API_KEY}"
+    model: "qwen-max"
+    max_history: 20
+    max_article_chars: 8000
 mysql:
     host: 127.0.0.1
     port: 3306

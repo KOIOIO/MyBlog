@@ -21,8 +21,10 @@ func Load(path string) (*config.Config, error) {
 	if err != nil {
 		return nil, err
 	}
+	// 支持 ${ENV_VAR} 形式的环境变量展开（如 LLM API Key 不落配置文件）。
+	expanded := os.ExpandEnv(string(data))
 	cfg := &config.Config{}
-	if err := yaml.Unmarshal(data, cfg); err != nil {
+	if err := yaml.Unmarshal([]byte(expanded), cfg); err != nil {
 		return nil, err
 	}
 	return cfg, nil
