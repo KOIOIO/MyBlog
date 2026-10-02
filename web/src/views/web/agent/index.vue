@@ -6,7 +6,7 @@
         <!-- 未登录引导 -->
         <div v-if="!userStore.isLoggedIn" class="login-guide">
           <div class="guide-card">
-            <div class="guide-icon">🤖</div>
+            <img class="guide-icon" src="/images/agent-avatar.jpg" alt="agent"/>
             <h2 class="guide-title">{{ t('pages.agent.title') }}</h2>
             <p class="guide-desc">{{ t('pages.agent.loginTip') }}</p>
             <el-button type="primary" size="large" @click="requireLogin">{{ t('pages.agent.loginBtn') }}</el-button>
@@ -72,7 +72,9 @@
                     :autosize="{minRows: 1, maxRows: 5}"
                     resize="none"
                     :placeholder="t('pages.agent.placeholder')"
-                    @keydown.enter.exact.prevent="onSend"
+                    @compositionstart="onCompositionStart"
+                    @compositionend="onCompositionEnd"
+                    @keydown.enter.exact="onEnterKeydown"
                 />
                 <el-button v-if="agentStore.streaming" type="danger" class="send-btn" @click="agentStore.stopStreaming()">
                   {{ t('pages.agent.stop') }}
@@ -111,6 +113,15 @@ const userStore = useUserStore();
 const layoutStore = useLayoutStore();
 
 const inputText = ref('');
+const onEnterKeydown = (e: KeyboardEvent): void => {
+    // 中文输入法组合期间（如输入 git 后按 Enter 确认候选词），
+    // keydown 事件的 isComposing 为 true，此时不得触发送信
+    if (e.isComposing) {
+        return;
+    }
+    e.preventDefault();
+    onSend();
+};
 const selectedArticles = ref<number[]>([]);
 const pickerRef = ref<InstanceType<typeof ArticlePicker> | null>(null);
 const sideCollapsed = ref(false);
@@ -211,7 +222,14 @@ const removeArticle = (id: number): void => {
       background: var(--el-bg-color);
       box-shadow: var(--el-box-shadow-light);
 
-      .guide-icon { font-size: 56px; }
+      .guide-icon {
+        width: 72px;
+        height: 72px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin: 0 auto;
+        display: block;
+      }
       .guide-title { margin: 16px 0 8px; font-size: 22px; color: var(--text-body); }
       .guide-desc { margin-bottom: 24px; color: var(--text-secondary); }
     }

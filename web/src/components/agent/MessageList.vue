@@ -1,7 +1,7 @@
 <template>
   <div ref="scrollRef" class="message-list">
     <div v-if="messages.length === 0" class="empty">
-      <div class="empty-icon">🤖</div>
+      <img class="empty-icon" src="/images/agent-avatar.jpg" alt="agent"/>
       <p class="empty-title">{{ t('pages.agent.emptyChatTitle') }}</p>
       <p class="empty-desc">{{ t('pages.agent.emptyChatDesc') }}</p>
     </div>
@@ -125,7 +125,15 @@ watch(() => [props.messages, props.streaming], scrollToBottom, {deep: true});
     text-align: center;
     color: var(--text-secondary);
 
-    .empty-icon { font-size: 48px; }
+    .empty-icon {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin: 0 auto;
+      display: block;
+      box-shadow: var(--el-box-shadow-light);
+    }
     .empty-title { margin: 12px 0 4px; font-size: 16px; color: var(--text-body); }
     .empty-desc { font-size: 13px; }
   }
