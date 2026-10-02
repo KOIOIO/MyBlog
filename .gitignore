@@ -1,0 +1,20 @@
+# macOS
+.DS_Store
+
+# 工具内部目录
+.superpowers/
+
+# 前端依赖与构建产物
+web/node_modules/
+web/dist/
+
+# 运行时日志
+server/log/
+
+# 媒体素材与冗余（本地保留，不入库）
+promo-video/
+docs/*.png
+docs/*.jpg
+deploy/backup/
+/img*.png
+web/public/vendor/*.bak*
