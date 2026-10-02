@@ -23,6 +23,7 @@ import (
 	websiteapp "server/internal/application/website"
 	userdomain "server/internal/domain/user"
 	advertisementhandler "server/internal/interface/http/handler/advertisement"
+	agenthandler "server/internal/interface/http/handler/agent"
 	articlehandler "server/internal/interface/http/handler/article"
 	basehandler "server/internal/interface/http/handler/base"
 	commenthandler "server/internal/interface/http/handler/comment"
@@ -64,6 +65,7 @@ type Deps struct {
 	ImageHandler         *imagehandler.Handler
 	WebsiteHandler       *websitehandler.Handler
 	AdvertisementHandler *advertisementhandler.Handler
+	AgentHandler         *agenthandler.Handler
 	FriendLinkHandler    *friendlinkhandler.Handler
 	FeedbackHandler      *feedbackhandler.Handler
 	ConfigHandler        *confighandler.Handler
@@ -193,6 +195,19 @@ func NewRouter(deps *Deps) *gin.Engine {
 			forumRouter.DELETE("delete", forumHandler.Delete)
 			forumRouter.GET("manageComments", forumHandler.ManageComments)
 			forumRouter.DELETE("comment", forumHandler.CommentDelete)
+		}
+	}
+
+	// ---- 已迁移 BC：agent ----
+	{
+		agentRouter := privateGroup.Group("agent")
+		agentHandler := deps.AgentHandler
+		{
+			agentRouter.POST("conversations", agentHandler.Create)
+			agentRouter.GET("conversations", agentHandler.List)
+			agentRouter.GET("conversations/:id/messages", agentHandler.Messages)
+			agentRouter.DELETE("conversations/:id", agentHandler.Delete)
+			agentRouter.POST("chat", agentHandler.Chat)
 		}
 	}
 

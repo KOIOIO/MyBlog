@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"server/internal/application/advertisement"
+	agentapp "server/internal/application/agent"
 	"server/internal/application/article"
 	"server/internal/application/auth"
 	"server/internal/application/comment"
@@ -22,11 +23,13 @@ import (
 	"server/internal/infrastructure/es"
 	"server/internal/infrastructure/geo"
 	"server/internal/infrastructure/hotsearch"
+	"server/internal/infrastructure/llm"
 	"server/internal/infrastructure/mysql"
 	"server/internal/infrastructure/redis"
 	"server/internal/infrastructure/storage"
 	ihttp "server/internal/interface/http"
 	advertisementhandler "server/internal/interface/http/handler/advertisement"
+	agenthandler "server/internal/interface/http/handler/agent"
 	articlehandler "server/internal/interface/http/handler/article"
 	basehandler "server/internal/interface/http/handler/base"
 	commenthandler "server/internal/interface/http/handler/comment"
@@ -142,6 +145,15 @@ func BuildApp(infra *Infra) *ihttp.Deps {
 	feedbackHandler := feedbackhandler.NewHandler(feedbackApp, log)
 	configHandler := confighandler.NewHandler(configApp, cfg, log)
 
+	// ---- agent BC（AI 助手）----
+	agentConvs := mysql.NewAgentConversationRepo(infra.DB)
+	agentMsgs := mysql.NewAgentMessageRepo(infra.DB)
+	agentMems := mysql.NewAgentMemoryRepo(infra.DB)
+	agentArticles := es.NewAgentArticleReader(esArticleStore)
+	modelProvider := llm.NewDashScopeProvider(&cfg.LLM, log)
+	agentApp := agentapp.NewService(cfg, log, agentConvs, agentMsgs, agentMems, agentArticles, modelProvider)
+	agentHandler := agenthandler.NewHandler(agentApp, log)
+
 	return &ihttp.Deps{
 		Config:               cfg,
 		Log:                  log,
@@ -164,6 +176,7 @@ func BuildApp(infra *Infra) *ihttp.Deps {
 		ImageHandler:         imageHandler,
 		WebsiteHandler:       websiteHandler,
 		AdvertisementHandler: advertisementHandler,
+		AgentHandler:         agentHandler,
 		FriendLinkHandler:    friendLinkHandler,
 		FeedbackHandler:      feedbackHandler,
 		ConfigHandler:        configHandler,

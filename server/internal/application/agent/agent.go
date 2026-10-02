@@ -57,6 +57,11 @@ func (s *Service) ListMessages(ctx context.Context, conversationID, userID uint)
 	return s.msgs.ListByConversation(ctx, conversationID)
 }
 
+// PeekConversation 校验会话归属（不读取消息），供流式接口发送前预检。
+func (s *Service) PeekConversation(ctx context.Context, conversationID, userID uint) (*agent.Conversation, error) {
+	return s.convs.GetByID(ctx, conversationID, userID)
+}
+
 // DeleteConversation 删除会话及其消息（校验归属）。
 func (s *Service) DeleteConversation(ctx context.Context, conversationID, userID uint) error {
 	if err := s.convs.Delete(ctx, conversationID, userID); err != nil {
