@@ -7,21 +7,37 @@ import (
 	"server/internal/common/page"
 	"server/internal/domain/comment"
 	"server/internal/domain/shared"
-	"server/model/database"
-	"server/model/other"
+	"server/internal/model/database"
+	esmodel "server/internal/model/elasticsearch"
+	"server/internal/model/other"
 
+	"github.com/elastic/go-elasticsearch/v8"
+	"github.com/elastic/go-elasticsearch/v8/typedapi/types"
+	"github.com/elastic/go-elasticsearch/v8/typedapi/types/enums/scriptlanguage"
 	"github.com/gofrs/uuid"
 	"gorm.io/gorm"
 )
 
-// CommentRepo 评论仓储（GORM + database.Comment 钩子同步 ES 评论数）。
+// CommentRepo 评论仓储（GORM 持久化，ES 评论数同步显式执行，替代原模型钩子）。
 type CommentRepo struct {
 	db *gorm.DB
+	es *elasticsearch.TypedClient
 }
 
 // NewCommentRepo 构造评论仓储。
-func NewCommentRepo(db *gorm.DB) *CommentRepo {
-	return &CommentRepo{db: db}
+func NewCommentRepo(db *gorm.DB, es *elasticsearch.TypedClient) *CommentRepo {
+	return &CommentRepo{db: db, es: es}
+}
+
+// updateESCommentCount 同步 ES 文章评论数（原 database.Comment 钩子逻辑）。
+func (r *CommentRepo) updateESCommentCount(ctx context.Context, articleID string, delta int) error {
+	source := "ctx._source.comments += 1"
+	if delta < 0 {
+		source = "ctx._source.comments -= 1"
+	}
+	script := types.Script{Source: &source, Lang: &scriptlanguage.Painless}
+	_, err := r.es.Update(esmodel.ArticleIndex(), articleID).Script(&script).Do(ctx)
+	return err
 }
 
 var _ comment.CommentRepository = (*CommentRepo)(nil)
@@ -117,14 +133,17 @@ func (r *CommentRepo) Newest(ctx context.Context, limit int) ([]*comment.Comment
 	return out, nil
 }
 
-// Create 创建评论。
+// Create 创建评论并同步 ES 评论数。
 func (r *CommentRepo) Create(ctx context.Context, c *comment.Comment) error {
-	return r.db.WithContext(ctx).Create(&database.Comment{
+	if err := r.db.WithContext(ctx).Create(&database.Comment{
 		ArticleID: c.ArticleID,
 		PID:       c.PID,
 		UserUUID:  c.UserUUID,
 		Content:   c.Content,
-	}).Error
+	}).Error; err != nil {
+		return err
+	}
+	return r.updateESCommentCount(ctx, c.ArticleID, 1)
 }
 
 // DeleteTree 校验权限并事务级联删除。
@@ -149,7 +168,7 @@ func (r *CommentRepo) DeleteTree(ctx context.Context, ids []uint, userUUID uuid.
 	})
 }
 
-// deleteTree 递归删除评论及其子评论（BeforeDelete 钩子同步 ES 评论数）。
+// deleteTree 递归删除评论及其子评论（显式同步 ES 评论数）。
 func (r *CommentRepo) deleteTree(tx *gorm.DB, id uint) error {
 	var children []database.Comment
 	if err := tx.Where("p_id = ?", id).Find(&children).Error; err != nil {
@@ -160,7 +179,14 @@ func (r *CommentRepo) deleteTree(tx *gorm.DB, id uint) error {
 			return err
 		}
 	}
-	return tx.Delete(&database.Comment{}, id).Error
+	var c database.Comment
+	if err := tx.Take(&c, id).Error; err != nil {
+		return err
+	}
+	if err := tx.Delete(&database.Comment{}, id).Error; err != nil {
+		return err
+	}
+	return r.updateESCommentCount(context.Background(), c.ArticleID, -1)
 }
 
 // ByUser 用户全部评论（含子评论树）。

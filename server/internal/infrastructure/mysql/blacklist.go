@@ -5,7 +5,7 @@ import (
 	"context"
 
 	"server/internal/domain/auth"
-	"server/model/database"
+	"server/internal/model/database"
 
 	"github.com/songzhibin97/gkit/cache/local_cache"
 	"gorm.io/gorm"

@@ -4,7 +4,7 @@ package page
 import (
 	"context"
 
-	"server/model/other"
+	"server/internal/model/other"
 
 	"github.com/elastic/go-elasticsearch/v8"
 	"github.com/elastic/go-elasticsearch/v8/typedapi/types"

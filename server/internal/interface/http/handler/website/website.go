@@ -9,8 +9,8 @@ import (
 	"server/config"
 	websiteapp "server/internal/application/website"
 	websitedomain "server/internal/domain/website"
-	"server/model/request"
-	"server/model/response"
+	"server/internal/model/request"
+	"server/internal/model/response"
 
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"

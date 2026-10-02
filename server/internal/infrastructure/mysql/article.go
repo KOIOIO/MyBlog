@@ -6,8 +6,8 @@ import (
 	"errors"
 
 	"server/internal/domain/article"
-	"server/model/appTypes"
-	"server/model/database"
+	"server/internal/model/appTypes"
+	"server/internal/model/database"
 
 	"gorm.io/gorm"
 )

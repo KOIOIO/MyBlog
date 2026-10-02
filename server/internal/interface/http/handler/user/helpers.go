@@ -4,12 +4,11 @@ import (
 	"errors"
 	"time"
 
-	"server/global"
 	authapp "server/internal/application/auth"
 	userdomain "server/internal/domain/user"
-	"server/model/appTypes"
-	"server/model/database"
-	"server/model/request"
+	"server/internal/model/appTypes"
+	"server/internal/model/database"
+	"server/internal/model/request"
 
 	"go.uber.org/zap"
 )
@@ -23,7 +22,7 @@ var timeNow = time.Now
 // toDBUser 领域用户 → GORM 模型（用于 response.Login 兼容序列化）。
 func toDBUser(u *userdomain.User) database.User {
 	return database.User{
-		MODEL:     global.MODEL{ID: u.ID, CreatedAt: u.CreatedAt, UpdatedAt: u.UpdatedAt},
+		MODEL:     database.MODEL{ID: u.ID, CreatedAt: u.CreatedAt, UpdatedAt: u.UpdatedAt},
 		UUID:      u.UUID,
 		Username:  u.Username,
 		Password:  u.Password,

@@ -5,10 +5,9 @@ import (
 	"testing"
 	"time"
 
-	"server/global"
 	"server/internal/domain/shared"
-	"server/model/appTypes"
-	"server/model/database"
+	"server/internal/model/appTypes"
+	"server/internal/model/database"
 
 	"github.com/gofrs/uuid"
 )
@@ -18,7 +17,7 @@ func TestForumPostJSONEqualsDatabaseModel(t *testing.T) {
 	uu := uuid.FromStringOrNil("fbd5364d-bb15-11f1-b230-16b7a2303b52")
 
 	old := database.ForumPost{
-		MODEL:        global.MODEL{ID: 3, CreatedAt: now, UpdatedAt: now},
+		MODEL:        database.MODEL{ID: 3, CreatedAt: now, UpdatedAt: now},
 		UserID:       1,
 		Title:        "测试帖",
 		Content:      "内容",
@@ -29,7 +28,7 @@ func TestForumPostJSONEqualsDatabaseModel(t *testing.T) {
 		CommentCount: 1,
 		ViewCount:    9,
 		User: database.User{
-			MODEL:     global.MODEL{ID: 1},
+			MODEL:     database.MODEL{ID: 1},
 			UUID:      uu,
 			Username:  "Xiaoyu_Wang",
 			Avatar:    "/uploads/avatar/x.jpg",

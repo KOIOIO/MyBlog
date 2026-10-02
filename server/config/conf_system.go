@@ -2,7 +2,7 @@ package config
 
 import (
 	"fmt"
-	"server/model/appTypes"
+	"server/internal/model/appTypes"
 	"strings"
 )
 

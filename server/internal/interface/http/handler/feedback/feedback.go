@@ -7,8 +7,8 @@ import (
 	fbapp "server/internal/application/feedback"
 	fbdomain "server/internal/domain/feedback"
 	"server/internal/interface/http/middleware"
-	"server/model/request"
-	"server/model/response"
+	"server/internal/model/request"
+	"server/internal/model/response"
 
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"

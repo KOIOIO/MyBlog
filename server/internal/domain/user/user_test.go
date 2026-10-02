@@ -5,10 +5,9 @@ import (
 	"testing"
 	"time"
 
-	"server/global"
 	"server/internal/domain/shared"
-	"server/model/appTypes"
-	"server/model/database"
+	"server/internal/model/appTypes"
+	"server/internal/model/database"
 
 	"github.com/gofrs/uuid"
 )
@@ -100,7 +99,7 @@ func TestUserJSONParity(t *testing.T) {
 	}
 
 	db := database.User{
-		MODEL:     global.MODEL{ID: 1, CreatedAt: now, UpdatedAt: now},
+		MODEL:     database.MODEL{ID: 1, CreatedAt: now, UpdatedAt: now},
 		UUID:      uid,
 		Username:  "Xiaoyu_Wang",
 		Password:  "secret-hash",

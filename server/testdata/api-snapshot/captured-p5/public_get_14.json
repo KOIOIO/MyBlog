@@ -1,0 +1,1 @@
+{"name": "public_get_14", "method": "GET", "path": "/api/friendLink/info", "status": 200, "body": "{\"code\":0,\"data\":{\"list\":[],\"total\":0},\"msg\":\"success\"}"}

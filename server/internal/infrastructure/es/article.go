@@ -8,8 +8,8 @@ import (
 
 	"server/internal/common/page"
 	"server/internal/domain/article"
-	"server/model/other"
-	"server/model/request"
+	"server/internal/model/other"
+	"server/internal/model/request"
 
 	"github.com/elastic/go-elasticsearch/v8"
 	"github.com/elastic/go-elasticsearch/v8/typedapi/core/bulk"

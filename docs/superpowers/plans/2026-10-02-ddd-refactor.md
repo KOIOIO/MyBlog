@@ -323,6 +323,80 @@ type FileStoragePort interface { Upload(ctx context.Context, f File, dir string)
 
 * [x] commit：`refactor(ddd): migrate support contexts & external adapters`
 
+**验收**：应用启动、访问既有接口行为与重构前一致；全局变量写入点收敛到 bootstrap。
+
+### Phase 1：auth + user BC（核心域第一刀，依赖最独立）
+
+**范围**：auth（JWT / 黑名单）与 user 完整迁移。
+
+
+
+* [x] `domain/auth`：JwtBlacklist 实体、AuthPort 接口
+
+* [x] `domain/user`：User 实体（含 `Freeze`、`RoleID` 校验等行为）、UserRepository、LoginRecordRepository 接口
+
+* [x] `infrastructure/redis`：JWT 黑名单 / 会话实现；`infrastructure/mysql/user.go`：User 仓储实现
+
+* [x] `application/auth`：Token 用例；`application/user`：Register/EmailLogin/ForgotPassword/UserCard/LoginLog/Freeze 用例（事务边界在此层）
+
+* [x] `interface/http/handler/user`：迁移 user 全部路由；`interface/http/middleware`：JWT/Admin 改为从 AuthPort 注入
+
+* [x] 旧 `api/user.go`、`service/user.go`、`service/jwt.go` 中 user/jwt 部分停止被引用（先不删除，防回滚）
+
+* [x] 单测：User 实体规则、auth token 黑名单流程（stub 仓储）；gin 冒烟测试覆盖 user 接口
+
+* [x] commit：`refactor(ddd): migrate auth & user bounded contexts`
+
+**验收**：user 全部接口行为不变（注册 / 登录 / 登出 / 个人卡片 / 冻结）；`go test ./...` 通过。
+
+### Phase 2：article BC（最复杂，含 ES 与事务）
+
+**范围**：文章 CRUD、搜索、浏览量、分类 / 标签计数、置顶、点赞。
+
+
+
+* [x] `domain/article`：Article/Category/Tag/ArticleLike 实体、ArticleRepository、EsArticlePort、ViewCounter 接口
+
+* [x] `infrastructure/mysql/article.go`：仓储实现（含 Create/Delete 时分类与标签计数的**事务联动**，事务边界暴露给 application）；`infrastructure/es`：搜索 / 索引 / 浏览量回写实现；`infrastructure/redis`：浏览量计数实现
+
+* [x] `application/article`：Create（事务）/Update/Delete/Top/Search/Get/View 用例
+
+* [x] `interface/http/handler/article`：迁移 article 路由；`interface/cron`：浏览量同步任务改注入 article 用例
+
+* [x] 单测：article 实体规则、创建事务联动（stub/mock 仓储）、ES 搜索查询构建（不连真实 ES，验证 query 结构）
+
+* [x] commit：`refactor(ddd): migrate article bounded context with es & view counter`
+
+**验收**：文章创建→分类 / 标签计数一致、搜索行为不变、浏览量 redis→ES 回写任务正常；旧 `service/article*.go` 停止被引用。
+
+### Phase 3：comment + forum BC
+
+
+
+* [x] `domain/comment`：Comment 树实体（LoadChildren / 级联删除行为收敛）、CommentRepository
+
+* [x] `domain/forum`：ForumPost/ForumComment/ForumLike 实体、ForumRepository
+
+* [x] `infrastructure/mysql`：comment/forum 仓储；`application/comment|forum` 用例（树加载、级联删除事务、点赞幂等）
+
+* [x] handler 与 cron 迁移；单测覆盖树构建与级联删除
+
+* [x] commit：`refactor(ddd): migrate comment & forum bounded contexts`
+
+### Phase 4：image /website/advertisement /friendlink/feedback + 外部防腐层
+
+
+
+* [x] `infrastructure/storage`：FileStoragePort 实现（local/qiniu，替代 utils/upload）；`domain/image`、application/handler 迁移
+
+* [x] `infrastructure/geo`（高德）、`infrastructure/hotsearch`（多平台爬虫）、CalendarPort 实现；`domain/website`（配置聚合 + 消费以上 Port）、application/handler 迁移；`service/gaode.go`、`service/calendar.go`、`service/hot_search.go` 停用
+
+* [x] advertisement、friendlink、feedback、config BC 迁移（轻量）
+
+* [x] `internal/interface/cron`：热搜、日历定时任务改注入
+
+* [x] commit：`refactor(ddd): migrate support contexts & external adapters`
+
 ### Phase 5：收尾清理与全量回归
 
 

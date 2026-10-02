@@ -9,8 +9,8 @@ import (
 	forumdomain "server/internal/domain/forum"
 	"server/internal/domain/shared"
 	"server/internal/interface/http/middleware"
-	"server/model/request"
-	"server/model/response"
+	"server/internal/model/request"
+	"server/internal/model/response"
 
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"

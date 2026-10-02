@@ -587,3 +587,25 @@ func (articleService *ArticleService) Exits(title string) (bool, error) {
 1. 客户端使用新的Access Token访问资源服务器。
 
 2. 资源服务器验证Token后返回受保护资源。
+
+---
+
+## 附录：2026-10-02 DDD 重构后的目录结构（服务器端）
+
+> 原三层（api/service/model/router/middleware/task/utils/global）已删除，不再有 global 全局变量。
+
+```
+server/
+├── cmd/server/main.go          # 入口：bootstrap 组装 → flag CLI → cron → HTTP
+├── config/                     # 配置加载与结构体（config.yaml）
+├── internal/
+│   ├── bootstrap/              # 手工依赖组装（Infra + BuildApp + InitCron）
+│   ├── common/                 # logger / crypto / email / jwt / page / errs / httpclient
+│   ├── domain/<bc>/            # 领域实体 + Port 端口 + 纯规则（不 import 基础设施库）
+│   ├── application/<bc>/       # 用例编排（依赖 domain 端口，手写 stub 测试）
+│   ├── infrastructure/         # mysql / redis / es / geo / storage / hotsearch / calendar / configfile
+│   ├── interface/http/         # handler/<bc> + middleware + router.go
+│   ├── model/                  # database 实体 / request / response / other / appTypes / elasticsearch
+│   └── flag/                   # CLI 命令（建表 / 导入导出 / ES 索引 / 建管理员）
+└── testdata/api-snapshot/      # 接口行为快照（captured/ 基线 + captured-p1..p5）
+```

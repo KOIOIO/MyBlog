@@ -5,10 +5,9 @@ import (
 	"testing"
 	"time"
 
-	"server/global"
 	"server/internal/domain/shared"
-	"server/model/appTypes"
-	"server/model/database"
+	"server/internal/model/appTypes"
+	"server/internal/model/database"
 
 	"github.com/gofrs/uuid"
 )
@@ -51,14 +50,14 @@ func TestCommentJSONEqualsDatabaseModel(t *testing.T) {
 
 	// database.Comment（子评论未加载 → children nil）
 	dbc := database.Comment{
-		MODEL:     global.MODEL{ID: 11, CreatedAt: now, UpdatedAt: now},
+		MODEL:     database.MODEL{ID: 11, CreatedAt: now, UpdatedAt: now},
 		ArticleID: "15",
 		PID:       &pid,
 		Children:  nil,
 		UserUUID:  testUUID,
 		Content:   "哈哈",
 		User: database.User{
-			MODEL:     global.MODEL{ID: 0},
+			MODEL:     database.MODEL{ID: 0},
 			UUID:      testUUID,
 			Username:  "Xiaoyu_Wang",
 			Avatar:    "/uploads/avatar/x.jpg",

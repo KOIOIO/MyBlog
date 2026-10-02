@@ -6,8 +6,8 @@ import (
 
 	advapp "server/internal/application/advertisement"
 	advdomain "server/internal/domain/advertisement"
-	"server/model/request"
-	"server/model/response"
+	"server/internal/model/request"
+	"server/internal/model/response"
 
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"

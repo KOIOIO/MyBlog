@@ -6,8 +6,8 @@ import (
 
 	authapp "server/internal/application/auth"
 	authdomain "server/internal/domain/auth"
-	"server/model/appTypes"
-	"server/model/response"
+	"server/internal/model/appTypes"
+	"server/internal/model/response"
 
 	"github.com/gin-gonic/gin"
 )

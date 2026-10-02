@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"server/internal/domain/auth"
-	"server/model/appTypes"
-	"server/model/request"
+	"server/internal/model/appTypes"
+	"server/internal/model/request"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gofrs/uuid"

@@ -6,8 +6,8 @@ import (
 
 	"server/internal/common/page"
 	"server/internal/domain/feedback"
-	"server/model/database"
-	"server/model/other"
+	"server/internal/model/database"
+	"server/internal/model/other"
 
 	"github.com/gofrs/uuid"
 	"gorm.io/gorm"

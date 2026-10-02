@@ -6,7 +6,7 @@ import (
 
 	"server/config"
 	cfgapp "server/internal/application/config"
-	"server/model/response"
+	"server/internal/model/response"
 
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"

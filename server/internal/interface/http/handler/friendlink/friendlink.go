@@ -6,8 +6,8 @@ import (
 
 	flapp "server/internal/application/friendlink"
 	fldomain "server/internal/domain/friendlink"
-	"server/model/request"
-	"server/model/response"
+	"server/internal/model/request"
+	"server/internal/model/response"
 
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"

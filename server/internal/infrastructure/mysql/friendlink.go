@@ -6,9 +6,9 @@ import (
 
 	"server/internal/common/page"
 	"server/internal/domain/friendlink"
-	"server/model/appTypes"
-	"server/model/database"
-	"server/model/other"
+	"server/internal/model/appTypes"
+	"server/internal/model/database"
+	"server/internal/model/other"
 
 	"gorm.io/gorm"
 )

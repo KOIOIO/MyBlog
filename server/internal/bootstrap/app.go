@@ -97,7 +97,7 @@ func BuildApp(infra *Infra) *ihttp.Deps {
 	articleApp := article.NewService(articleRepo, esArticleStore, viewCounter)
 
 	// ---- comment BC ----
-	commentRepo := mysql.NewCommentRepo(infra.DB)
+	commentRepo := mysql.NewCommentRepo(infra.DB, infra.ESClient)
 	commentApp := comment.NewService(commentRepo, log)
 
 	// ---- forum BC ----

@@ -1,8 +1,4 @@
 // Package bootstrap 负责基础设施初始化与手工依赖组装（替代 initialize + global 的写入点）。
-//
-// 过渡策略：Phase 0 阶段 bootstrap 完成 DB/Redis/ES/本地缓存实例化后，同时写入
-// global 包（兼容层），旧代码（api/service/task/middleware）在迁移完成前仍可读取；
-// 新代码一律通过构造参数获取句柄。Phase 5 删除 global 后，本包成为唯一装配入口。
 package bootstrap
 
 import (
@@ -10,7 +6,6 @@ import (
 	"os"
 
 	"server/config"
-	"server/global"
 	"server/internal/common/jwt"
 	"server/internal/common/logger"
 	iconfig "server/internal/config"
@@ -42,28 +37,19 @@ func InitConfig() *config.Config {
 	return cfg
 }
 
-// InitLogger 初始化日志并写入 global（兼容层）。
+// InitLogger 初始化日志。
 func InitLogger(cfg *config.Config) *zap.Logger {
-	zl := logger.Init(&cfg.Zap)
-	global.Log = zl
-	return zl
+	return logger.Init(&cfg.Zap)
 }
 
-// InitInfra 实例化 DB/Redis/ES/本地缓存，写入 global（兼容层）并返回句柄。
+// InitInfra 实例化 DB/Redis/ES/本地缓存并返回句柄。
 func InitInfra(cfg *config.Config, log *zap.Logger) *Infra {
-	global.Config = cfg
-
 	db := initGorm(cfg, log)
-	global.DB = db
-
 	rdb := connectRedis(cfg, log)
-	global.Redis = rdb
 
 	es := connectEs(cfg, log)
-	global.ESClient = es
 
 	bc := initBlackCache(cfg, log)
-	global.BlackCache = bc
 
 	return &Infra{
 		Config:     cfg,

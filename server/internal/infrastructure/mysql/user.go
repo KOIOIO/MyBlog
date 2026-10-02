@@ -7,15 +7,14 @@ import (
 	"fmt"
 	"time"
 
-	"server/global"
 	"server/internal/common/errs"
 	"server/internal/common/page"
 	"server/internal/domain/shared"
 	"server/internal/domain/user"
-	"server/model/appTypes"
-	"server/model/database"
-	"server/model/other"
-	"server/model/request"
+	"server/internal/model/appTypes"
+	"server/internal/model/database"
+	"server/internal/model/other"
+	"server/internal/model/request"
 
 	"github.com/gofrs/uuid"
 	"gorm.io/gorm"
@@ -282,8 +281,8 @@ func (r *LoginRecordRepository) Page(ctx context.Context, cond user.LoginListCon
 // ---------------------------------------------------------------------------
 
 // modelOf 由领域字段构造 GORM 基础模型。
-func modelOf(id uint, createdAt, updatedAt time.Time) global.MODEL {
-	return global.MODEL{ID: id, CreatedAt: createdAt, UpdatedAt: updatedAt}
+func modelOf(id uint, createdAt, updatedAt time.Time) database.MODEL {
+	return database.MODEL{ID: id, CreatedAt: createdAt, UpdatedAt: updatedAt}
 }
 
 // pageInfoOf 构造分页参数。

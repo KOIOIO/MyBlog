@@ -4,10 +4,9 @@ package mysql
 import (
 	"context"
 
-	"server/global"
 	"server/internal/domain/website"
-	"server/model/appTypes"
-	"server/model/database"
+	"server/internal/model/appTypes"
+	"server/internal/model/database"
 
 	"gorm.io/gorm"
 )
@@ -61,7 +60,7 @@ func (r *WebsiteRepo) List(ctx context.Context) ([]*website.FooterLink, error) {
 // Save 保存（创建或更新）页脚链接。
 func (r *WebsiteRepo) Save(ctx context.Context, link *website.FooterLink) error {
 	return r.db.WithContext(ctx).Save(&database.FriendLink{
-		MODEL:       global.MODEL{ID: link.ID},
+		MODEL:       database.MODEL{ID: link.ID},
 		Logo:        link.Logo,
 		Link:        link.Link,
 		Name:        link.Name,
@@ -72,7 +71,7 @@ func (r *WebsiteRepo) Save(ctx context.Context, link *website.FooterLink) error 
 // Delete 删除页脚链接。
 func (r *WebsiteRepo) Delete(ctx context.Context, link *website.FooterLink) error {
 	return r.db.WithContext(ctx).Delete(&database.FriendLink{
-		MODEL:       global.MODEL{ID: link.ID},
+		MODEL:       database.MODEL{ID: link.ID},
 		Logo:        link.Logo,
 		Link:        link.Link,
 		Name:        link.Name,

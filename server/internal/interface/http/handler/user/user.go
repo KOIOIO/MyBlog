@@ -7,8 +7,8 @@ import (
 	userapp "server/internal/application/user"
 	"server/internal/domain/auth"
 	"server/internal/interface/http/middleware"
-	"server/model/request"
-	"server/model/response"
+	"server/internal/model/request"
+	"server/internal/model/response"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"

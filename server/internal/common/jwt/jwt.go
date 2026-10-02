@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"server/model/request"
+	"server/internal/model/request"
 
 	"github.com/golang-jwt/jwt/v4"
 )

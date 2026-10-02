@@ -9,8 +9,8 @@ import (
 	"context"
 	"time"
 
-	"server/flag"
 	"server/internal/bootstrap"
+	"server/internal/flag"
 	ihttp "server/internal/interface/http"
 
 	"github.com/fvbock/endless"
@@ -30,7 +30,12 @@ func main() {
 		zl.Error("Failed to load JWT blacklist:", zap.Error(err))
 	}
 
-	flag.InitFlag()
+	flag.InitFlag(flag.Deps{
+		DB:  infra.DB,
+		ES:  infra.ESClient,
+		Cfg: cfg,
+		Log: zl,
+	})
 
 	bootstrap.InitCron(deps, zl)
 

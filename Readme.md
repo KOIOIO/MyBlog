@@ -217,36 +217,26 @@ graph LR
     end
 ```
 
-### 2. 后端分层架构
+### 2. 后端分层架构（DDD 四层）
 
 ```mermaid
 graph TB
-    subgraph "后端分层架构"
-        A["路由层 Router"] --> B["中间件层 Middleware"]
-        B --> C["控制器层 API"]
-        C --> D["服务层 Service"]
-        D --> E["数据访问层 Model"]
-        
-        subgraph "横切关注点"
-            F["日志 Zap"]
-            G["配置 Config"]
-            H["工具 Utils"]
-        end
-        
-        F -.-> A
-        F -.-> B
-        F -.-> C
-        F -.-> D
-        
-        G -.-> A
-        G -.-> B
-        G -.-> C
-        G -.-> D
-        
-        H -.-> C
-        H -.-> D
+    subgraph "后端分层架构（DDD）"
+        A["interface 接口层<br/>HTTP Handler + 中间件"] --> B["application 应用层<br/>用例编排 / 事务边界"]
+        B --> C["domain 领域层<br/>实体 / 端口 / 领域规则"]
+        C --> D["infrastructure 基础设施层<br/>MySQL / Redis / ES / 七牛 / 外部爬虫"]
+        D -.->|实现 Port| C
+        B --> E["bootstrap 组装层<br/>手工构造注入（无 DI 框架）"]
     end
 ```
+
+- **interface**：`server/internal/interface/http`（handler 按 BC 分包 + 注入式中间件 + router.go）
+- **application**：`server/internal/application/<bc>`（用例编排，依赖 domain 端口）
+- **domain**：`server/internal/domain/<bc>`（充血实体 + Port 接口 + 纯规则，不 import 基础设施库）
+- **infrastructure**：`server/internal/infrastructure/{mysql,redis,es,geo,storage,hotsearch,calendar,configfile}`
+- **bootstrap / common**：`server/internal/bootstrap` 手工 wire；`server/internal/common` 横切工具
+- 持久化映射层：`server/internal/model/{database,request,response,other,appTypes,elasticsearch}`（DB 实体 / DTO / ES 索引结构）
+- CLI 命令：`server/internal/flag`；入口：`server/cmd/server/main.go`
 
 ### 3. 数据流架构
 

@@ -8,8 +8,8 @@ import (
 	"server/internal/common/page"
 	"server/internal/domain/forum"
 	"server/internal/domain/shared"
-	"server/model/database"
-	"server/model/other"
+	"server/internal/model/database"
+	"server/internal/model/other"
 
 	"gorm.io/gorm"
 )

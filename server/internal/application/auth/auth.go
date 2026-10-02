@@ -10,8 +10,8 @@ import (
 	"server/internal/domain/auth"
 	"server/internal/domain/shared"
 	"server/internal/domain/user"
-	"server/model/appTypes"
-	"server/model/request"
+	"server/internal/model/appTypes"
+	"server/internal/model/request"
 )
 
 // 登录流程错误（handler 据此映射固定文案，文案必须与重构前一致）。
