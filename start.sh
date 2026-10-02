@@ -39,7 +39,7 @@ wait_ready "http://127.0.0.1:9200/" "elasticsearch"
 echo "==> 2/4 启动后端 (Go)"
 cd "$SERVER_DIR"
 if ! lsof -iTCP:8080 -sTCP:LISTEN >/dev/null 2>&1; then
-  go build -o "$BACKEND_BIN" .
+  go build -o "$BACKEND_BIN" ./cmd/server
   nohup "$BACKEND_BIN" > "$BACKEND_LOG" 2>&1 &
   sleep 3
   echo "[backend] started, log: $BACKEND_LOG"
