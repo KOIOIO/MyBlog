@@ -47,6 +47,7 @@ const formatTime = (s: string): string => dayjs(s).format('MM-DD HH:mm');
 <style scoped lang="scss">
 .conv-side {
   flex: 1;
+  min-height: 0;
   overflow-y: auto;
   display: flex;
   flex-direction: column;

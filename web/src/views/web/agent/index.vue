@@ -191,10 +191,11 @@ const removeArticle = (id: number): void => {
 <style scoped lang="scss">
 .agent-page {
   .page {
+    padding: calc(70px + 16px) 16px 16px;
+
     .container {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 16px;
     }
   }
 
@@ -219,7 +220,7 @@ const removeArticle = (id: number): void => {
   .workspace {
     display: flex;
     gap: 16px;
-    height: calc(100vh - 140px);
+    height: calc(100vh - 240px);
     min-height: 480px;
   }
 
@@ -294,7 +295,7 @@ const removeArticle = (id: number): void => {
 
 @media (max-width: 768px) {
   .agent-page {
-    .workspace { height: calc(100vh - 120px); }
+    .workspace { height: calc(100vh - 210px); }
     .side {
       display: none;
       &.collapsed { display: none; }

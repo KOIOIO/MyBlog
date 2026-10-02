@@ -56,7 +56,7 @@ const search = async (keyword: string): Promise<void> => {
             category: '',
             tag: '',
             sort: '',
-            order: '',
+            order: 'desc',
         });
         options.value = res.data.list.map((hit) => ({
             id: Number(hit._id),

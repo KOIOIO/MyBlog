@@ -50,7 +50,7 @@ type Message struct {
 	ConversationID uint      `json:"conversation_id"`
 	Role           string    `json:"role"`
 	Content        string    `json:"content"`
-	ArticleIDs     []uint    `json:"article_ids,omitempty"`
+	ArticleIDs     []uint    `json:"article_ids"`
 	Tokens         int       `json:"-"`
 	CreatedAt      time.Time `json:"created_at"`
 }

@@ -96,14 +96,7 @@ func (h *Handler) Chat(c *gin.Context) {
 	}
 	userID := middleware.GetUserID(c)
 
-	// 先做归属预校验（会话存在性），失败走普通 JSON 错误
-	if req.ConversationID != 0 {
-		if _, err := h.svc.PeekConversation(context.Background(), req.ConversationID, userID); err != nil {
-			h.writeDomainError(err, c)
-			return
-		}
-	}
-
+	// SSE 响应头先设置，后续所有输出（含预校验错误）统一走 SSE 协议
 	c.Header("Content-Type", "text/event-stream")
 	c.Header("Cache-Control", "no-cache")
 	c.Header("Connection", "keep-alive")
@@ -113,6 +106,14 @@ func (h *Handler) Chat(c *gin.Context) {
 		data, _ := json.Marshal(payload)
 		c.Writer.Write([]byte("data: " + string(data) + "\n\n"))
 		c.Writer.Flush()
+	}
+
+	// 归属预校验（会话存在性），失败以 SSE 错误事件返回
+	if req.ConversationID != 0 {
+		if _, err := h.svc.PeekConversation(context.Background(), req.ConversationID, userID); err != nil {
+			writeEvent(gin.H{"error": err.Error()})
+			return
+		}
 	}
 
 	_, err := h.svc.Chat(c.Request.Context(), userID, req.ConversationID, req.Message, req.ArticleIDs,

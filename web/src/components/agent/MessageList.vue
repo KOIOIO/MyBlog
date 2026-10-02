@@ -6,7 +6,11 @@
       <p class="empty-desc">{{ t('pages.agent.emptyChatDesc') }}</p>
     </div>
     <div v-for="msg in messages" :key="msg.id" class="msg-row" :class="msg.role">
-      <div class="avatar">{{ msg.role === 'assistant' ? '🤖' : '👤' }}</div>
+      <div class="avatar">
+        <img v-if="msg.role === 'assistant'" class="avatar-img" src="/images/agent-avatar.jpg" alt="agent"/>
+        <el-avatar v-else-if="userStore.state.userInfo.avatar" class="avatar-img" :size="34" :src="userStore.state.userInfo.avatar"/>
+        <span v-else class="avatar-fallback">{{ userInitial }}</span>
+      </div>
       <div class="bubble-wrap">
         <div v-if="msg.role === 'user' && msg.article_ids && msg.article_ids.length > 0" class="ref-tag">
           📄 {{ t('pages.agent.referencedArticles', {n: msg.article_ids.length}) }}
@@ -21,8 +25,9 @@
 </template>
 
 <script setup lang="ts">
-import {nextTick, ref, watch} from "vue";
+import {computed, nextTick, ref, watch} from "vue";
 import {useI18n} from "vue-i18n";
+import {useUserStore} from "@/stores/user";
 import type {AgentMessage} from "@/api/agent";
 
 const props = defineProps<{
@@ -31,7 +36,13 @@ const props = defineProps<{
 }>();
 
 const {t} = useI18n();
+const userStore = useUserStore();
 const scrollRef = ref<HTMLElement | null>(null);
+
+const userInitial = computed(() => {
+    const name = userStore.state.userInfo.username || 'U';
+    return name.charAt(0).toUpperCase();
+});
 
 const scrollToBottom = (): void => {
     nextTick(() => {
@@ -93,6 +104,20 @@ watch(() => [props.messages, props.streaming], scrollToBottom, {deep: true});
     justify-content: center;
     font-size: 16px;
     flex-shrink: 0;
+    overflow: hidden;
+
+    .avatar-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+      display: block;
+    }
+
+    .avatar-fallback {
+      color: var(--el-color-primary);
+      font-weight: 600;
+    }
   }
 
   .bubble-wrap {

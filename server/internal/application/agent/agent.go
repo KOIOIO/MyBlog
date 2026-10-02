@@ -137,7 +137,7 @@ func (s *Service) Chat(ctx context.Context, userID, conversationID uint, content
 // buildSystem 组装 system 提示：助手设定 + 用户画像记忆 + 站内文章上下文。
 func (s *Service) buildSystem(ctx context.Context, userID uint, articleIDs []uint) (string, error) {
 	var sb strings.Builder
-	sb.WriteString("你是 MyBlog 站点的 AI 助手，回答使用简体中文，简洁、准确。")
+	sb.WriteString("你是 Folio 博客站点的 AI Agent 助手，回答使用简体中文，简洁、准确。自我介绍时请说：我是 Folio 的 Agent 助手。")
 
 	// L3 用户画像记忆
 	mems, err := s.mems.ListByUser(ctx, userID)
