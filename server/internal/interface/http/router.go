@@ -1,58 +1,114 @@
 // Package http 提供 Gin 路由装配（替代 initialize/router.go）。
 //
 // 绞杀者迁移说明：
-//   - Phase 0：仅建立骨架，按 BC 注册空路由组，未挂载业务，亦未接入 main。
-//   - Phase 1 起：本包成为主路由入口，已迁移 BC 使用 internal/handler 下的新 Handler，
-//     未迁移 BC 委托旧 router/ 文件注册，保证路由不丢失。
-//   - Phase 5：删除旧 router/ 后，本包为唯一路由定义处。
+//   - 已迁移 BC（base、user）在本文件注册新 Handler；
+//   - 未迁移 BC 委托旧 router/ 的 Init 函数注册，保证路由不丢失；
+//   - 中间件（JWT/Admin/日志/登录记录）已迁移为注入式（internal/interface/http/middleware）。
 package http
 
 import (
 	"net/http"
 
 	"server/config"
+	authapp "server/internal/application/auth"
+	userapp "server/internal/application/user"
+	userdomain "server/internal/domain/user"
+	basehandler "server/internal/interface/http/handler/base"
+	userhandler "server/internal/interface/http/handler/user"
+	"server/internal/interface/http/middleware"
+	oldrouter "server/router"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 )
 
-// NewRouter 构建 Gin Engine（骨架：中间件 + 三组路由 + 空 BC 子组）。
-func NewRouter(cfg *config.Config) *gin.Engine {
+// Deps 路由装配依赖。
+type Deps struct {
+	Config      *config.Config
+	Log         *zap.Logger
+	Auth        *authapp.AuthService
+	User        *userapp.UserService
+	BaseHandler *basehandler.Handler
+	UserHandler *userhandler.Handler
+	Geo         userdomain.GeoProvider
+	Logins      userdomain.LoginRecordRepository
+}
+
+// NewRouter 构建 Gin Engine（中间件链 + 三组路由 + 已迁移/未迁移 BC 路由）。
+func NewRouter(deps *Deps) *gin.Engine {
+	cfg := deps.Config
 	gin.SetMode(cfg.System.Env)
-	router := gin.Default()
-	router.Use(ginLoggerPlaceholder(), ginRecoveryPlaceholder(true))
+	engine := gin.Default()
+	engine.Use(middleware.GinLogger(deps.Log), middleware.GinRecovery(deps.Log, true))
 
-	// 会话中间件（与旧实现一致）
 	var store = cookie.NewStore([]byte(cfg.System.SessionsSecret))
-	router.Use(sessions.Sessions("session", store))
+	engine.Use(sessions.Sessions("session", store))
 
-	// 静态文件
-	router.StaticFS(cfg.Upload.Path, http.Dir(cfg.Upload.Path))
+	engine.StaticFS(cfg.Upload.Path, http.Dir(cfg.Upload.Path))
 
-	publicGroup := router.Group(cfg.System.RouterPrefix)
-	privateGroup := router.Group(cfg.System.RouterPrefix)
-	adminGroup := router.Group(cfg.System.RouterPrefix)
+	routerGroup := oldrouter.RouterGroupApp
 
-	// TODO(Phase 1): 中间件改为注入式后在此挂载 JWTAuth/AdminAuth。
-	_ = privateGroup
-	_ = adminGroup
+	publicGroup := engine.Group(cfg.System.RouterPrefix)
+	privateGroup := engine.Group(cfg.System.RouterPrefix)
+	privateGroup.Use(middleware.JWTAuth(deps.Auth))
+	adminGroup := engine.Group(cfg.System.RouterPrefix)
+	adminGroup.Use(middleware.JWTAuth(deps.Auth)).Use(middleware.AdminAuth())
 
-	// TODO(各 Phase)：按 BC 迁移路由。
-	// 已迁移 BC 在此注册 internal/handler 下的新 Handler；
-	// 未迁移 BC 调用旧 router 的 Init 函数保持路由不丢失。
-	_ = publicGroup
-	_ = cfg
+	// ---- 已迁移 BC：base ----
+	{
+		baseRouter := publicGroup.Group("base")
+		baseRouter.POST("captcha", deps.BaseHandler.Captcha)
+		baseRouter.POST("sendEmailVerificationCode", deps.BaseHandler.SendEmailVerificationCode)
+	}
 
-	return router
-}
+	// ---- 已迁移 BC：user ----
+	{
+		userRouter := privateGroup.Group("user")
+		userPublicRouter := publicGroup.Group("user")
+		userLoginRouter := publicGroup.Group("user").Use(middleware.LoginRecord(deps.Geo, deps.Logins, deps.Log))
+		userAdminRouter := adminGroup.Group("user")
+		userHandler := deps.UserHandler
+		{
+			userRouter.POST("logout", userHandler.Logout)
+			userRouter.PUT("resetPassword", userHandler.UserResetPassword)
+			userRouter.GET("info", userHandler.UserInfo)
+			userRouter.PUT("changeInfo", userHandler.UserChangeInfo)
+			userRouter.POST("avatar", userHandler.UploadAvatar)
+			userRouter.GET("weather", userHandler.UserWeather)
+			userRouter.GET("chart", userHandler.UserChart)
+		}
+		{
+			userPublicRouter.POST("forgotPassword", userHandler.ForgotPassword)
+			userPublicRouter.GET("card", userHandler.UserCard)
+		}
+		{
+			userLoginRouter.POST("register", userHandler.Register)
+			userLoginRouter.POST("login", userHandler.Login)
+		}
+		{
+			userAdminRouter.GET("list", userHandler.UserList)
+			userAdminRouter.PUT("freeze", userHandler.UserFreeze)
+			userAdminRouter.PUT("unfreeze", userHandler.UserUnfreeze)
+			userAdminRouter.GET("loginList", userHandler.UserLoginList)
+		}
+	}
 
-// ginLoggerPlaceholder 骨架占位：Phase 5 迁移 middleware/logger.go 后替换为真实实现。
-func ginLoggerPlaceholder() gin.HandlerFunc {
-	return func(c *gin.Context) { c.Next() }
-}
+	// ---- 未迁移 BC：委托旧 router 注册（保持路由不丢失） ----
+	{
+		routerGroup.InitArticleRouter(privateGroup, publicGroup, adminGroup)
+		routerGroup.InitCommentRouter(privateGroup, publicGroup, adminGroup)
+		routerGroup.InitFeedbackRouter(privateGroup, publicGroup, adminGroup)
+		routerGroup.InitForumRouter(privateGroup, publicGroup, adminGroup)
+	}
+	{
+		routerGroup.InitImageRouter(adminGroup)
+		routerGroup.InitAdvertisementRouter(adminGroup, publicGroup)
+		routerGroup.InitFriendLinkRouter(adminGroup, publicGroup)
+		routerGroup.InitWebsiteRouter(adminGroup, publicGroup)
+		routerGroup.InitConfigRouter(adminGroup)
+	}
 
-// ginRecoveryPlaceholder 骨架占位：Phase 5 迁移 middleware/logger.go 后替换为真实实现。
-func ginRecoveryPlaceholder(stack bool) gin.HandlerFunc {
-	return func(c *gin.Context) { c.Next() }
+	return engine
 }

@@ -257,21 +257,21 @@ type FileStoragePort interface { Upload(ctx context.Context, f File, dir string)
 
 
 
-* [ ] `domain/auth`：JwtBlacklist 实体、AuthPort 接口
+* [x] `domain/auth`：JwtBlacklist 实体、AuthPort 接口
 
-* [ ] `domain/user`：User 实体（含 `Freeze`、`RoleID` 校验等行为）、UserRepository、LoginRecordRepository 接口
+* [x] `domain/user`：User 实体（含 `Freeze`、`RoleID` 校验等行为）、UserRepository、LoginRecordRepository 接口
 
-* [ ] `infrastructure/redis`：JWT 黑名单 / 会话实现；`infrastructure/mysql/user.go`：User 仓储实现
+* [x] `infrastructure/redis`：JWT 黑名单 / 会话实现；`infrastructure/mysql/user.go`：User 仓储实现
 
-* [ ] `application/auth`：Token 用例；`application/user`：Register/EmailLogin/ForgotPassword/UserCard/LoginLog/Freeze 用例（事务边界在此层）
+* [x] `application/auth`：Token 用例；`application/user`：Register/EmailLogin/ForgotPassword/UserCard/LoginLog/Freeze 用例（事务边界在此层）
 
-* [ ] `interface/http/handler/user`：迁移 user 全部路由；`interface/http/middleware`：JWT/Admin 改为从 AuthPort 注入
+* [x] `interface/http/handler/user`：迁移 user 全部路由；`interface/http/middleware`：JWT/Admin 改为从 AuthPort 注入
 
-* [ ] 旧 `api/user.go`、`service/user.go`、`service/jwt.go` 中 user/jwt 部分停止被引用（先不删除，防回滚）
+* [x] 旧 `api/user.go`、`service/user.go`、`service/jwt.go` 中 user/jwt 部分停止被引用（先不删除，防回滚）
 
-* [ ] 单测：User 实体规则、auth token 黑名单流程（stub 仓储）；gin 冒烟测试覆盖 user 接口
+* [x] 单测：User 实体规则、auth token 黑名单流程（stub 仓储）；gin 冒烟测试覆盖 user 接口
 
-* [ ] commit：`refactor(ddd): migrate auth & user bounded contexts`
+* [x] commit：`refactor(ddd): migrate auth & user bounded contexts`
 
 **验收**：user 全部接口行为不变（注册 / 登录 / 登出 / 个人卡片 / 冻结）；`go test ./...` 通过。
 
