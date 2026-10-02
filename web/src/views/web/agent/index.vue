@@ -72,8 +72,6 @@
                     :autosize="{minRows: 1, maxRows: 5}"
                     resize="none"
                     :placeholder="t('pages.agent.placeholder')"
-                    @compositionstart="onCompositionStart"
-                    @compositionend="onCompositionEnd"
                     @keydown.enter.exact="onEnterKeydown"
                 />
                 <el-button v-if="agentStore.streaming" type="danger" class="send-btn" @click="agentStore.stopStreaming()">
