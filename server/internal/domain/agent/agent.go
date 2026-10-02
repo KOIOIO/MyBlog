@@ -71,6 +71,7 @@ type ConversationRepository interface {
 	Create(ctx context.Context, c *Conversation) error
 	ListByUser(ctx context.Context, userID uint) ([]*Conversation, error)
 	GetByID(ctx context.Context, id, userID uint) (*Conversation, error)
+	UpdateTitle(ctx context.Context, id, userID uint, title string) error
 	Delete(ctx context.Context, id, userID uint) error
 }
 

@@ -87,18 +87,42 @@ func (r *AgentConversationRepository) GetByID(ctx context.Context, id, userID ui
 	}, nil
 }
 
-// Delete 删除会话（软删）。
-func (r *AgentConversationRepository) Delete(ctx context.Context, id, userID uint) error {
+// UpdateTitle 更新会话标题；不存在返回 ErrConversationNotFound，归属不符返回 ErrForbidden。
+func (r *AgentConversationRepository) UpdateTitle(ctx context.Context, id, userID uint, title string) error {
 	res := r.db.WithContext(ctx).
+		Model(&database.AgentConversation{}).
 		Where("id = ? AND user_id = ?", id, userID).
-		Delete(&database.AgentConversation{})
+		Update("title", title)
 	if res.Error != nil {
 		return res.Error
 	}
 	if res.RowsAffected == 0 {
-		return agent.ErrConversationNotFound
+		var cnt int64
+		if err := r.db.WithContext(ctx).Model(&database.AgentConversation{}).
+			Where("id = ?", id).Count(&cnt).Error; err != nil {
+			return err
+		}
+		if cnt == 0 {
+			return agent.ErrConversationNotFound
+		}
+		return agent.ErrForbidden
 	}
 	return nil
+}
+
+// Delete 删除会话（软删）；不存在返回 ErrConversationNotFound，归属不符返回 ErrForbidden。
+func (r *AgentConversationRepository) Delete(ctx context.Context, id, userID uint) error {
+	var row database.AgentConversation
+	if err := r.db.WithContext(ctx).Where("id = ?", id).First(&row).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return agent.ErrConversationNotFound
+		}
+		return err
+	}
+	if row.UserID != userID {
+		return agent.ErrForbidden
+	}
+	return r.db.WithContext(ctx).Where("id = ?", id).Delete(&database.AgentConversation{}).Error
 }
 
 // AgentMessageRepository 消息仓储（GORM 实现）。
