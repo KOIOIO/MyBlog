@@ -1,0 +1,1 @@
+{"name": "public_get_4", "method": "GET", "path": "/api/article/category", "status": 200, "body": "{\"code\":0,\"data\":[{\"category\":\"技术\",\"number\":13},{\"category\":\"生活\",\"number\":3}],\"msg\":\"success\"}"}

@@ -1,0 +1,1 @@
+{"name": "public_get_16", "method": "GET", "path": "/api/website/title", "status": 200, "body": "{\"title\":\"Folio\"}"}
