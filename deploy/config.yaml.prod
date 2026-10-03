@@ -30,6 +30,12 @@ jwt:
     access_token_expiry_time: 2h
     refresh_token_expiry_time: 7d
     issuer: go_blog
+llm:
+    base_url: "https://dashscope.aliyuncs.com/compatible-mode/v1"
+    api_key: "${DASHSCOPE_API_KEY}"   # 必改：由 docker-compose 从 .env 注入 DASHSCOPE_API_KEY，运行时 os.ExpandEnv 展开，不要写真实密钥
+    model: "qwen-max"
+    max_history: 20
+    max_article_chars: 8000
 mysql:
     host: mysql                    # 必改：compose 网络内用服务名 mysql
     port: 3306

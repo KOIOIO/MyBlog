@@ -70,7 +70,7 @@ const routes = [
                 name: "agent",
                 component: () => import('@/views/web/agent/index.vue'),
                 meta: {
-                    title: "AI Agent",
+                    title: "Folio Chatbot",
                     requiresAuth: true
                 }
             }

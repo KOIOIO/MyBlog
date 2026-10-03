@@ -4,7 +4,7 @@ export default {
     search: 'Search',
     news: 'News',
     forum: 'Forum',
-    agent: 'AI Agent',
+    agent: 'Folio Chatbot',
     friendLink: 'Links',
     about: 'About'
   },

@@ -4,7 +4,7 @@ export default {
     search: '搜索',
     news: '新闻',
     forum: '论坛',
-    agent: 'AI Agent',
+    agent: 'Folio Chatbot',
     friendLink: '友链',
     about: '关于'
   },

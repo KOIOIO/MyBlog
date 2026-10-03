@@ -73,6 +73,8 @@ services:
     ports:
       # 只绑定本机回环地址：仅 1Panel 的 OpenResty 通过 127.0.0.1:8080 访问，不暴露公网
       - "127.0.0.1:8080:8080"
+    environment:
+      DASHSCOPE_API_KEY: ${DASHSCOPE_API_KEY}   # 从 deploy/.env 读取，供 config.yaml 的 llm.api_key 展开
     volumes:
       - ./config.yaml.prod:/app/config.yaml:ro
       - ./uploads:/app/uploads

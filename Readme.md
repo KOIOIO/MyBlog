@@ -337,11 +337,11 @@ erDiagram
     ARTICLE ||--o{ ARTICLE_TAG : "标签"
 ```
 
-## AI Agent（Folio 智能助手）
+## Folio Chatbot（站点 AI 助手）
 
 ### 1. 功能简介
 
-AI Agent 是与首页、论坛同级的独立栏目（`/agent`），定位为 **Folio 博客站点的 Agent 助手**，提供：
+Folio Chatbot 是与首页、论坛同级的独立栏目（`/agent`），定位为 **Folio 博客站点的 AI 助手**，提供：
 
 - **带记忆的多轮对话**：短期记忆（会话内历史）+ 长期记忆（按用户沉淀的画像记忆）双轨注入
 - **携带站内文章提问**：对话前可勾选站内文章，Agent 会基于文章正文作答（可选，不选也能对话）

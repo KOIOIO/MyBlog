@@ -32,9 +32,9 @@ export default {
     },
     about: {},
     agent: {
-      title: 'AI Agent',
+      title: 'Folio Chatbot',
       desc: 'Chat with the built-in AI, optionally with site articles',
-      loginTip: 'Log in to use AI Agent and keep your private conversation history',
+      loginTip: 'Log in to use Folio Chatbot and keep your private conversation history',
       loginBtn: 'Log In',
       newChat: 'New Chat',
       history: 'History',

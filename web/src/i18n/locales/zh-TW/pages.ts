@@ -32,9 +32,9 @@ export default {
     },
     about: {},
     agent: {
-      title: 'AI Agent',
+      title: 'Folio Chatbot',
       desc: '與站內 AI 對話，可攜帶文章提問',
-      loginTip: '登入後即可使用 AI Agent，保存你的專屬對話記錄',
+      loginTip: '登入後即可使用 Folio Chatbot，保存你的專屬對話記錄',
       loginBtn: '登入',
       newChat: '新增對話',
       history: '歷史對話',
