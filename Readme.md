@@ -15,8 +15,9 @@ MyBlog-ES 是一个基于 Go + Vue3 的现代化博客系统，采用前后端�
 - **缓存**: Redis
 - **日志**: Zap
 - **认证**: JWT双Token机制
-- **配置管理**: Viper + YAML
+- **配置管理**: Viper + YAML（支持 `${ENV}` 环境变量展开）
 - **命令行工具**: urfave/cli
+- **LLM 接入**: DashScope Compatible API（qwen-max，SSE 流式输出）
 
 ### 前端技术栈
 - **框架**: Vue 3.x
@@ -25,7 +26,9 @@ MyBlog-ES 是一个基于 Go + Vue3 的现代化博客系统，采用前后端�
 - **UI组件库**: Element Plus
 - **图表库**: ECharts
 - **Markdown编辑器**: md-editor-v3
-- **HTTP客户端**: Axios
+- **Markdown渲染**: markdown-it（Agent 回复）
+- **图表渲染**: mermaid（Agent 回复中的流程图/时序图等）
+- **HTTP客户端**: Axios（普通 API）；Agent 流式对话走原生 fetch + ReadableStream 解析 SSE
 - **语言**: TypeScript
 
 ## 系统架构图
@@ -333,6 +336,147 @@ erDiagram
     ARTICLE_CATEGORY ||--o{ ARTICLE : "分类"
     ARTICLE ||--o{ ARTICLE_TAG : "标签"
 ```
+
+## AI Agent（Folio 智能助手）
+
+### 1. 功能简介
+
+AI Agent 是与首页、论坛同级的独立栏目（`/agent`），定位为 **Folio 博客站点的 Agent 助手**，提供：
+
+- **带记忆的多轮对话**：短期记忆（会话内历史）+ 长期记忆（按用户沉淀的画像记忆）双轨注入
+- **携带站内文章提问**：对话前可勾选站内文章，Agent 会基于文章正文作答（可选，不选也能对话）
+- **用户级会话历史**：每个用户的会话记录独立展示在左侧栏，点击可恢复历史对话
+- **富文本回复**：支持 Markdown（列表、表格、代码块等）与 Mermaid 图表（架构图/流程图/时序图/ER 图等，Agent 生成图表时默认输出 Mermaid）
+
+### 2. 总体架构
+
+```mermaid
+graph TB
+    subgraph "前端（web/src）"
+        V["views/web/agent/index.vue<br/>对话页：左侧会话 + 右侧消息 + 输入区"]
+        MS["components/agent/MessageList.vue<br/>消息流渲染（Markdown + Mermaid）"]
+        CS["components/agent/ConversationSide.vue<br/>会话历史侧栏"]
+        AP["components/agent/ArticlePicker.vue<br/>站内文章选择器"]
+        ST["stores/agent.ts<br/>会话/消息状态 + SSE 流式消费"]
+        API["api/agent.ts<br/>fetch SSE（不走 Axios 拦截器）"]
+        MD["utils/markdown.ts<br/>markdown-it + mermaid fence"]
+    end
+
+    subgraph "后端（server/internal）"
+        H["interface/http/handler/agent<br/>SSE 流式接口（错误统一 data:error）"]
+        APP["application/agent<br/>Chat 用例编排"]
+        D["domain/agent<br/>实体 + 端口（纯规则）"]
+        LLM["infrastructure/llm/dashscope<br/>DashScope Compatible SSE 客户端"]
+        MYSQL["infrastructure/mysql/agent<br/>会话/消息/记忆仓储"]
+        ES["infrastructure/es/agent_article<br/>按 id 读取文章正文"]
+    end
+
+    U["用户"] --> V
+    V --> ST
+    V --> API
+    ST --> API
+    API --> H
+    H --> APP
+    APP --> D
+    APP --> LLM
+    APP --> MYSQL
+    APP --> ES
+    MYSQL --> DB[("MySQL")]
+    ES --> ESX[("Elasticsearch")]
+    LLM --> DASH["DashScope<br/>qwen-max"]
+```
+
+### 3. 后端实现（DDD 分层）
+
+- **interface**：`server/internal/interface/http/handler/agent` —— SSE 输出助手消息，所有错误（含参数预校验）统一编码为 `data:{"error":...}` 事件返回
+- **application**：`server/internal/application/agent` —— Chat 用例编排：自动创建会话 → 截取标题（≤30 rune）→ 落库用户消息 → 拼装历史（`max_history` 条）+ 当前消息 → 组装 system（助手设定 + 画像记忆 ≤10 条 + 文章块 ≤`max_article_chars`）→ 流式调用 LLM → 落库助手消息
+- **domain**：`server/internal/domain/agent` —— 会话/消息/记忆实体、5 个端口、标题生成与访问控制规则（跨用户访问返回 Forbidden，不存在返回 NotFound）
+- **infrastructure**：
+  - `llm/dashscope.go`：DashScope Compatible 端点 `POST {base_url}/chat/completions`，`bufio.Scanner` 解析 SSE `data:` 块，`stream_options.include_usage` 收集 token 用量，支持上下文取消
+  - `mysql/agent.go`：三张表的 CRUD，归属校验先查后判
+  - `es/agent_article.go`：文章正文在 Elasticsearch（非 MySQL），按字符串 id 读取正文注入上下文
+
+### 4. 前端实现
+
+- **API 层**（`api/agent.ts`）：普通接口走 Axios；流式对话用原生 `fetch` + `ReadableStream` 手动解析 SSE，绕过 Axios 拦截器，token 从 `useUserStore().state.accessToken` 直接取
+- **状态层**（`stores/agent.ts`）：发送时本地即时追加用户消息 + 助手占位，逐块流式更新，支持中断（AbortController）
+- **渲染层**（`MessageList.vue` + `utils/markdown.ts`）：
+  - `markdown-it` 渲染 Markdown（`html:false` 防 XSS；fence 规则拦截 ```mermaid 输出为 `<div class="mermaid">`）
+  - `MutationObserver` 监听消息区 DOM 变化 + 400ms 防抖触发 `mermaid.run`（流式期间内容未闭合不渲染，结束自动成图；失败保留源码并告警）
+  - 头像：助手侧使用 Agent 卡通形象（`/images/agent-avatar.jpg`），用户侧使用账号头像（缺省显示首字母）
+- **输入法兼容**：中文输入法组合期间按 Enter 确认候选词不会误发送（`keydown` 事件 `e.isComposing` 判断）
+
+### 5. 记忆组件设计
+
+```mermaid
+erDiagram
+    AGENT_CONVERSATIONS {
+        int id PK
+        uuid UUID UK
+        int user_id FK
+        string title
+        string summary
+        int status
+    }
+    AGENT_MESSAGES {
+        int id PK
+        int conversation_id FK
+        string role
+        text content
+        json article_ids
+        int tokens
+    }
+    AGENT_MEMORIES {
+        int id PK
+        int user_id FK
+        string content
+        string source
+    }
+    USERS ||--o{ AGENT_CONVERSATIONS : "拥有"
+    AGENT_CONVERSATIONS ||--o{ AGENT_MESSAGES : "包含"
+    USERS ||--o{ AGENT_MEMORIES : "沉淀"
+```
+
+| 表 | 职责 | 关键字段 |
+|---|---|---|
+| `agent_conversations` | 会话记录，按用户隔离 | `user_id` 索引、`uuid` 唯一、`title` ≤100 |
+| `agent_messages` | 消息明细，支持恢复历史 | `conversation_id` 索引、`role`、`content`、`article_ids`（JSONUintArray）、`tokens` |
+| `agent_memories` | 用户长期画像记忆 | `user_id` 索引、`content` ≤500、`source`（记忆来源） |
+
+**记忆机制（两轨）**：
+
+1. **短期记忆**：同会话历史消息按 `max_history`（默认 20 条）截取注入 prompt，保证多轮上下文
+2. **长期记忆**：每次对话将当前用户 `agent_memories` 中最新的 ≤10 条画像记忆注入 system prompt，跨会话生效；记忆内容由 Agent 在对话中根据用户信息沉淀
+3. **恢复**：点击左侧会话记录 → 拉取该会话全部消息 → 渲染为历史对话（同样支持 Markdown/Mermaid）
+
+**MVP 说明**：当前实现不依赖向量数据库，文章检索与记忆匹配均通过 MySQL + LLM 完成；系统为向量检索预留了 `ArticleRetriever` / `MemoryRetriever` 端口，后续可平滑升级。
+
+### 6. 配置与密钥安全
+
+```yaml
+llm:
+  base_url: "https://dashscope.aliyuncs.com/compatible-mode/v1"
+  api_key: "${DASHSCOPE_API_KEY}"   # 环境变量注入，绝不写入代码/文档
+  model: "qwen-max"
+  max_history: 20
+  max_article_chars: 8000
+```
+
+- 配置加载使用 `os.ExpandEnv` 展开 `${ENV}` 语法，密钥只从环境变量读取
+- 模型为 **qwen-max**（DashScope 兼容模式）；**不存在 `qwen-7max` 模型 ID**，调用会返回 `model_not_found`
+
+### 7. Agent 常见问题与排障
+
+| 现象 | 根因 | 解决 |
+|---|---|---|
+| 调用 `qwen-7max` 返回 `model_not_found` | 阿里云无此模型 ID | 使用 `qwen-max` |
+| 选择文章时报 `ArticleSearch.Order required` | 文章搜索接口 `order` 为必填参数，前端传了空串 | 请求携带 `order=desc` |
+| 左侧会话栏内容被上方遮挡、无法滚动 | 会话列表 flex 子项缺 `min-height:0`，且页面未给 fixed 导航栏让位 | 列表容器加 `min-height:0`；页面 `padding-top` 预留导航高度 |
+| 回复显示 `**加粗**` 等 Markdown 原文 | 消息以纯文本渲染 | 助手消息走 `v-html` + `markdown-it`（`html:false` 防 XSS） |
+| Mermaid 代码块不变成图 | 流式期间/时序问题导致 `mermaid.run` 未触发 | `MutationObserver` + 400ms 防抖自动渲染；解析失败保留源码 |
+| 中文输入法输入英文按 Enter 直接发送 | `keydown` 未判断输入法组合态 | `e.isComposing` 为 true 时不触发送信 |
+| 历史会话仍自称 "MyBlog" 助手 | 旧消息使用旧 system prompt 生成 | 新会话已统一为 Folio 身份；旧消息为历史产物 |
+| Agent 报错格式 | 接口统一错误处理 | 所有错误通过 SSE `data:{"error":...}` 返回，前端统一提示 |
 
 ## 核心特性
 
