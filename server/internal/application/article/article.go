@@ -150,6 +150,8 @@ func (s *Service) Update(ctx context.Context, id string, a *article.Article) err
 	if err != nil {
 		return err
 	}
+	// 编辑表单不携带创建时间，继承 ES 旧文档值，避免以空串覆盖 created_at 触发 ES date 解析失败
+	a.CreatedAt = old.CreatedAt
 
 	oldIllustrations := article.IllustrationsOf(old.Content)
 	newIllustrations := article.IllustrationsOf(a.Content)
