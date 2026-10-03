@@ -3,11 +3,12 @@
     <web-navbar :noScroll="true"/>
     <div class="page">
       <h1 class="page-title">{{ t('pages.friendLink.title') }}</h1>
+      <friend-link-marquee v-if="friendLinkList.length" :items="friendLinkList"/>
       <div class="list">
         <div v-for="(item, i) in friendLinkList" :key="item.name" class="link-card"
              :style="{ animationDelay: Math.min(i, 5) * 60 + 'ms' }"
              @click="handleFriendLinkJumps(item.link)">
-          <el-image class="card-logo" style="width: 48px; height: 48px" :src="item.logo" alt=""></el-image>
+          <img class="card-logo" :src="item.logo" :alt="item.name" loading="lazy"/>
           <div class="card-body">
             <h3 class="card-name">{{ item.name }}</h3>
             <p class="card-desc">{{ item.description }}</p>
@@ -20,6 +21,7 @@
 
 <script setup lang="ts">
 import WebNavbar from "@/components/layout/WebNavbar.vue";
+import FriendLinkMarquee from "@/components/pages/FriendLinkMarquee.vue";
 import {type FriendLink, friendLinkInfo} from "@/api/friend-link";
 import {ref} from "vue";
 import {useI18n} from "vue-i18n";
@@ -93,6 +95,9 @@ const handleFriendLinkJumps = (link: string) => {
     }
 
     .card-logo {
+      height: 48px;
+      max-width: 96px;
+      object-fit: contain;
       border-radius: var(--radius-sm);
       flex-shrink: 0;
     }

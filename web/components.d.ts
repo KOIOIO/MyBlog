@@ -76,6 +76,7 @@ declare module 'vue' {
     ForumCommentItem: typeof import('./src/components/forum/ForumCommentItem.vue')['default']
     ForumImageUploader: typeof import('./src/components/forum/ForumImageUploader.vue')['default']
     FriendLinkCreateForm: typeof import('./src/components/forms/FriendLinkCreateForm.vue')['default']
+    FriendLinkMarquee: typeof import('./src/components/pages/FriendLinkMarquee.vue')['default']
     FriendLinkUpdateForm: typeof import('./src/components/forms/FriendLinkUpdateForm.vue')['default']
     LoginForm: typeof import('./src/components/forms/LoginForm.vue')['default']
     Logo: typeof import('./src/components/widgets/Logo.vue')['default']
